@@ -1,0 +1,92 @@
+---
+
+#========================================
+# CONFIG MAIN template - template pentru instanta curenta de fw
+#========================================
+
+
+mainTemplate: blackSea
+mainModel: newsPaper
+
+
+#========================================
+# tipuri de module existente
+#========================================
+mods: [PLUGINS, MODELS, GENERAL, LOCALS]
+
+#nu imi e foarte clar la ce sunt bune urmatoarele
+models: [profile, masterBlog, articles, blog, comments, siteMap, contact, products, single, basket, mainPOPup]
+
+plugins: [toolbar, MENUhorizontal, MENU_h_multiLevel, rating]
+
+general: [TOOLbar, GEN_edit, EDITmode, user, authManager, usrManager]
+
+
+
+#========================================
+# modulele instantiate automat
+#========================================
+
+default_LOCALS: []
+
+default_GENERAL: []
+  #- authManager
+  #- user
+
+default_MODELS: []
+#  - mainPOPup
+
+default_PLUGINS: [LANG, SEO, MENUhorizontal]
+
+
+#=========================================
+# tree stuff
+#=========================================
+
+tree: []
+
+# typeul / modelul default cand se intra
+type: single
+type_MOD: MODELS
+
+id: 85
+idT: 85
+idC: 85
+
+
+
+#========================================
+# other settings
+#========================================
+
+INC_css: ''
+INC_js: ''
+admin: false
+# DB: pointer la baza de date
+
+
+# numele modelelor pentru meniuri
+# exlicatii necesare
+# key = table.MENUS - col.idM
+menus:
+  1: MENUhorizontal
+  2: MENUhorizontalv
+
+
+
+#==========================================
+# language
+#==========================================
+lang: en
+lang2: ro
+langs:
+  - en
+  - ro
+
+#===========================================
+# other stuff
+#============================================
+history: []
+history_HREF: ''
+history_TITLE: ''
+history_TITLE_keywords: ''

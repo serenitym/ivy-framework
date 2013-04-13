@@ -1,0 +1,176 @@
+
+Framework stuff
+
+=====================[ DONE - staging]===============================================================
+DONE » trebuie pus si tasks ca link in framework...but keep it out of deploiment
+DONE » proces Script trebuie sa faca cumva parte din framework sau sa se numeasca cumva
+like ajaxProxy care sa includa procesSCRIPT.php
+» trebuie refacut sample project
+DONE » CAD ->core
+DONE » creare scheletModul
+
+DONE » trecere etc-uri in framework
+
+DONE » si bineinteles mutat tot frameworkul pe
+modelul de templating curent
+
+DONE » creare doc pentru DB - aferent unui modul
+
+DONE » problema generaledit si fisierele lui temporare
+
+
+DONE »[] - creat un mainModel
+
+    - scos templateurile din core + css-uri + js-uri
+    - si creat acest mainModel in MODELS
+
+=====================[ PRIORITIES ]=========================================================
+
+PROBLEMS
+
+GEN_edit
+    CTRL_SV_CHANGES
+        - linia 37 - se presupune automat ca handle este MODELS
+
+
+as vrea sa creez in var / trees un master tree care sa existe mereu
+
+
+?? module cu yml-uri diferite
+ ex: am modulul contact
+ cu paginile - contact si cariere
+ pentru contact sa zicem ca nu vreau upload de fisiere
+ dar pentru cariere vreau . Deci? solutie?
+
+***[GEN_edit] - CTRL_SV_CHANGES
+    - affected_[MODULES] = trebuie trecute pe yml-uri, pentru ca sunt aferente proiectului
+
+***[] - standardizat GEN_edit - encapsulate
+
+» - documentat faza cu asincron calls
+» - documentat editMode
+
+» create demos for configs;
+» admin TOOLbar buttons
+
+» documentatie TrenderTmpl
+
+=====================[ PHP clean + performance Code ]================================================================
+
+***[]
+    mereu avut in vedere simplitatea codului
+    gasit o regula pentru complexitate si transparenta , absolut necesat!!!
+
+***[?] - obiecte instantiate cu construct($C) - deprecated
+
+[] TrenderTmpl - vazut ce functii sunt deprecated + pus tot frameworkul pe noua met de tmpl
+[] Ccore       - review general
+
+[] - revizie Cblog
+
+[] DMLsql
+    - este o metoda pentru contine si apelarea metodei reLocate
+    - cu toate astea numele DMLsql nu sugereaza asta
+       => transparenta nu foarte mare
+    - in plus aduce dupa sine un if ---
+
+[] instantiere ACmodule
+    - ma cam deranjaza setarea in plus care trebuie sa o fac in tmpl_AblackSea.yml
+     pe admin_MOD
+    - o tot uit si este sacaitoare - parca parca as vrea sa scap de ea...
+
+
+[] DMLsql_setValues
+   - a se vedea comentariul de la ea
+   - debate - obscure + procesare mai multa
+   - in plus trebuie mentinuta o relatie intre
+   html - mysql table - php - and also .yml file
+   
+   
+[ victor ] server_processing.php - sta in public si ar trebui trecut prin procesSCRIPT
+
+
+[] # manage function - should be put in TgenTools respectiv create ATgenTools
+   si ACcore ar trebui sa use ATgenTools
+   dar nu stiu daca exista cumva vreo problema daca ATgenTools rescrie functii din TgenTools
+   de aceea deocamdata sunt rescrise doar in cadrul claselor
+
+=====================[ PHP ]================================================================
+
+***[]
+    - scapat de controllere care fac o gramada de if-uri  mai ales cele care testeaza submiturile
+    - trimis prin POST eventual -
+        » handle = modelName
+        » action - method name
+
+    - trebuie vazut daca nu cumva vreau sa fac ceva si pentru GET-uri
+
+
+P***[?] - metodele de where-uri din TmethDB - obscure si poate ar trebui scoase din uz
+        - trecut Cblog - queries cu create_function ca la Ccomments
+
+P**[]  - user pe modul de admin cu incarcare de ACcore  si user simplu
+
+P**[]  - un mod de a valida datele venite de la formuri
+
+[] - file_puts_contents - metoda dedicata
+[] - logare diferentiata - user / userAdmin
+[] - bagat css/ js - core automat
+
+[] toggle -  un fel de query statistics
+    - dbDegugger extends mysqli
+        - function query($str)
+        {
+            log_time();
+            parent::query($str);
+            log_time();
+        }
+
+
+=====================[ JS clean + performance Code ]=================================================================
+
+=====================[ JS ]=================================================================
+
+
+=====================[ CSS ]================================================================
+
+
+=====================[ DB ]=================================================================
+
+====================[ Concept ]=============================================================
+***[] - multiple templates intr-o tema + fw
+        - aplicatie directa - blog pagina de revista personalizata
+
+[] testing outputs -> puse ca metode statice
+[] metode / standarde documentare
+[] js + css mini
+
+====================[ Documentare ]=========================================================
+[ ] documentare editMode
+    - inspecial logica optiunilor pentru elementele editabil ex: name, style, asincrSCRIPT
+
+
+[ ] documentare pe feedback priorities
+
+[ ] problema denumirii functiilor
+
+[] documeteaza metoda de  reqAsync
+    - controlReq_async
+        - variabilele de post trimise de javaScript
+
+    1. - request for a file to proces the request
+    2. - send a post variable to be processed be a controlReq_async
+            * atentie aceasta varianta este mai expensive
+              dar permite mai multa flexibilitate
+
+    3. - send moduleName & methName
+            - acceseaza direct moduleName->methName care sa proceseze requestul
+
+
+====================[ Learning needs ]=============================================================
+[*] mindMaps
+[] documentation
+[] git stuff
+- javascript inheritance
+- ceva de scris documentatie
+- task managers

@@ -1,0 +1,49 @@
+
+=====================[ DONE ]===============================================================
+
+
+=====================[ PRIORITIES ]=========================================================
+
+
+
+
+=====================[ PHP ]================================================================
+[ victor ] server_processing.php - sta in public si ar trebui trecut prin procesSCRIPT
+
+[*] TrenderTmpl - vazut ce functii sunt deprecated
+[*] Ccore       - review general
+[?] - obiecte instantiate cu construct($C) - deprecated
+[] - file_puts_contents - metoda dedicata
+
+[] - revizie Cblog
+[] - logare diferentiata - user / userAdmin
+[] - bagat css/ js - core automat
+
+
+=====================[ JS ]=================================================================
+
+
+=====================[ CSS ]================================================================
+
+
+=====================[ DB ]=================================================================
+
+====================[ Concept ]=============================================================
+
+[] organizarea pozelor pic-manager
+[] testing outputs -> puse ca metode statice
+[] metode / standarde documentare
+[] js + css mini
+
+====================[ Documentare ]=========================================================
+[ ] documentare editMode
+[ ] documentare Cblog->GET_comments()
+
+[ ] documentare pe feedback priorities
+
+[ ] problema denumirii functiilor
+
+====================[ Learning needs ]=============================================================
+[*] mindMaps
+[] documentation
+[] git stuff
