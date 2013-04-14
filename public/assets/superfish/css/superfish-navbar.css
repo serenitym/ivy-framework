@@ -28,7 +28,7 @@
 	border: none;
 }
 .sf-navbar > li > ul {
-	min-width: 36em; /* set this to whatever suits your design */
+	/*min-width: 36em; /* set this to whatever suits your design */
 }
 .sf-navbar ul li {
 	background: #BDD2FF;

@@ -17,6 +17,8 @@
 
  <?php
    echo $core->INC_js;
+   $footer_TMPL = tmpl_inc.'footer.php';
+   if(is_file($footer_TMPL)) require_once($footer_TMPL);
  ?>
 
 <!-- ========================================================================================================= -->

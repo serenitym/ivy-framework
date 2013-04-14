@@ -5,8 +5,8 @@
 #========================================
 
 
-mainTemplate: blackSea
 mainModel: newsPaper
+mainTemplate: blackSea
 
 
 #========================================
@@ -15,7 +15,7 @@ mainModel: newsPaper
 mods: [PLUGINS, MODELS, GENERAL, LOCALS]
 
 #nu imi e foarte clar la ce sunt bune urmatoarele
-models: [profile, masterBlog, articles, blog, comments, siteMap, contact, products, single, basket, mainPOPup]
+models: [profile, masterBlog, articles, blog, comments, siteMap, contact, products, single,basket, mainPOPup]
 
 plugins: [toolbar, MENUhorizontal, MENU_h_multiLevel, rating]
 

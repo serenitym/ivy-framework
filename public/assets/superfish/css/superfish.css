@@ -12,7 +12,8 @@
 	position: absolute;
 	display: none;
 	top: 100%;
-	left: 0;
+	right: 0;
+    margin-right: 0px;
 	z-index: 99;
 }
 .sf-menu > li {
@@ -35,7 +36,7 @@
 
 /*** DEMO SKIN ***/
 .sf-menu {
-	float: left;
+	float: right;
 	margin-bottom: 1em;
 }
 .sf-menu ul {

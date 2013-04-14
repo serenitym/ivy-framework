@@ -134,6 +134,6 @@ function getMenus(&$DB,$menus)
 
 
 $DB = new mysqli(dbHost,dbUser,dbPass,dbName);
-$menus[1] = 'menuHorizontal';
+$menus[1] = 'ivyMenu';
 
 echo getMenus($DB,$menus);

@@ -6,9 +6,9 @@ class CTRL_SV_CHANGES extends CHANGES
     # problema la trecerea de la un proiect la altul
     # yaml ?
     var $affected_MODELS  = array('siteMap');
-    var $affected_PLUGINS = array('MENUhorizontal');
+    var $affected_PLUGINS = array('MENUhorizontal','ivyMenu');
     var $affected_GENERAL = array('GEN_edit');
-    var $affected_LOCALS = array('menuHorizontal');
+    var $affected_LOCALS  = array();
 
     function getOBJECT_handle($change_type,$id,$detail)          {
 
