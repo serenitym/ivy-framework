@@ -9,7 +9,7 @@
 
         echo
 
-           $core->SEO->DISPLAY().
+           //$core->SEO->DISPLAY().
            '<base href="'.publicURL.'" />'.
 
            (isset($core->admin)
