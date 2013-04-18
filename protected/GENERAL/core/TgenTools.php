@@ -171,6 +171,48 @@ trait TgenTools{
        return $modType;
    }
 
+
+    public function get_resImages_paths($modName){
+        /**
+         * USE
+         *
+         * $results=glob("{includes/*.php,core/*.php}",GLOB_BRACE);
+         * GLOB_BRACE - Expands {a,b,c} to match 'a', 'b', or 'c'
+         *
+         * foreach (glob("$dir/$prefix*.html") as $file) {   #echo $file."<br>";  }
+         *
+         * <?php
+             $path_parts = pathinfo('/www/htdocs/inc/lib.inc.php');
+
+             echo $path_parts['dirname'], "\n";    =>  /www/htdocs/inc
+             echo $path_parts['basename'], "\n";   =>  lib.inc.php
+             echo $path_parts['extension'], "\n";  =>  php
+             echo $path_parts['filename'], "\n";   => lib.inc
+             ?>
+         *
+         *
+         *  'resPath'
+         *  'resURL'
+         *
+        */
+        $resDir = resPath."uploads/images/{$modName}";
+        $imgFiles_Paths = glob("$resDir/*.jpg");
+        return $imgFiles_Paths;
+
+    }
+
+    public function get_resImages_urls($modName){
+
+        $imgFiles_Paths = $this->get_resImages_paths($modName);
+        $imgFiles_Urls = array();
+        foreach($imgFiles_Paths AS $key=>$filePath){
+
+            $imgFiles_Urls[$key] = str_replace(resPath,resURL,$filePath);
+        }
+
+        return $imgFiles_Urls;
+    }
+
  #===================================================================================================================
 
     # Testing - not sure if this are usefull anymore...???DEPRECATED ???

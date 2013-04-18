@@ -105,7 +105,46 @@ trait TrenderTmpl {
                 return $this->debugMess("getDisplay_Items -error: There are no items <br>");
         }
 
+    }
+
+    #2
+    public function
+    renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='') {
+
+
+        if(is_array($items) && count($items) > 0)
+        {
+            $content = $this->get_renderContent($tmplStr, $tmplPath);
+            # $content   = str_replace('$this','$core',$content);
+            if($content)
+            {
+
+                if($tmplStr){
+                    $content = str_replace('~','$',$content);
+                    $content = str_replace('`','"',$content);
+                }
+
+                $display = '';
+                # pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
+                $o  = &$obj;
+                foreach($items AS $i)
+                {
+                    $displayItem = '';
+                    eval("\$displayItem = \"$content\";");
+                    $display .=$displayItem;
+                }
+
+                return $display;
+            }
+            else {
+
+                 return $this->debugMess("getDisplay_Items_uniDimens -error: Nu exista continut de template <br>");
+            }
+        } else {
+                return $this->debugMess("getDisplay_Items_uniDimens -error: There are no items <br>");
         }
+
+    }
 
 
     public function

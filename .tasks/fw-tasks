@@ -28,10 +28,16 @@ DONE »[] - creat un mainModel
 
 PROBLEMS
 
+[] - hardLog.php nu este pozitionat corect in framework
+
+
+** cred ca e rezolvata - check
 GEN_edit
     CTRL_SV_CHANGES
         - linia 37 - se presupune automat ca handle este MODELS
 
+GEN.js - trebuie spart in deprecGEN
+    -   acele functii care nu sunt encapsulate cum trebuie
 
 as vrea sa creez in var / trees un master tree care sa existe mereu
 

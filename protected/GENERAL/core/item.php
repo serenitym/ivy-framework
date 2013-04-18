@@ -12,7 +12,8 @@ class item
 {
     var  $id;              # id curent
     var  $p_id;            # id parinte;
-    var  $idT;
+    var  $idT;             # idT al tree-ului principal
+    var  $level;           # pe ce level este acest copil (nepot, stranepot ...etc) starting from 0
     var  $children;        # array( poz=>id_child )
 
 

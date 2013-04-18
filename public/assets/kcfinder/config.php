@@ -18,6 +18,7 @@
 
 
 $publicDir = $_SERVER['DOCUMENT_ROOT'];
+$publicUrl = 'http://'.$_SERVER['HTTP_HOST'];
 
 
 $_CONFIG = array(
@@ -29,7 +30,7 @@ $_CONFIG = array(
 
     'theme' => "oxygen",
 
-    'uploadURL' => "$publicDir/RES/uploads",
+    'uploadURL' => "$publicUrl/RES/uploads",
     'uploadDir' => "$publicDir/RES/uploads",
 
     'dirPerms' => 0755,

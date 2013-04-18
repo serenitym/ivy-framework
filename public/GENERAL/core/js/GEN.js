@@ -33,14 +33,125 @@ $.fn.collectData = function(){
     return data;
 }
 
+$.fn.maxHeight = function(){
 
+    var max = 0;
+    this.each(
+        function(){
+            max = Math.max(max,$(this).height());
+        }
+    );
+    return max;
+}
 
+$.fn.minHeight = function(){
+
+    var min = 3000;
+    this.each(
+        function(){
+            min = Math.min(min,$(this).height());
+        }
+    );
+    return min;
+}
+//==============================[ivyMods]==================
+
+var ivyMods = {};
 
 //=============================[ framework related functions ]==============================
 var fmw = function(){
 // all this functions should be refered from outside as fmw.FunctionName
 
 
+
+   function openKCFinder_popUp(callBackFn){
+       window.KCFinder = {
+              callBack: function(url) {
+               //field.value = url;
+               alert(url);
+               if(callBackFn != '')
+               {
+
+                   if(typeof callBackFn == 'function')
+                       callBackFn.call(this, url);  // carrousel callback function
+                   else
+                       alert('functia cu numele '+callBackFn+' nu pare sa fie o functie declarata');
+
+               }
+               popUp_remove();
+               window.KCFinder = null;
+           }
+       };
+
+       var popUpKCF = new popUp_call(
+                   { content:
+                       "<div id='kcfinder_div'>" +
+                           '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+                                   'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
+                       "</div>",
+
+                       widthPop:'900'
+                       ,heightPop : '500'
+                   });
+
+       // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+
+   }
+
+   function KCFinder_popUp(options){
+           /**
+            * opt= {
+            *     callBackFn,
+            *     jqObj_img
+             *
+            * }
+            * */
+            var defaults = {
+               callBackFn: '',
+               jqObj_img: ''
+           }
+           var opt=$.extend(true,{},defaults, options);
+
+            window.KCFinder = {
+                  callBack: function(url) {
+                       //field.value = url;
+                       alert(url);
+
+
+                       if(typeof opt.callBackFn == 'function')
+                       {
+                           opt.newUrl = url;
+                           opt.callBackFn.call(this, opt);
+                       }  // carrousel callback function
+                       else
+                           alert('functia cu numele '+opt.callBackFn+' nu pare sa fie o functie declarata');
+
+
+                    /*   if(opt.jqObj_img != '')
+                       {
+                           //alert(opt.jqObj_img.attr('src'));
+                           opt.jqObj_img.attr('src',url);
+                       }*/
+
+                       popUp_remove();
+                       window.KCFinder = null;
+               }
+           };
+
+           var popUpKCF = new popUp_call(
+                       { content:
+                           "<div id='kcfinder_div'>" +
+                               '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+                                       'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
+                           "</div>",
+
+                           widthPop:'900'
+                           ,heightPop : '500'
+                       });
+
+           // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+
+       }
 
 
     /**
@@ -153,7 +264,11 @@ var fmw = function(){
 
       }
   //=========================================================================
-    return {asyncConf :asyncConf };
+    return {
+        asyncConf :asyncConf,
+        openKCFinder_popUp: openKCFinder_popUp,
+        KCFinder_popUp: KCFinder_popUp
+    };
 }();
 
 

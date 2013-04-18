@@ -7,7 +7,7 @@
 
 cautarea dupa aur continua
 
-- posibilitatea integrarii mai multor templateuri
+-[ posibilitatea integrarii mai multor templateuri]-----
 idee: templates = array cu templateuri de integrat
 daca nu exista atunci templateul default va fii integrat automat
 
@@ -46,8 +46,6 @@ si probabil ca record template ar trebui sa se afle pe un template separat
 care sa aiba propriul css si js
 
 putin dubios if you ask me...
-
-capul meu nu prea functioneaza la ora asta asa ca i'm just babling and bouncing ideas
 
 o idee ar fii sa se faca alta tema dar care sa aiba mai multe css-uri in functie de templateul ales
 si sa zicem ca templateul de record va avea un record.css
@@ -128,7 +126,7 @@ Thins strategy is pending for further developement
 *** - rezolvarea requesturilor asincrone din editMODE
 
 
-### procesSCRIPT metoda de reqAsync ###
+#########[ procesSCRIPT metoda de reqAsync ]###########
 
 - variabilele de post trimise de javaScript
 

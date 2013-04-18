@@ -185,19 +185,6 @@
                                 ? c.insertElement(this.imageElement)
                                 : (c.insertElement(this.linkElement), this.linkElement.append(this.imageElement, !1))
                             : c.insertElement(this.imageElement)
-                //===============================================================================
-                 alert('in ok');
-                /*if (typeof add_picDetail == 'function')
-                {
-                    //alert('Considera ca s-a gasit o functie');
-                    add_picDetail(this.originalElement.$.src);
-
-                }*/
-                add_picDetail(this.originalElement.$.src, false);
-
-
-
-                //===============================================================================
 
             },
             onLoad: function () {

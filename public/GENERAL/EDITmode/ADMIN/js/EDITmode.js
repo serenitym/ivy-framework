@@ -26,16 +26,15 @@ var parsePOSTfile_getTags = 'MODELS/blog/ADMIN/getTags.php';
  *  UTILIZARE:
    $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } ) */
 
-
-
 // DOCUMENTEAZA TOT editMODEUL URGENT
-
 //trebuie cumva setat daca vreau sau nu indicatii pentru butoane
 
 
 var iEdit = function(){
 
     var LG = 'ro';
+
+
     /**
      * Config ex:
      *
@@ -58,7 +57,7 @@ var iEdit = function(){
      *            saveBt:{}
      *       },
      *
-     * Utilizarea configului
+     *  Utilizarea configului
      *
      *  bttConf[elemName].add['name']
      *
@@ -86,7 +85,23 @@ var iEdit = function(){
             recordHome :{
                 addBt: {status: false},
                 saveBt:{status:false}
-            }
+            }/*,
+            teamMember:{
+                addBt: {name: 'add new Member'},
+                extraBts:{
+                    manageGroup: {
+                        callBack: "javascript: alert('bun');",
+                        value: 'manage Groups',
+                        class: ''
+                    },
+                    showAllmembers:{
+                        callBack: "javascript: alert('bun');",
+                        value: 'show all Members',
+                        class: ''
+                    }
+                }
+            }*/
+
 
             /*
             // setate din picManager.js
@@ -123,7 +138,6 @@ var iEdit = function(){
     function split( val )        {    return val.split( /,\s*/ ); }
 
     function extractLast( term ) {    return split( term ).pop(); }
-
 
 
     function async_Binds(BLOCK,Name,id) {
@@ -227,23 +241,46 @@ var iEdit = function(){
                      return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"' >"+EDvalue+"</textarea>"; },
             EDeditor : function (){
                      return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"'  id='editor_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
+            EDaddEditor : function (){
+                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"'  id='editorAdd_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
             EDpic    : function (){
-                           var  IDpr = $('input[name=IDpr]').val();
+                             //var  IDpr = $('input[name=IDpr]').val();
                              // if(typeof IDpr!='undefined') INPUTname='';
                              //(form,url_action,id_element,html_show_loading,html_error_http)
-                             $('form[id^=EDITform]').attr('enctype','multipart/form-data');
+                            /* $('form[id^=EDITform]').attr('enctype','multipart/form-data');
                              $('form[id^=EDITform]').attr('encoding','multipart/form-data');
                             return "<div class='"+INPUTclass+"' id='frontpic'>" +
                                                      EDvalue+
                                                     "<div  id='formUPL' >"+
                                                          "<input type='file' id='fileUPL' name='filename_"+INPUTname+"' class='fileinput'  />" +
                                                          "<input type='hidden' name='id' value='"+IDpr+"'>" +
-                                                        /* "<input type='submit' name='UPLDimg' value='UP'>"+*/
+                                                        *//* "<input type='submit' name='UPLDimg' value='UP'>"+*//*
                                                      "</div>" +
                                                  "</div>"
-                                                 ;
+                                                 ;*/
+                            var imgSrc = $(EDtag).attr('src');
+
+                            //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
+
+                            return   "<img class='"+INPUTclass+"' src='"+imgSrc+"' id='editImg_"+INPUTname+"'>" +
+                                     "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                                     "<input type='button' name='replaceImg' value='loadImg' " +
+                                                          " style='left: 0;position: absolute;'" +
+                                                          " onclick='iEdit.evCallback.loadPic(\"editImg_"+INPUTname+"\")'>";
+
 
                  },
+            EDaddPic : function(){
+                            var imgSrc = $(EDtag).attr('src');
+
+                            //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
+
+                            return   "<img class='"+INPUTclass+"' src='"+imgSrc+"' id='editAddImg_"+INPUTname+"'>" +
+                                     "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                                     "<input type='button' name='replaceImg' value='loadImg' " +
+                                                           " style='left: 0;position: absolute;'" +
+                                                           " onclick='iEdit.evCallback.loadPic(\"editAddImg_"+INPUTname+"\")'>" ;
+            },
             EDsel    : function (){
                             if(eval('typeof '+EDname+'!= "undefined" ')) var options = eval(EDname+'.getHTMLoptions("'+EDvalue+'")');
                             else alert('nu l-a recunoscut ca obiect');
@@ -252,110 +289,120 @@ var iEdit = function(){
         };
 
 
+        var EDcallback = {
+             EDeditor : function(){
+                   var toolbar_conf = (EDtag_width < 500 ? 'EXTRAsmallTOOL' : 'smallTOOL' );
+                   CKEDITOR.replace( 'editor_'+EDname+'_'+LG,
+                                         {
+                                             toolbar : toolbar_conf,
+                                             height : EDtag_height
+                                           ,width : EDtag_width
+                                         });
+                                 //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
+
+             },
+             EDaddEditor : function(){
+                   var toolbar_conf = (EDtag_width < 500 ? 'EXTRAsmallTOOL' : 'smallTOOL' );
+                   CKEDITOR.replace( 'editorAdd_'+EDname+'_'+LG,
+                                         {
+                                             toolbar : toolbar_conf,
+                                             height : EDtag_height
+                                           ,width : EDtag_width
+                                         });
+                                 //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
+
+             },
+             EDdate   : function(){
+                            $(formSelector+' input[name='+INPUTname+']').datepicker({dateFormat: 'yy-mm-dd'});
+             },
+             EDtags   : function(){
+             //Alt exemplu cu array predefinit
+            /*$('input[name='+INPUTname+']')
+         // don't navigate away from the field on tab when selecting an item
+           .bind( "keydown", function( event ) {
+               if ( event.keyCode === $.ui.keyCode.TAB &&
+                       $( this ).data( "autocomplete" ).menu.active ) {
+                   event.preventDefault();
+               }
+           })
+           .autocomplete({
+               minLength: 0,
+               source: function( request, response ) {
+                   // delegate back to autocomplete, but extract the last term
+                   response( $.ui.autocomplete.filter(
+                       availableTags, extractLast( request.term ) ) );
+               },
+               focus: function() {
+                   // prevent value inserted on focus
+                   return false;
+               },
+               select: function( event, ui ) {
+                   var terms = split( this.value );
+                   // remove the current input
+                   terms.pop();
+                   // add the selected item
+                   terms.push( ui.item.value );
+                   // add placeholder to get the comma-and-space at the end
+                   terms.push( "" );
+                   this.value = terms.join( ", " );
+                   return false;
+               }
+           });*/
+
+
+                    $('input[name='+INPUTname+']')
+                   // don't navigate away from the field on tab when selecting an item
+                     .bind( "keydown", function( event ) {
+                         if ( event.keyCode === $.ui.keyCode.TAB &&
+                                 $( this ).data( "autocomplete" ).menu.active ) {
+                             event.preventDefault();
+                         }
+                     })
+                     .autocomplete
+                     ({
+                         minLength: 0,
+                         source:
+                                function( request, response )
+                                {
+                                    $.post(
+                                        procesSCRIPT_file,
+                                        {parsePOSTfile : parsePOSTfile_getTags},
+                                         function(data)
+                                         {
+                                             // delegate back to autocomplete, but extract the last term
+                                               response( $.ui.autocomplete.filter(
+                                                   data, extractLast( request.term ) ) );
+                                         },
+                                        "json"
+                                    );
+
+                                },
+
+                         focus:
+                                function() { return false; /* prevent value inserted on focus */},
+
+                         select:
+                                function( event, ui )
+                                {
+                                    var terms = split( this.value );
+                                    // remove the current input
+                                    terms.pop();
+                                    // add the selected item
+                                    terms.push( ui.item.value );
+                                    // add placeholder to get the comma-and-space at the end
+                                    terms.push( "" );
+                                    this.value = terms.join( ", " );
+                                    return false;
+                                }
+                     });
+              }
+        };
+
         //alert(typeof EDtags[EDtype]);
         if( eval('typeof ' +EDreplace[EDtype]) == 'function' )
         {
 
             $(EDtag).replaceWith( EDreplace[EDtype]() );
-
-             var EDcallback = {
-                  EDeditor : function(){
-                        var toolbar_conf = (EDtag_width < 500 ? 'EXTRAsmallTOOL' : 'smallTOOL' );
-                        CKEDITOR.replace( 'editor_'+EDname+'_'+LG,
-                                              {
-                                                  toolbar : toolbar_conf,
-                                                  height : EDtag_height
-                                                ,width : EDtag_width
-                                              });
-                                      //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
-
-             },
-                  EDdate   : function(){
-                 $(formSelector+' input[name='+INPUTname+']').datepicker({dateFormat: 'yy-mm-dd'});
-             },
-                  EDtags   : function(){
-                  //Alt exemplu cu array predefinit
-                 /*$('input[name='+INPUTname+']')
-              // don't navigate away from the field on tab when selecting an item
-                .bind( "keydown", function( event ) {
-                    if ( event.keyCode === $.ui.keyCode.TAB &&
-                            $( this ).data( "autocomplete" ).menu.active ) {
-                        event.preventDefault();
-                    }
-                })
-                .autocomplete({
-                    minLength: 0,
-                    source: function( request, response ) {
-                        // delegate back to autocomplete, but extract the last term
-                        response( $.ui.autocomplete.filter(
-                            availableTags, extractLast( request.term ) ) );
-                    },
-                    focus: function() {
-                        // prevent value inserted on focus
-                        return false;
-                    },
-                    select: function( event, ui ) {
-                        var terms = split( this.value );
-                        // remove the current input
-                        terms.pop();
-                        // add the selected item
-                        terms.push( ui.item.value );
-                        // add placeholder to get the comma-and-space at the end
-                        terms.push( "" );
-                        this.value = terms.join( ", " );
-                        return false;
-                    }
-                });*/
-
-
-                         $('input[name='+INPUTname+']')
-                        // don't navigate away from the field on tab when selecting an item
-                          .bind( "keydown", function( event ) {
-                              if ( event.keyCode === $.ui.keyCode.TAB &&
-                                      $( this ).data( "autocomplete" ).menu.active ) {
-                                  event.preventDefault();
-                              }
-                          })
-                          .autocomplete
-                          ({
-                              minLength: 0,
-                              source:
-                                     function( request, response )
-                                     {
-                                         $.post(
-                                             procesSCRIPT_file,
-                                             {parsePOSTfile : parsePOSTfile_getTags},
-                                              function(data)
-                                              {
-                                                  // delegate back to autocomplete, but extract the last term
-                                                    response( $.ui.autocomplete.filter(
-                                                        data, extractLast( request.term ) ) );
-                                              },
-                                             "json"
-                                         );
-
-                                     },
-
-                              focus:
-                                     function() { return false; /* prevent value inserted on focus */},
-
-                              select:
-                                     function( event, ui )
-                                     {
-                                         var terms = split( this.value );
-                                         // remove the current input
-                                         terms.pop();
-                                         // add the selected item
-                                         terms.push( ui.item.value );
-                                         // add placeholder to get the comma-and-space at the end
-                                         terms.push( "" );
-                                         this.value = terms.join( ", " );
-                                         return false;
-                                     }
-                          });
-                   }
-             };
-
             if(eval('typeof ' +EDcallback[EDtype]) == 'function')
             EDcallback[EDtype]();
 
@@ -366,12 +413,7 @@ var iEdit = function(){
 
     }
 
-    function remove_addNew(){
-            var addFORM_id    = "new_"+nameENT+'_'+LG;
 
-            $('.TOOLSem > input[name=addNewENT]').parent().show();
-            $("#"+addFORM_id).hide();
-    }
 
 
     function test(){
@@ -389,8 +431,19 @@ var iEdit = function(){
         init :{
             // we can refer to init as this. because is a named object
             set_iEdit :    function(){
+
                 LG =  $("input[name=lang]").val();  //Need to get the current LG;
 
+                // *** ATENTIE - sunt in dubii daca e sau nu bine asa
+                /**
+                 * daca proiectul curent are de facut setari pentru EditMode
+                 *
+                 * de obicei aceste setari vor sta in LOCALS/mainMODEL/ tmpl_mainTemplate/ js
+                 * */
+                if(typeof fmw.set_iEdit_localSettings == 'function')
+                    fmw.set_iEdit_localSettings();
+
+                //===============[set tools]=============================
                 this.tools();
                 this.tools_addEnt();
 
@@ -499,15 +552,43 @@ var iEdit = function(){
                       var nameENT = TYPEarr[TYPEarr.length - 1];        //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
                       var cls     = classes.replace('ENT','');   //ENT || SING - restul claselor fara denumirea de ENT sau SING
                      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                      var BTT = {status : 1, style : '',  name: '+'};
+                     var html_extraBTTS = '';
+                     var BTT = {
+                          status : 1,
+                          style : '',
+                          name: '+'
+                      };
 
-                      if(typeof bttConf[nameENT].addBt !='undefined')
-                          $.extend(BTT, bttConf[nameENT].addBt);
+
+                     if(typeof bttConf[nameENT] !='undefined')
+                     {
+                         if(typeof bttConf[nameENT].addBt !='undefined')
+                             $.extend(BTT, bttConf[nameENT].addBt);
+                        //~~~~~~~~~~~~~~~~~~~~~~~~[ extraBts]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                         if(typeof bttConf[nameENT].extraBts !='undefined'){
+
+                             var extraBts =  bttConf[nameENT].extraBts;
+                             for(key in extraBts){
+
+                                 var extraBtt = {callBack : '', value : key,  name: key};
+                                 $.extend(extraBtt, extraBts[key]);
+
+                                 html_extraBTTS +="<span>" +
+                                                      "<input type='button'  class='editModeBTT'  name='"+extraBtt.name+"' value='"+extraBtt.value+"' " +
+                                                                     " onclick=\""+extraBtt.callBack+"\">" +
+                                                 "</span>" ;
+                             }
+                         }
+
+
+
+                     }
 
                      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
                       return {
                           BTT            : BTT,
+                          html_extraBTTS : html_extraBTTS,
                           nameENT        : nameENT,
                           FORM_class     :  cls+" addForm",
                           FORM_id        : "new_"+nameENT+'_'+LG,
@@ -521,6 +602,7 @@ var iEdit = function(){
                 {
                       var allENTS   = $(this);
                       var firstENT  = $(this).find('div[class^=ENT]:first');
+
 
 
                       if(firstENT.length > 0) // daca sunt elemente in cadrul allENTS
@@ -543,13 +625,17 @@ var iEdit = function(){
                                  (
                                    "<div class='TOOLSem'>" +
                                        "<div class='TOOLSbtn'>" +
+
+                                            elD.html_extraBTTS+
                                             "<span>" +
                                                   "<input type='button'  class='editModeBTT' "+elD.BTT.style+"  name='addNewENT' value='"+elD.BTT.name+"' " +
                                                                         " onclick=\"iEdit.evCallback.addEnt('"+elD.nameENT+"')\">" +
                                                   "<i>Add new</i>" +
                                             "</span>" +
+
                                        "</div>" +
                                    "</div>"
+
                                  );
 
                                   //____________________________________________________________________________________________
@@ -563,7 +649,7 @@ var iEdit = function(){
                                                       "<i>save</i>" +
                                                   "</span>                         " +
                                               "     <span>" +
-                                                      "<input type='button' class='editModeBTT'   name='EXIT' value='x' onclick=\"removeAddNew()\">" +
+                                                      "<input type='button' class='editModeBTT'   name='EXIT' value='x' onclick=\"iEdit.evCallback.remove_addNew('"+elD.nameENT+"'); return false;\">" +
                                                       "<i>Exit</i>" +
                                                   "</span>       " +
                                         "     </div>          " +
@@ -574,8 +660,41 @@ var iEdit = function(){
                                     "</form>"
                                  );
                                   // ___________________________________________________________________________________________
-                                 $("#"+elD.FORM_id).find('div[class^=ED]').empty();
-                                  transform($("#"+elD.FORM_id),'.addForm');
+
+                              // *** ATENTIE trebuie golita si imaginea
+                              /**
+                               * Se golesc toate fieldurile editabile
+                               * apoi se pune o alta clasa fieldurilor editabile - cu CKeditor pentru a
+                               * nu mai trebui sa distrug instantele de CKeditor pentru add-uri
+                               * */
+                                 // probabil ca cele 2 ar trebuii inlantuite
+                              var addForm =  $("#"+elD.FORM_id);
+                              addForm
+                                 //  .find('*[class^=ED]').not('*[class=EDpic]').empty();
+                                   .find('*[class^=ED]').empty();
+
+                              /*addForm
+                                   .find('*[class=EDpic]')
+                                   .css('background','gray');*/
+
+                              addForm
+                                  .find('*[class^=EDeditor]')
+                                  .map(function(){
+                                       var classEditor = $(this).attr('class');
+                                       var classEditor = classEditor.replace('EDeditor', 'EDaddEditor');
+                                       $(this).attr('class', classEditor);
+                               });
+
+                              addForm
+                                  .find('*[class^=EDpic]')
+                                  .map(function(){
+                                       var classEditor = $(this).attr('class');
+                                       var classEditor = classEditor.replace('EDpic', 'EDaddPic');
+                                       $(this).attr('class', classEditor);
+                               });
+
+                              transform($("#"+elD.FORM_id),'.addForm');
+
 
 
                           }//if(BTT.status)
@@ -594,6 +713,89 @@ var iEdit = function(){
         },
         evCallback : {
 
+            // ============[ EDpic - events ]=================================
+            changePic: function(param){
+
+                // pentru mai multa docum vezi functia de mai jos "loadPic"
+                /**
+                 * param = {
+                 *     callBackFn,
+                 *     jqObj_img,
+                  *    newUrl
+                 * }
+                 * */
+                /**
+                 * WORKING ON
+                 *
+                 return   "<img class='"+INPUTclass+"' src='"+imgSrc+"' id='editImg_"+INPUTname+"'>" +
+                          "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                          "<input type='button' name='replaceImg' value='loadImg' " +
+                                               " style='left: 0;position: absolute;'" +
+                                               " onclick='iEdit.evCallback.loadPic(\"editImg_"+INPUTname+"\")'>";
+
+                 [ OR ]
+
+                 return   "<img class='"+INPUTclass+"' src='"+imgSrc+"' id='editAddImg_"+INPUTname+"'>" +
+                           "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                           "<input type='button' name='replaceImg' value='loadImg' " +
+                                                 " style='left: 0;position: absolute;'" +
+                                                 " onclick='iEdit.evCallback.loadPic(\"editAddImg_"+INPUTname+"\")'>" ;
+                 * */
+                param.jqObj_img.attr('src',param.newUrl);
+                param.jqObj_img.next('input[type=hidden]').val(param.newUrl);
+
+
+              },
+            loadPic:   function(id){
+
+                //alert($('img#'+id).attr('src'));
+                //var jqImg = $('img#'+id);
+
+                fmw.KCFinder_popUp({
+                    jqObj_img: $('img#'+id),                  //img-ul al carui url va fi schimbat cu noua imagine aleasa
+                    callBackFn: iEdit.evCallback.changePic   //functie apelata dupa ce a fost selectata o imagine
+                })
+
+
+            },
+
+            generalRemove_addNew: function(){
+
+                      //  this.exitEditContent_byType('ENT');
+
+                        $('.TOOLSem > input[name=addNewENT]').parent().show();
+                        $("form[id^=new_]").hide();
+            },
+
+            exitEditContent_byType: function(TYPE){
+
+                $('textarea[id^=editor_]').map(function(){
+
+                    var  id = $(this).attr('id');
+                    if (CKEDITOR.instances[id]) CKEDITOR.instances[id].destroy(true);
+                });
+
+                var editForm =$('form[id^=EDITform]');
+                if(editForm.length > 0){
+                    editForm.prev().show();
+                    editForm.remove();
+                    // $('.'+TYPE).not('*[id*=_new_]').show();
+                }
+
+
+            },
+
+            //*** posibly deprecated since generalRemove_addNew = exists
+            remove_addNew: function(nameENT){
+                       // this.exitEditContent_byType('ENT');
+                        var addFORM_id    = "new_"+nameENT+'_'+LG;
+
+                        $('.TOOLSem > input[name=addNewENT]').parent().show();
+                        $("#"+addFORM_id).hide();
+                return false;
+            },
+
+            // *** de investigat - posibil deprecated
             exitEditContent_byName : function(Name,id){
 
                 var jqForm = $('form[id=EDITform_'+id+'][class$='+Name+']');
@@ -611,9 +813,33 @@ var iEdit = function(){
 
 
             },
+            general_ExitEditContent: function(){},
+             // set by init.tools_addEnt
+            addEnt: function(nameENT){
+
+                var addFORM_id    = "new_"+nameENT+'_'+LG;
+
+                this.exitEditContent_byType('ENT');
+                this.exitEditContent_byType('SING');
+                //this.remove_addNew(nameENT);
+                $('.TOOLSem > input[name=addNewENT]').parent().hide();
+                $("#"+addFORM_id).show();
+
+              //  $("#"+addFORM_id).find('.PRDpic > img').replaceWith("<img src='./MODELS/products/RES/small_img/site_produs_slice_pisici.jpg' alt='placeholder_img'>");
+
+
+            },
             // set by init.tools
             editContent : function(id,Name,TYPE,cls){
 
+
+                /*    this.generalRemove_addNew();
+                    if(TYPE == 'SING')
+                        this.exitEditContent_byType(TYPE);
+                */
+                    this.generalRemove_addNew();
+                    this.exitEditContent_byType('ENT');
+                    this.exitEditContent_byType('SING');
 
                     var elD = function(){
 
@@ -634,7 +860,7 @@ var iEdit = function(){
                                 }
                                 return tag;  }();
 
-                           var SAVE_tag   = function(){
+                           var SAVE_tag    = function(){
 
                               var tag = '';
                               if ( BTT.saveBt.status )
@@ -680,7 +906,7 @@ var iEdit = function(){
                            return {
                                 BLOCK      : BLOCK,
                                 BTT        : BTT,
-                                DELETE_tag :DELETE_tag,
+                                DELETE_tag : DELETE_tag,
                                 SAVE_tag   : SAVE_tag,
                                 EXTRA_tags : EXTRA_tags,
                                 elmContent : BLOCK.find('.ELMcontent').html()
@@ -741,24 +967,13 @@ var iEdit = function(){
                 // if( eval('typeof '+Name+'_extra != "undefined" '))  eval(Name+'_extra.alterCSS_EDITform()');
 
 
+
                   transform(elD.BLOCK,'form[class$='+Name+'][id=EDITform_'+id+']');
                   elD.BLOCK.hide();
 
 
             },
-            // set by init.tools_addEnt
-            addEnt: function(nameENT){
 
-                var addFORM_id    = "new_"+nameENT+'_'+LG;
-
-                remove_addNew();
-                $('.TOOLSem > input[name=addNewENT]').parent().hide();
-                $("#"+addFORM_id).show();
-
-                $("#"+addFORM_id).find('.PRDpic > img').replaceWith("<img src='./MODELS/products/RES/small_img/site_produs_slice_pisici.jpg' alt='placeholder_img'>");
-
-
-            },
 
             // set by async_Binds
             async_delete : function(Name ,id){

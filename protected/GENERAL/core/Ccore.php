@@ -346,6 +346,7 @@ class Ccore extends CManage
         # date ale modulului curent
         $obj->idC    =  &$this->idC;
         $obj->idT    =  &$this->idT;
+        $obj->level  =  &$this->level;
         $obj->type   =  &$this->type;
 
 
@@ -579,7 +580,7 @@ class Ccore extends CManage
      * @param $ch
      * @param string $p_id
      */
-    public function GET_tree_fromDB($ch,$p_id='', $idT) {
+    public function GET_tree_fromDB($ch,$p_id='', $idT,$level=0) {
 
             foreach($ch AS $id_ch)
             {
@@ -589,13 +590,15 @@ class Ccore extends CManage
                 $q_arr = $this->DB->query($q)->fetch_assoc();
 
 
-                $this->TMPtree[$id_ch]->name    = $q_arr['name_en'];
+                $this->TMPtree[$id_ch]->name    = $q_arr['name_'.$this->lang];
                 $this->TMPtree[$id_ch]->name_ro = $q_arr['name_ro'];
                 $this->TMPtree[$id_ch]->name_en = $q_arr['name_en'];
                 $this->TMPtree[$id_ch]->type    = $q_arr['type'];
                 $this->TMPtree[$id_ch]->id      = $id_ch;
                 $this->TMPtree[$id_ch]->p_id    = $p_id;
+                # idT si level 2 noi concepte
                 $this->TMPtree[$id_ch]->idT     = $idT;
+                $this->TMPtree[$id_ch]->level   = $level;
                 $this->TMPtree[$id_ch]->nameF   = str_replace(' ','_',$this->TMPtree[$id_ch]->name_en) ;
                 /*  $this->TMPtree[$id_ch]->new     = $q_arr['new'];*/
 
@@ -609,7 +612,7 @@ class Ccore extends CManage
 
 
                 if($q_res->num_rows)
-                    $this->GET_tree_fromDB($this->TMPtree[$id_ch]->children,$id_ch, $idT);
+                    $this->GET_tree_fromDB($this->TMPtree[$id_ch]->children,$id_ch, $idT, $level+1);
 
             }
 

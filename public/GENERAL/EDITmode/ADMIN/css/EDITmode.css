@@ -40,10 +40,12 @@ form[id^="EDITform"]
     }
 
 
-        .TOOLSem > .TOOLSbtn{  padding-top: 1px;
-                               position: relative;
-                               left: -10px;
-                               float: right; }
+        .TOOLSem > .TOOLSbtn{
+            /*padding-top: 1px;*/
+           margin-top: -2px;
+           position: relative;
+           left: -10px;
+           float: right; }
 
 .allENTS > .TOOLSem {
          padding-top: 3px;

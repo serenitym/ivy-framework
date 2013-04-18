@@ -1,15 +1,21 @@
 @charset "UTF-8";
 /*RESETS */
+p{
+    margin: 0.5em 0em;
+}
+
+
 .hidden {visibility: visible !important;}
 body{line-height: initial;}
 form{margin: initial;}
 .ui-datepicker {font-size: 11px !important;}
-/*========================================[ KCFinder ]=================================*/
 
 /*=========================================================== [ATmpl] =============================================== */
 
 .ATmpl, .ATmpl-inline      {display: none;}           /* divul pentru ADMIN template */
-form[id^="EDITform"] .ATmpl {display: inherit !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
+form[id^="EDITform"] .ATmpl,
+form.addForm .ATmpl
+{display: inherit !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
 
 form[id^="EDITform"] .ATmpl-inline {display: inline-block !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
 
@@ -158,7 +164,7 @@ form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in 
 .pt9{font-size: 9pt;}
 .pt7{font-size: 7pt;}
 
-.m0 {margin: 0px;}
+.m0 {margin: 0px !important;}
 
 .l5 {margin-left: 5px;}
 .l10 {margin-left: 10px;}
