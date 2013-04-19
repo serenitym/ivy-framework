@@ -447,7 +447,7 @@ var iEdit = function(){
                 this.tools();
                 this.tools_addEnt();
 
-                $("div[class^=ENT] , div[class^=SING]").live({
+                $("*[class^=ENT] , *[class^=SING]").live({
                     mouseover   : function() { $(this).find('.TOOLSem').show();},
                     mouseout    : function() { $(this).find('.TOOLSem').hide(); }
                 });
@@ -495,7 +495,7 @@ var iEdit = function(){
                        }
 
                 }
-                $("div[class^=SING], div[class^=ENT]").map(function()
+                $("*[class^=SING], *[class^=ENT]").map(function()
                    {
 
                        var elD = get_elmDet($(this)); //from element Details
@@ -598,10 +598,10 @@ var iEdit = function(){
 
                }
 
-                $('div[class^=allENTS]').map(function()
+                $('*[class^=allENTS]').map(function()
                 {
                       var allENTS   = $(this);
-                      var firstENT  = $(this).find('div[class^=ENT]:first');
+                      var firstENT  = $(this).find('*[class^=ENT]:first');
 
 
 
@@ -673,9 +673,11 @@ var iEdit = function(){
                                  //  .find('*[class^=ED]').not('*[class=EDpic]').empty();
                                    .find('*[class^=ED]').empty();
 
-                              /*addForm
+                             /* addForm
                                    .find('*[class=EDpic]')
-                                   .css('background','gray');*/
+                                   .attr('src','')
+                                   .css('background','gray')
+                                   ;*/
 
                               addForm
                                   .find('*[class^=EDeditor]')
@@ -690,7 +692,10 @@ var iEdit = function(){
                                   .map(function(){
                                        var classEditor = $(this).attr('class');
                                        var classEditor = classEditor.replace('EDpic', 'EDaddPic');
-                                       $(this).attr('class', classEditor);
+                                       $(this)
+                                           .attr('class', classEditor)
+                                           .attr('src','');
+                                     // $(this).css('background','gray');
                                });
 
                               transform($("#"+elD.FORM_id),'.addForm');

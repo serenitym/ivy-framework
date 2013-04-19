@@ -136,6 +136,42 @@ form[id^="EDITform"] textarea{
     background-color:rgba(255,255,255,0.5);
 }
 
+/*===============[ testing - TWICKS] =======================*/
+form.addForm  input[type="text"],
+form[id^="EDITform"] input[type="text"]{
+
+    border: 0px !important;
+    outline: 1px solid #ccc;
+}
+
+form.addForm textarea,
+form[id^="EDITform"] textarea
+{
+    border: 0px !important;
+    outline: 1px solid #ccc;
+}
+
+form.addForm input[type="text"]:hover,
+form.addForm input[type="text"]:focus,
+
+form[id^="EDITform"] input[type="text"]:hover,
+form[id^="EDITform"] input[type="text"]:focus
+{
+
+    outline: 1px solid rgb(255, 211, 132);;
+    box-shadow: 1px 1px 3px #ffe5b8  ;
+}
+
+form.addForm textarea:hover,
+form.addForm textarea:focus,
+
+form[id^="EDITform"] textarea:hover,
+form[id^="EDITform"] textarea:focus
+{
+    outline: 1px solid rgb(255, 211, 132);;
+    box-shadow: 1px 1px 3px #ffe5b8  ;
+}
+/*===========================================================*/
 
 /*___________________________________________________________________________*/
 .hotTitle {font-size: 15pt; font-weight: bold;}
@@ -281,15 +317,6 @@ span.cke_skin_kama {padding: 0px !important;}
 /*
  .content{position: relative;}*/
 
-/*___________________________[EXCEPTII !!!]________________________________________*/
-
-div.pictures {
-    border-top: 2px white solid !important;
-    border-left: 2px white solid !important;
-}
-div.pictures:hover {
-    border-top: 2px #ff4500 solid !important;
-    border-left: 2px #ff4500 solid !important;
 }
 /*===============================[custom]=====================================*/
 input[type='button'][name='exitEditMODE'] {display: none !important;}
