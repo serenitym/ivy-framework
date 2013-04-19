@@ -201,6 +201,10 @@ class Ccore extends CManage
     }
 
 
+    public function SET_INC_hardAdd($extension,$srcPath){
+
+        $this->{"INC_".$extension} .= $this->{"GET_INCtag_".$extension}($srcPath);
+    }
 
 
 #============================================[ objConf ]================================================================
@@ -717,7 +721,7 @@ class Ccore extends CManage
                $this->idC = ( $_GET['idC'] ?  $_GET['idC'] : $this->idT );
 
                 #======== ATENTIE !!! - EXCEPTIE???  ================================================
-                    if($this->idT == 1 && $this->idC!=1) $this->GET_idT_from_idC($this->idC);
+                //    if($this->idT == 1 && $this->idC!=1) $this->GET_idT_from_idC($this->idC);
                 #======== ATENTIE !!! - EXCEPTIE  ================================================
                return true;
         }
@@ -746,6 +750,7 @@ class Ccore extends CManage
        /* $this->new       = &$this->tree[$this->idC]->new;*/
         $this->id        = &$this->tree[$this->idC]->id;
         $this->p_id      = &$this->tree[$this->idC]->p_id;
+        $this->level     = &$this->tree[$this->idC]->level;
 
          if(    in_array($this->type,$this->models )) $this->type_MOD = 'MODELS';
          elseif(in_array($this->type,$this->plugins)) $this->type_MOD = 'PLUGINS';
