@@ -681,7 +681,7 @@ class Ccore extends CManage
                 # idT si level 2 noi concepte
                 $this->TMPtree[$id_ch]->idT     = $idT;
                 $this->TMPtree[$id_ch]->level   = $level;
-                $this->TMPtree[$id_ch]->nameF   = str_replace(' ','_',$this->TMPtree[$id_ch]->name_en) ;
+                $this->TMPtree[$id_ch]->nameF   = str_replace(' ','_',$this->TMPtree[$id_ch]->name) ;
                 /*  $this->TMPtree[$id_ch]->new     = $q_arr['new'];*/
 
 
