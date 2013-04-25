@@ -499,7 +499,8 @@ class Ccore extends CManage
         if(isset($obj->objREQ))
          $this->SET_objExternalREQ($obj,$obj->objREQ);
 
-        if(method_exists($obj,"_setINI"))  $obj->_setINI(); //__init
+        if(method_exists($obj,"_setINI"))  $obj->_setINI();
+        elseif(method_exists($obj,"_init"))  $obj->_init();
      /*   else{
             if($obj->modName == 'single')
             echo "GET_objREQ obiectul $obj->modName nu are _setINI()";
@@ -1022,3 +1023,5 @@ class Ccore extends CManage
 
     public function __clone  () { }
 }
+
+/* vim: set ft=php: */
