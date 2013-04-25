@@ -137,6 +137,14 @@ P**[]  - un mod de a valida datele venite de la formuri
 
 =====================[ JS ]=================================================================
 
+ - [ probelema .live() ] - deprecated
+    EDITmode.js
+        linia 209 - cu live nu merge cu .on() merge --neclar de ce????
+
+
+- iEdit - addBttConf - linia 473
+      variabila bttConf - cu configurile butoanelor de editare
+     * ATENTIE  trebuie sa ridic un semn de intrebare? oare aceasta variabila nu ar fii mai bine sa fie publica
 
 =====================[ CSS ]================================================================
 

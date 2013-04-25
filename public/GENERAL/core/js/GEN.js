@@ -2,12 +2,11 @@ var procesSCRIPT_file = 'procesSCRIPT.php';                 // intermediaza requ
 //     UTILIZARE:
 // $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } )
 
-
 /* GENERAL purpuse functions */
-
 
 //DOCUMENTEAZA URGENT !!!!
 
+//==============================[ jQuery - extensions ]=====================================
 
 $.fn.collectData = function(){
 
@@ -54,9 +53,15 @@ $.fn.minHeight = function(){
     );
     return min;
 }
-//==============================[ivyMods]==================
 
-var ivyMods = {};
+
+//==============================[ ivyMods ]====================================================
+/* Aici vor sta functiile modulelor */
+var ivyMods = {
+    set_iEdit:{
+        //moduleName : function(){}
+    }
+};
 
 //=============================[ framework related functions ]==============================
 var fmw = function(){
@@ -161,7 +166,7 @@ var fmw = function(){
      * @param callBack
      * @return {*}
      */
-    function asyncConf(options, callBack){
+   function asyncConf(options, callBack){
         /*
           options:
            - parsePOSTfile
@@ -269,6 +274,8 @@ var fmw = function(){
         openKCFinder_popUp: openKCFinder_popUp,
         KCFinder_popUp: KCFinder_popUp
     };
+
+
 }();
 
 
@@ -292,12 +299,11 @@ var testName = 'Un nume';
 testAsync.fnpost({test : 'variabila de test'},['variabila1','variabila2']);*/
 
 
-
-
+//PLEASE ENCAPSULATE
 function hideShow(){
 
 
-    $('button[class^=showHidden]').live(
+    $('button[class^=showHidden]').on(
 
         'click',
         function(){
@@ -311,7 +317,7 @@ function hideShow(){
         }
     );
 
-    $('button[class^=hiddeHidden]').live(
+    $('button[class^=hiddeHidden]').on(
 
         'click',
         function(){
@@ -342,6 +348,7 @@ function hideShow(){
  *
  *  - dupa labels => after(  .splited-labels  )
  */
+//******************ENCAPSULATE
 function convertLabels(){
 
     //
@@ -368,8 +375,6 @@ function convertLabels(){
 
         }
     });
-
-
 
 }
 
@@ -703,17 +708,5 @@ $(document).ready(function(){
     hideShow();
     convertLabels();
 
-    // pentru pozele admin de picManager
-    $('.picDetails button[class^=togglePicDetails] ')
-        .live('click',function(){
-            $(this).siblings('.more-picDetails').toggle();
-             if($(this).hasClass('icon-chevron-down') )
-             {
-                 $(this).attr('class','togglePicDetails icon-chevron-up');
-             }
-             else
-             {
-                 $(this).attr('class','togglePicDetails icon-chevron-down');
-             }
-        });
+
 });

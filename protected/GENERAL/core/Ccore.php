@@ -42,6 +42,18 @@ class CManage extends  item
             }
         }
 
+    function reset_affected($affected_mods, $resetTree_method=''){
+
+            if( isset($affected_mods)){
+               foreach($affected_mods AS $modType =>$mods)
+                {
+                    $this->solve_affectedMOD($mods,$modType);
+                }
+            }
+
+            if($resetTree_method) $this->{$resetTree_method}();
+
+        }
 
     function regenerateALLtrees()    {
 
@@ -57,6 +69,25 @@ class CManage extends  item
               unset($this->TMPtree);
           }
     }
+
+    function reset_tree($treeId){
+
+        unlink(fw_resTree."tree{$treeId}.txt");
+
+    }
+
+    function reset_currentTree(){
+
+           unlink(fw_resTree."tree{$this->idT}.txt");
+
+    }
+
+    function reset_allTrees(){
+
+        foreach(glob(fw_resTree.'*.txt') as $treeFile)
+             unlink($treeFile);
+    }
+
     function create_masterTREE($unlinkTrees = true)     {
 
         /**
@@ -153,7 +184,7 @@ class Ccore extends CManage
      * @param string $template - templateul daca este necesar
      * @param string $ADMINstr - ADMIN
      */
-    public function SET_INC_ext($mod_name,$type_MOD,$extension,$folder='',$template='',$ADMINstr='') {
+    public function SET_INC_ext($mod_name,$type_MOD,$extension,$folder,$template='',$ADMINstr='') {
 
 
             if($folder=='') $folder = $extension;
@@ -164,7 +195,7 @@ class Ccore extends CManage
             $ext_PATH         =  fw_pubPath.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
             $ext_SRC_PATH     =   fw_pubURL.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
 
-            # echo $ext_SRC_PATH.'<br>';
+            #echo $ext_SRC_PATH.'<br>';
             $this->{"INC_".$extension} .= $this->GET_INC_htmlTags($extension,$ext_PATH,$ext_SRC_PATH);
 
 
@@ -179,11 +210,22 @@ class Ccore extends CManage
      * @param string $folder
      * @param string $ADMINstr
      */
-    public function SET_INC_extObj(&$obj, $extension,$folder='',$ADMINstr=''){
+    public function SET_INC_extObj(&$obj, $extension,$folder,$ADMINstr=''){
 
-         $template = isset($obj->template) ? $obj->template : '';
+        $template = isset($obj->template) ? $obj->template : '';
 
-         $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
+        $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
+
+        /**
+         * daca obiectul are setat un template file atunci se va cauta un
+         * path = modType/ modName/ tmpl_tmplName/ js/ js_templateFileName/ ....js
+        */
+        if(isset($obj->template_file))
+        {
+             $folder = $folder."/"."{$folder}_".$obj->template_file;
+             $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
+        }
+
     }
 
     # 5
@@ -194,17 +236,48 @@ class Ccore extends CManage
      * @param string $folder
      * @param string $ADMINstr
      */
-   public function SET_INC_extObj_jsCss(&$obj,$folder='',$ADMINstr=''){
+   public function SET_INC_extObj_jsCss(&$obj,$ADMINstr=''){
 
-        $this->SET_INC_extObj($obj,'js',$folder,$ADMINstr);
-        $this->SET_INC_extObj($obj,'css',$folder,$ADMINstr);
+        $this->SET_INC_extObj($obj,'js','js',$ADMINstr);
+        $this->SET_INC_extObj($obj,'css','css',$ADMINstr);
     }
 
+   //=====================[hard INCS]============================
 
-    public function SET_INC_hardAdd($extension,$srcPath){
+   #1
+   public function SET_INC_hardAdd($extension,$srcPath){
 
         $this->{"INC_".$extension} .= $this->{"GET_INCtag_".$extension}($srcPath);
     }
+
+   #2
+   public function SET_INC_assetsObj($obj){
+
+       # default assets   $obj->INC_assets[js / css]
+      if( isset($obj->assetsIC) )
+      foreach($obj->assetsINC AS $extension)
+           foreach($extension AS $srcPath)
+                $this->SET_INC_hardAdd($extension, $srcPath);
+
+     /**
+     * Assets for a template file  $obj->INC_assets_tmplF[ template_file ] [js / csss]
+     */
+     if( isset($obj->template_file)
+          && isset($obj->{'assetsINC_'.$obj->template_file}) )
+     {
+             $tmplFile_assets = &$obj->{'assetsINC_'.$obj->template_file};
+
+             foreach($tmplFile_assets AS $extension => $paths)
+                 foreach($paths AS $srcPath)
+                     $this->SET_INC_hardAdd($extension, $srcPath);
+
+     }
+
+
+
+   }
+
+
 
 
 #============================================[ objConf ]================================================================
@@ -501,7 +574,10 @@ class Ccore extends CManage
             $objectCreat_stat =  $this->SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre,$ADMINstr);
 
             if( $objectCreat_stat )
-                 $this->SET_INC_extObj_jsCss($this->$mod_name,'',$ADMINstr);
+            {
+                $this->SET_INC_extObj_jsCss($this->$mod_name,$ADMINstr);
+                $this->SET_INC_assetsObj($this->$mod_name);
+            }
 
             return $objectCreat_stat; #daca a fost sau nu creat obiectul
         }
@@ -759,6 +835,56 @@ class Ccore extends CManage
     }
 
 #=======================================================================================================================
+
+
+    public function ctrl_postRequest(){
+
+        if(isset($_POST['moduleName']) && isset($_POST['methName']))
+        {
+
+            $moduleName = $_POST['moduleName'];
+            $methName   = $_POST['methName'];
+
+            if(is_object($this->$moduleName) && method_exists($this->$moduleName,$methName))
+            {
+                //===============[solve request Modules ]==========================
+
+                /**
+                 * Daca exista o metoda care sa parseze posturile
+                 *  - exemplu validare , trim-uire
+                 *  - aruncarea de erori
+                 *
+                 * => atunci va fii apelata aceasta metoda intai
+                 * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
+                 * daca nu se mai intampla nimic
+                */
+                if(method_exists($this->$moduleName,'_handlePosts_'.$methName))
+                {
+                    $validData =$this->$moduleName->{'_handlePosts_'.$methName}();
+                    if($validData)
+                    {
+                        $this->$moduleName->{$methName}();
+                        // =================[refresh page]======================
+                        $this->reLocate();
+                    }
+                    //safty reasons
+                    unset($_POST);
+
+                } else{
+
+                    $this->$moduleName->{$methName}();
+                     // =================[refresh page]======================
+                    $this->reLocate();
+                }
+
+            }
+
+
+        }
+
+       // echo "<b>moduleName</b> ".$_POST['moduleName']." <b>methName</b> ".$_POST['methName'];
+    }
+
     #1  - A | use:
     /**
      *LOGISTICS
@@ -791,11 +917,12 @@ class Ccore extends CManage
         if($this->type)  $this->SET_current();
 
 
-
+        $this->ctrl_postRequest();
 
       }
 
 #=======================================================================================================================
+
 
     # COMMENT THIS!!!
     function __construct($auth=NULL)                {
@@ -861,7 +988,12 @@ class Ccore extends CManage
         if(PROFILER == 1)
             $this->profiler->display($this->DB);
     }
-
+    /**
+     * ATENTIE
+     *  - aceasta functie este apelata din interiorul __wakeup-ului altor module
+     * de ce nu se creaza o metoda de wakeup a core-ului care sa apeleze aceasta metoda??
+     *
+    */
     public function DB_reConnect () {
         /**
          * DE ce nu unset($this->DB) - explicatie
@@ -885,6 +1017,7 @@ class Ccore extends CManage
 
 
     }
+
 
     public function __clone  () { }
 }

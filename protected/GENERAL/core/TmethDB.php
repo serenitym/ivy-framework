@@ -12,6 +12,7 @@
  */
 trait TmethDB{
 
+    // deprecateded
     #=============================[ MANAGE wheres ]=======================================
     public function CONCAT_queryWheres(&$obj1, &$obj2,$where='WHERE '){
 
@@ -124,6 +125,17 @@ trait TmethDB{
         return $output;
     }
 
+    /**
+     *
+     * @param $obj                        - obiectul care a apelat metoda
+     * @param $query                      - query-ul de procesat
+     * @param string $processResMethod    - metoda a $obj care proceseaza orice rand returnat
+     * @param bool $onlyArr               - daca queryul ret un singur record
+     *                                              false - va seta valoriile ret la obj
+     *                                              true - va returna un array[0] = array(colum=>value);
+     * @return array                      - array muldimensional cu toate recordurile returnate de query
+     *                                      si procesate de processResMethod
+     */
     public function GET_objProperties(&$obj,$query,$processResMethod='', $onlyArr = false) {
 
 
@@ -263,6 +275,7 @@ trait TmethDB{
 
     #relocare remote ...sunt situatii cand e nevoie
     public function reLocate($location='', $ANCORA='',$paramAdd='') {
+
          unset($_POST);
          $location = ($location=='' ? $_SERVER['REQUEST_URI'] :$location);
          header("Location: ".$location.$paramAdd.$ANCORA);
@@ -290,6 +303,21 @@ trait TmethDB{
         # poate ca pe viitor as  vrea sa am ceva pentru affected
 
     }
+
+    public function
+    DMLsql_bulk($queries,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='') {
+
+        foreach($queries AS $query){
+
+            $this->DB->query($query);
+        }
+
+        if($reset)  $this->reLocate($location,$ANCORA,$paramAdd);
+        else return $errorMessage;
+
+
+    }
+
 
     /**
      * ??? debatable

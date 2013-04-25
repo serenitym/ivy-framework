@@ -1,0 +1,95 @@
+
+this is the default templateFile
+
+<!-- Folosirea variabilelor si metodelor din cadrul obiectului curent
+    La care ne referim cu $o->varName
+-->
+<div>
+
+    <p>{$o->var1}</p>
+    <p>{$o->var2}</p>
+    <p>{$o->var3}</p>
+
+    <!--$this = obiectul principal core -->
+    <p>{$this->var4}</p>
+
+    <!--Apelarea metodelor-->
+    <p>".$o->methName()."</p>
+    <p>".$this->methName()."</p>
+
+    
+</div>
+
+<!--Iterarea prin array-uri  - multidemsionale (ex: recorduri provenite din BD)
+    ex: $o->news = recordurile news-urilor
+                 = array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
+
+    » preluate cu GET_objProperties
+    =====================================================================
+     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$obj='')
+
+     $items = arra
+-->
+
+<div>
+    ".$this->renderDisplay_Items(
+        $o->news,
+        "
+            <div>
+                <p>Title : {~ao->title}</p>
+                <p>Lead : {~ao->lead}</p>
+                <!--Conditionare concatenata-->
+                `.(
+                    ~ao->pictureUrl
+                    ? `<p>Picture : <img src='{~ao->pictureUrl}'> </p>`
+                    : `There is no picture`
+                ).`
+
+            </div>
+        "
+
+    )."
+
+</div>
+
+<!-- Iterarea prin array-uri multidensionale
+
+     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='')
+
+        - logica este idem cu cea a arra-urile muldimensionale doar
+        ca ne referim la itemul curent cu ~i sau $i pentru tmplStr / tmplPath
+
+ -->
+<div>
+    ".$this-> renderDisplay_Items_uniDimens(
+        $this->someItems,
+        <p>{~i}</p>
+    )."
+</div>
+
+
+
+<!-- Integrarea de templateuri ale altui obiect
+
+    renderDisplay_fromObj(&$obj, $tmplStr='', $tmplPath='')
+            - ase folosii parametrul de tmplPath al metodei
+-->
+
+ <div>
+     ".$this->renderDisplay_fromObj(
+        $this->objName,
+        '',
+        $this->objName->modType.'/'
+            .$this->objName->modName.'/'.
+            .'tmpl/templateFile.html'
+     )."
+
+
+     ".$this->renderDisplay_fromObj(
+            $this->objName,
+            '',
+            'MODELS/objName/tmpl/templateFile.html'
+     )."
+
+
+ </div>

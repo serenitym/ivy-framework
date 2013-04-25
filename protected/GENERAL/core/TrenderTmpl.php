@@ -73,6 +73,19 @@ trait TrenderTmpl {
     }
 
     # 2
+    /**
+     * Parsare array muldimensional
+     *
+     * @param $items                - array-ul de forma array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
+     * @param string $tmplStr       - template trimis direct ca string in acest template ne vom referii la
+     *                                  -  itemul unui array ca ~ao->propName
+     *                                  - optional la $o cu ~o (adta daca este trimis prin $obj)
+     *                                  - ghilimelele duble se vor scrie cu `
+     * @param string $tmplPath      - path-ul la orice alt template care va folosii acest array
+     *                                  - in acest template ne putem referii la variabile in modul normal $ si concatenari cu "
+     * @param string $obj           - daca se doreste sa se faca referire in interiorul templateului de array la obiectul principal
+     * @return string               - returneaza templateul randat
+     */
     public function
     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$obj='') {
 
@@ -108,6 +121,16 @@ trait TrenderTmpl {
     }
 
     #2
+    /**
+     * Parsare array unidensional
+     *  - similar cu renderDisplay_Items
+     *
+     * @param $items
+     * @param string $tmplStr
+     * @param string $tmplPath
+     * @param string $obj
+     * @return string
+     */
     public function
     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='') {
 
@@ -147,6 +170,13 @@ trait TrenderTmpl {
     }
 
 
+    /**
+     * render Template with obj properties
+     * @param $obj
+     * @param string $tmplStr
+     * @param string $tmplPath
+     * @return string
+     */
     public function
     renderDisplay_fromObj(&$obj, $tmplStr='', $tmplPath=''){
 
@@ -249,6 +279,7 @@ trait TrenderTmpl {
 
         return $mod_resPath;
     }
+
     public function
     get_resPath_forObj(&$obj, $resName=''){
 
@@ -279,26 +310,27 @@ trait TrenderTmpl {
 
          if(is_file($resPath))
          {
-             $pageContent = file_get_contents($resPath);
+             return file_get_contents($resPath);
+
          } else {
 
              if(is_object($obj) && method_exists($obj, '_setRes'))
              {
                 $obj->resPath = $resPath;
+                $obj->_setRes($resPath);
+                if(is_file($resPath))
+                    return file_get_contents($resPath);
 
-                if($obj->_setRes($resPath))
-                    $this->get_resContent($resPath);
-
-                 else
-                      $pageContent = 'Nu exista continut la pagina <b>'.$resPath.'</b>';
+               else
+                   return 'Nu exista continut la pagina <b>'.$resPath.'</b>';
 
              }
              else {
-                 $pageContent = 'Nu exista continut la pagina <b>'.$resPath.'</b>';
+                 return 'Nu exista continut la pagina <b>'.$resPath.'</b>';
              }
          }
 
-        return  $pageContent;
+
     }
 
     public function
@@ -315,7 +347,16 @@ trait TrenderTmpl {
 
     #===================[ general controler ]==========================================
 
-
+    /**
+     * INCEARCA SA SOLUTIONEZE display-ul pentru un obiect
+     *  - obj->DISPLAY()
+     *  - obj->DISPLAY_page
+     *  - obj->DISPLAY_ResPath
+     *  - obj->ctrlDisplay_fromObj($obj)
+     *
+     * @param $obj
+     * @return string
+     */
     public function
     ctrlDisplay(&$obj){
 
@@ -343,6 +384,10 @@ trait TrenderTmpl {
 
 
 
+
+
+
+    #=====deprecated
 
     /**
      * CHECK condition by eval()

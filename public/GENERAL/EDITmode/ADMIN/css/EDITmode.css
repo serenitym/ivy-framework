@@ -8,13 +8,13 @@
     {  position: relative; }
 
 .SING, .ENT
-    {border: 1px rgba(255, 255, 255, 0) solid;}
+    {outline: 1px rgba(255, 255, 255, 0) solid;}
 
 .SING:hover, .ENT:hover
-    {border: 1px solid #ddd;}
+    {outline: 1px solid #ddd;}
 
 form[id^="EDITform"]
-   {border: 1px solid #eee;}
+   {outline: 1px solid #eee;}
 
 .SING:hover, .ENT:hover, form[id^="EDITform"]
 {
@@ -22,6 +22,16 @@ form[id^="EDITform"]
     background-color: rgba(200,200,200,0.13);
 }
 
+
+/*
+
+.SING:hover > .TOOLSem,
+.ENT:hover > .TOOLSem,
+form[id^="EDITform"]:hover > .TOOLSem,
+.addForm:hover > .TOOLSem {
+    visibility: visible;
+}
+*/
 
 
 .ELMcontent {padding-top: 20px;}
@@ -32,11 +42,14 @@ form[id^="EDITform"]
 .TOOLSem {position: absolute;
           top:0px;
           left: 0px;
+         /* background-color: #E8EDF0;*/
+
           background-color: #ABBAC4;
           width: 100%;
           height: 20px;
           /*border-radius: 2px 2px 0px 0px;*/
           border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+          /*visibility: hidden;*/
     }
 
 
@@ -55,9 +68,18 @@ form[id^="EDITform"]
          background-color: #E8EDF0;
          border-radius: 4px;
         }
+
+/** testing */
+
+.allENTS > .TOOLSem { visibility: hidden;}
+
+.allENTS:hover > .TOOLSem { visibility: visible;}
+
+
 /*________________________________________________________________________________*/
     /*.TOOLSem input[type='button'],
      .TOOLSem input[type=submit],*/
+        /*  .TOOLSem .editModeBTT{*/
           .TOOLSem .editModeBTT{
 
               color: rgba(0, 0, 0, 0.65);
@@ -75,20 +97,20 @@ form[id^="EDITform"]
  .TOOLSem input[type='button']:hover,
  .TOOLSem input[type=submit]:hover{ cursor: pointer; }
 
- .TOOLSem input.editModeBTT{ background: #D2D6E2;}
- .TOOLSem input.editModeBTT:hover{ background:  #F4F5FA;}
+ .TOOLSem input.editModeBTT{ background: #D2D6E2 ;}
+ .TOOLSem input.editModeBTT:hover{ background:  #F4F5FA ;}
 
 /*________________________[edit button]________________________________________*/
- .TOOLSem input[class=editModeBTT][name='EDIT']{ background: #b6fff5; margin-top: 3px;/*nu stiu de ce e nevoie de asta*/}
- .TOOLSem input[class=editModeBTT][name='EDIT']:hover{ background:  #00ffff;}
+ .TOOLSem .editM-edit{ background: #b6fff5 !important; margin-top: 3px;/*nu stiu de ce e nevoie de asta*/}
+ .TOOLSem .editM-edit:hover{ background:  #00ffff !important;}
 
 /*_______________________[ save edit]__________________________________________*/
- .TOOLSem input[class=editModeBTT][value='s']{ background: #b5ff83;}
- .TOOLSem input[class=editModeBTT][value='s']:hover{ background:  #93ff23;}
+ .TOOLSem .editM-save{ background: #b5ff83 !important;}
+ .TOOLSem .editM-save:hover{ background:  #93ff23 !important;}
 
-/*_______________________[ save edit]__________________________________________*/
- .TOOLSem input[class=editModeBTT][value='x']{ background: #ffbf64;}
- .TOOLSem input[class=editModeBTT][value='x']:hover{ background:  #ff9b00;}
+/*_______________________[ exit edit]__________________________________________*/
+ .TOOLSem .editM-exit{ background: #ffbf64 !important;}
+ .TOOLSem .editM-exit:hover{ background:  #ff9b00 !important;}
 
 
 
@@ -114,26 +136,29 @@ form[id^="EDITform"]
 
 
 
-form[id^="EDITform"] input[type="text"]{
+
+form.addForm input[type="text"],
+form[id^="EDITform"] input[type="text"],
+
+form.addForm select,
+form[id^="EDITform"] select,
+
+form.addForm textarea,
+form[id^="EDITform"] textarea
+{
     /*padding: 0px;*/
  /*   outline-offset: 0px;
     border: 0px !important;
     outline: 1px inset #ddd;*/
 
     margin: 0px;
-    padding: 1px 2px;
+    padding: 0px 2px;
     background-color:rgba(255,255,255,0.5);
 }
-form[id^="EDITform"] textarea{
-    margin: 0px;
-    padding: 0px 2px;
 
+form[id^="EDITform"] textarea{
     overflow: hidden !important;
     resize: none !important;
-
-   /* border: 0px !important;
-    outline: 1px inset #ddd;*/
-    background-color:rgba(255,255,255,0.5);
 }
 
 /*===============[ testing - TWICKS] =======================*/
