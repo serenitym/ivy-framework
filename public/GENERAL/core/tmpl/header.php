@@ -10,7 +10,7 @@
         echo
 
            //$core->SEO->DISPLAY().
-           '<base href="'.publicURL.'" />'.
+           //'<base href="'.publicURL.'" />'.
 
            (isset($core->admin)
                    ? ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
