@@ -803,6 +803,7 @@ class Ccore extends CManage
         if(PROFILER == 1)
             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
 
+
        /**
          * DataBase connection
         */
