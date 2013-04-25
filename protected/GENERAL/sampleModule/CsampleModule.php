@@ -36,17 +36,29 @@ class CsampleModule{
  *
  *    GET_objProperties(&$obj,$query,$processResMethod='', $onlyArr = false)
  *
- *      *  $obj                        - obiectul care a apelat metoda
-        *  $query                      - query-ul de procesat
-        *  string $processResMethod    - metoda a $obj care proceseaza orice rand returnat
-        *  bool $onlyArr               - daca queryul ret un singur record
+ *      *  $obj                              - obiectul care a apelat metoda
+        *  $query                            - query-ul de procesat
+        *  string $processResMethod($row)    - metoda a $obj care proceseaza orice rand returnat
+        *  bool $onlyArr                     - daca queryul ret un singur record
         *                                              false - va seta valoriile ret la obj
         *                                              true - va returna un array[0] = array(colum=>value);
-        * return array                 - array muldimensional cu toate recordurile returnate de query
+        * return array                     - array muldimensional cu toate recordurile returnate de query
         *                                      si procesate de processResMethod
+ *
+ *   USE LIKE this
+ *      $this->news = $this->C->GET_objProperties($this, $query, 'procesNews');
+ *
+ *   =>$this->news = array(0=> [title=>'', content=>'', idNews=>'' ], 1=> [], ...);
  *
  *
 */
+    /**
+     * Apelata imediat dupa instantierea modulului
+     * like a second __construct()
+     */
+    function _setINI(){
+
+    }
     function DISPLAY(){
 
         return 'Acesta ar trebui sa fie un sample';

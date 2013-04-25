@@ -5,7 +5,7 @@ class ACsampleModule extends CsampleModule{
 /**
  * USABLE - TmethDB - call them from $this->C->methName
  *
- *  reLocate($location='', $ANCORA='',$paramAdd='')
+ *  reLocate($location='', $ANCORA='',$paramAdd='');
  *
  *  DMLsql($query,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='')
  *

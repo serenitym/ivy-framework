@@ -76,7 +76,7 @@ trait TrenderTmpl {
     /**
      * Parsare array muldimensional
      *
-     * @param $items                - array-ul de forma array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
+     * @param array $items           - array-ul de forma array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
      * @param string $tmplStr       - template trimis direct ca string in acest template ne vom referii la
      *                                  -  itemul unui array ca ~ao->propName
      *                                  - optional la $o cu ~o (adta daca este trimis prin $obj)

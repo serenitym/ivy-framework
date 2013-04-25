@@ -18,7 +18,7 @@ include:
 
 #numele templateului
 template: ""
-#numele fisierului de template
+#numele fisierului de template , default = numele modulului ex: sampleModule.html
 template_file: ""
 
 
