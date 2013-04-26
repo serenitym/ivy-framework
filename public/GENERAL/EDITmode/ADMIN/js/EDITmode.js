@@ -256,7 +256,7 @@ var iEdit = function(){
         var INPUTname    = EDname+"_"+LG;
         var INPUTclass   = 'EDITOR '+EDname;
         var INPUTclasses = $(EDtag).attr('class').replace(EDtype, 'EDITOR');
-        var EDtag_height = $(EDtag).height()+'px';
+        var EDtag_height = $(EDtag).height();
         var EDtag_width  = $(EDtag).width();
 
 
@@ -330,7 +330,7 @@ var iEdit = function(){
                    CKEDITOR.replace( 'editor_'+EDname+'_'+LG,
                                          {
                                              toolbar : toolbar_conf,
-                                             height : EDtag_height
+                                             height : EDtag_height+'px'
                                            ,width : EDtag_width
                                          });
                                  //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
@@ -346,6 +346,9 @@ var iEdit = function(){
                                          });
                                  //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
 
+             },
+             EDtxa: function(){
+                  $(formSelector+' textarea[name='+INPUTname+']').css('height',EDtag_height);
              },
              EDdate   : function(){
                             $(formSelector+' input[name='+INPUTname+']').datepicker({dateFormat: 'yy-mm-dd'});
