@@ -12,12 +12,16 @@ form{margin: initial;}
 
 /*=========================================================== [ATmpl] =============================================== */
 
-.ATmpl, .ATmpl-inline      {display: none;}           /* divul pentru ADMIN template */
+.ATmpl, .ATmpl-inline      {display: none; }           /* divul pentru ADMIN template */
 form[id^="EDITform"] .ATmpl,
 form.addForm .ATmpl
 {display: inherit !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
 
-form[id^="EDITform"] .ATmpl-inline {display: inline-block !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
+.addForm  .ATmpl-inline,
+form[id^="EDITform"] .ATmpl-inline
+{
+    display: inline-block !important;
+}      /*  cand ajunge in cadrul unui form se face vizibil  */
 
 form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in cadrul unui formde EDITARE*/
 
