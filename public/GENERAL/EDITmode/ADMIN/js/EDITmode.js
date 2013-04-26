@@ -262,22 +262,22 @@ var iEdit = function(){
 
         var EDreplace ={
             EDtxtp   : function (){
-                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclass+"' value='"+EDvalue+"' placeholder='"+EDname+"' />";
+                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclasses+"' value='"+EDvalue+"' placeholder='"+EDname+"' />";
                       },
 
             EDtxt    : function (){
-                       return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclass+"' value='"+EDvalue+"' />";},
+                       return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclasses+"' value='"+EDvalue+"' />";},
             EDdate   : function (){
-                       return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclass+"' value='"+EDvalue+"' />";},
+                       return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclasses+"' value='"+EDvalue+"' />";},
             EDtags   : function (){
                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclass+"' value='"+EDvalue+"' />";},
 
             EDtxa    : function (){
-                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"' >"+EDvalue+"</textarea>"; },
+                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"' >"+EDvalue+"</textarea>"; },
             EDeditor : function (){
-                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"'  id='editor_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
+                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"'  id='editor_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
             EDaddEditor : function (){
-                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclass+"'  id='editorAdd_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
+                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"'  id='editorAdd_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
             EDpic    : function (){
                              //var  IDpr = $('input[name=IDpr]').val();
                              // if(typeof IDpr!='undefined') INPUTname='';
@@ -760,6 +760,10 @@ var iEdit = function(){
                                        $(this).attr('class', classEditor);
                                });
 
+                              /**
+                               * Pentru formularul de adaugare de pic se creeaza un alt tip de ED
+                               * EDaddPic
+                               * */
                               addForm
                                   .find('*[class^=EDpic]')
                                   .map(function()
@@ -770,14 +774,33 @@ var iEdit = function(){
                                        var imgHeight = $(this).height();
                                        var imgWidth = $(this).width();
 
+                                      /**
+                                       * daca imaginea nu are width sau height atunci se presupune ca parintele care
+                                       * contine imaginea va avea unul din cele doua
+                                        */
+                                       if(!imgHeight) imgHeight =  $(this).parent().height();
+                                       if(!imgWidth) imgWidth = $(this).parent().width();
+
                                        $(this)
                                            .attr('class', classEditor)
                                            .attr('src',"http://placehold.it/"+imgWidth+"x"+imgHeight+'&text=add%20Image');
                                      // $(this).css('background','gray');
                                });
 
-                              transform($("#"+elD.FORM_id),'.addForm');
-                              $('.addForm').find('a').on('click', function(){return false;});
+                              /**
+                               * Daca nu exista ENTS visible inseamna ca nu a fost adaugat nici un ENT
+                               * => trebuie sa apara TOOLSem din start , fara mouse over
+                               * */
+                              var ENTS = addForm.next('*[class^=ENT]:visible');
+                              if(ENTS.length == 0) {
+                                  addForm.prev('.TOOLSem').css('visibility','visible');
+                              }
+
+                              $('form[class$=addForm][id='+elD.FORM_id+']').find('a').on('click', function(){ return false;});
+                              // KK
+                              $('form[class$=addForm][id='+elD.FORM_id+']').find('a[rel=alterPics_group] >img').unwrap();
+                              transform($("#"+elD.FORM_id),'form[class$=addForm]');
+                            //  alert( $('form[class$=addForm]').find('a').length);
 
 
 
@@ -902,6 +925,8 @@ var iEdit = function(){
             addEnt: function(nameENT){
 
                 var addFORM_id    = "new_"+nameENT+'_'+LG;
+
+
 
                 this.exitEditContent_byType('ENT');
                 this.exitEditContent_byType('SING');

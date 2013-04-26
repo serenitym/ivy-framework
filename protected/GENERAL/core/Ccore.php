@@ -672,7 +672,7 @@ class Ccore extends CManage
                 $q_arr = $this->DB->query($q)->fetch_assoc();
 
 
-                $this->TMPtree[$id_ch]->name    = $q_arr['name_'.$this->lang];
+                $this->TMPtree[$id_ch]->name    = $q_arr['name_'.$this->langs[0]];
                 $this->TMPtree[$id_ch]->name_ro = $q_arr['name_ro'];
                 $this->TMPtree[$id_ch]->name_en = $q_arr['name_en'];
                 $this->TMPtree[$id_ch]->type    = $q_arr['type'];
