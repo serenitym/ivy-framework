@@ -213,37 +213,6 @@ trait TgenTools{
         return $imgFiles_Urls;
     }
 
- #===================================================================================================================
-
-    # Testing - not sure if this are usefull anymore...???DEPRECATED ???
-    static function error_ech($message, $from='', $var_dump=''){
-
-            echo "<p class='text-error '><b> $from :</b> $message </p>";
-            if($var_dump)
-                var_dump($var_dump);
-        }
-    static function info_ech($message, $from=''){
-
-                echo "<p class='text-success '><b> $from :</b> $message </p>";
-        }
-
-    static function error_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
-
-            echo "<p class='text-error '><b> {$obj->modName}->  $meth :</b> $message </p>";
-            if($var_dump)
-                var_dump($var_dump);
-        }
-    static function info_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
-
-                echo "<p class='text-success '><b> {$obj->modName} -> $meth :</b> $message </p>";
-               if($var_dump)
-                  var_dump($var_dump);
-        }
-
- #===================================================================================================================
-
-
-
 
 
     static function READyml($file_yml, &$obj =''){
@@ -276,4 +245,137 @@ trait TgenTools{
             return " Obiectul $objName nu este instantiat <br>";
         }
     }
+
+
+
+
+ #============================================[proces POSTS]=======================================================================
+
+  function valid_string($val, $fbk=''){
+
+      if(is_string($val)) {
+          return true;
+      }
+      else{
+
+        // daca are un feedback setat
+        if($fbk){
+            $this->feedback->setFb($fbk['type'], $fbk['name'], $fbk['mess']);
+
+            // daca acest feedback este de eroare
+            if($fbk['type'] != 'error') return true;
+
+        }
+
+        return false;
+      }
+  }
+  function valid_notEmpty($val, $fbk=''){
+
+      if(!empty($val)) {
+          return true;
+      }
+      else{
+
+        echo 'valid_notEmpty '.$val;
+        // daca are un feedback setat
+        if($fbk){
+            $this->feedback->setFb($fbk['type'], $fbk['name'], $fbk['mess']);
+
+            // daca acest feedback este de eroare
+            if($fbk['type'] != 'error') return true;
+
+        }
+        return false;
+      }
+  }
+  function processPosts( $expectedPosts){
+
+      /**
+       *
+       * updatePrev:
+              title:
+
+                  validRules:
+                    string:
+                      fbk: {type: "warning", name: "News Title", mess: "Your title should be a string" }
+
+                    notEmpty:
+                       fbk: {type: "error", name: "News Title", mess: "Your news must have a title" }
+
+       *
+                newsDate: ""
+
+                extLink: ""
+
+                lead:
+                  fbk: {type: "error", name: "News Lead", mess: "Your news must have a Lead" }
+                  varType: "string"
+
+                newsPic: ""
+      */
+
+      $psts = new stdClass();
+      $lg = $this->lang;
+
+      $psts->validation = true;
+      $psts->vars = new stdClass();
+
+      foreach($expectedPosts AS $prop => $det){
+
+          // preia valoarea din post
+          $varName = isset($det['pstVal']) ? $det['pstVal'] : $prop;
+
+          $pst = isset($_POST[$varName."_".$lg])
+                 ?  $_POST[$varName."_".$lg]
+                 : ($_POST[$varName] ? $_POST[$varName] : '' );
+
+          // retine postul in obiect
+          $psts->vars->$prop = $pst = trim($pst);
+
+
+          //echo $varName." = ".$pst."<br>";
+          // vezi daca are reguli de validare
+          if(isset($det['validRules']))
+              foreach($det['validRules'] AS $validRule => $validDet){
+
+                  $psts->validation = $this->{'valid_'.$validRule}( $pst, $validDet['fbk'] );
+
+              }
+      }
+
+      return $psts;
+
+  }
+
+ #============================================[staging -> _dep_]=======================================================================
+
+    # Testing - not sure if this are usefull anymore...???DEPRECATED ???
+    static function error_ech($message, $from='', $var_dump=''){
+
+            echo "<p class='text-error '><b> $from :</b> $message </p>";
+            if($var_dump)
+                var_dump($var_dump);
+        }
+    static function info_ech($message, $from=''){
+
+                echo "<p class='text-success '><b> $from :</b> $message </p>";
+        }
+
+    static function error_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+
+            echo "<p class='text-error '><b> {$obj->modName}->  $meth :</b> $message </p>";
+            if($var_dump)
+                var_dump($var_dump);
+        }
+    static function info_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+
+                echo "<p class='text-success '><b> {$obj->modName} -> $meth :</b> $message </p>";
+               if($var_dump)
+                  var_dump($var_dump);
+        }
+
+ #===================================================================================================================
+
+
 }

@@ -55,8 +55,8 @@ var iEdit = function(){
      *                            })
      *                },
      *            edit: {},
-     *            deleteBt : {status : 1, atrName:"delete_"+Name, atrValue: 'd' ,methName:''},
-                  saveBt : {status : 1, atrName:"save_"+Name, atrValue: 's' ,methName:''}
+     *            deleteBt : {methName:'', status : 1, atrName:"delete_"+Name, atrValue: 'd' },
+                  saveBt : {methName:'',status : 1, atrName:"save_"+Name, atrValue: 's' }
 
      *       },
      *
@@ -227,7 +227,7 @@ var iEdit = function(){
     }
 
 
-    function transform(BLOCK,formSelector){
+    function transform(BLOCK,formSelector, elmName){
 
              BLOCK.find('*[class^=ED]').map(function(){
                  // selELEM =  $(this).attr('class')+' ';
@@ -244,11 +244,11 @@ var iEdit = function(){
 
 
                 //  alert('EDname '+EDtype+'  EDname '+EDname+' value '+EDvalue);
-                  replace(EDtype, EDname, EDvalue,formSelector);
+                  replace(EDtype, EDname, EDvalue,formSelector, elmName);
           });
     }
 
-    function replace(EDtype, EDname, EDvalue,formSelector){
+    function replace(EDtype, EDname, EDvalue,formSelector, elmName){
 
           //alert(EDtype+' '+EDname+" "+EDvalue+" "+formSelector);
 
@@ -294,6 +294,12 @@ var iEdit = function(){
                                                  "</div>"
                                                  ;*/
                             var imgSrc = $(EDtag).attr('src');
+
+                            /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );
+                            var hiddenValue = $(EDtag+"[src*=placehold.it]").length > 0
+                                              ? ''
+                                              : imgSrc;*/
+
 
                             //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
 
@@ -387,7 +393,6 @@ var iEdit = function(){
                }
            });*/
 
-
                     $('input[name='+INPUTname+']')
                    // don't navigate away from the field on tab when selecting an item
                      .bind( "keydown", function( event ) {
@@ -399,7 +404,7 @@ var iEdit = function(){
                      .autocomplete
                      ({
                          minLength: 0,
-                         source:
+                         /*source:
                                 function( request, response )
                                 {
                                     $.post(
@@ -414,6 +419,30 @@ var iEdit = function(){
                                         "json"
                                     );
 
+                                },*/
+                         source:
+                                function( request, response )
+                                {
+                                    // wwant to do it like this
+                                   /* if(typeof bttConf[elmName] !='undefinder' &&  typeof bttConf[elmName].EDs[EDname] !='undefinder' ){
+
+                                        var jsonPath = bttConf[elmName].EDs[EDname].getJson;
+                                        $.getJSON(jsonPath, function(data) {
+                                             response( $.ui.autocomplete.filter(
+                                             data, extractLast( request.term ) ) );
+                                        });
+                                    }*/
+                                    $.post(
+                                        procesSCRIPT_file,
+                                        {parsePOSTfile : parsePOSTfile_getTags},
+                                         function(data)
+                                         {
+                                             // delegate back to autocomplete, but extract the last term
+                                               response( $.ui.autocomplete.filter(
+                                                   data, extractLast( request.term ) ) );
+                                         },
+                                        "json"
+                                    );
                                 },
 
                          focus:
@@ -460,6 +489,8 @@ var iEdit = function(){
 
     //========================================[ PUBLIC FUNCTIONS ]====================================
     return {
+
+        bttConf : bttConf,
 
         add_bttConf : function(bttName,bttName_conf ){
 
@@ -802,7 +833,7 @@ var iEdit = function(){
                               $('form[class$=addForm][id='+elD.FORM_id+']').find('a').on('click', function(){ return false;});
                               // KK
                               $('form[class$=addForm][id='+elD.FORM_id+']').find('a[rel=alterPics_group] >img').unwrap();
-                              transform($("#"+elD.FORM_id),'form[class$=addForm]');
+                              transform($("#"+elD.FORM_id),'form[class$=addForm]', elD.nameENT);
                             //  alert( $('form[class$=addForm]').find('a').length);
 
 
@@ -1089,7 +1120,7 @@ var iEdit = function(){
 
 
 
-                  transform(elD.BLOCK,'form[class$='+Name+'][id=EDITform_'+id+']');
+                  transform(elD.BLOCK,'form[class$='+Name+'][id=EDITform_'+id+']', Name);
                   // disable all links 'a' in this form
                  $('form[class$='+Name+'][id=EDITform_'+id+']').find('a').on('click', function(){return false;});
 

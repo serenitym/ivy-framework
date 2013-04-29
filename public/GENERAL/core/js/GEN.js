@@ -263,6 +263,7 @@ var fmw = function(){
                       else{ console.log("Selectorul folosit nu a fost bun"); }
 
                   }
+
               };
 
           return $.extend(prop, fns);
