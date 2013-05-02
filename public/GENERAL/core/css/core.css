@@ -32,7 +32,7 @@ form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in 
 /*========================================[ popUp - styling ]========================================================*/
 
 #popUp-canvas{
-    z-index: 900;
+    z-index: 9901;
     height: 100%;
     width: 100%;
     position: fixed;
@@ -43,7 +43,7 @@ form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in 
         padding: 10px 15px;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         border-radius: 7px;
-        z-index: 999;
+        z-index: 9000;
         background: white;
         min-width:  500px;
         position: absolute;
@@ -59,6 +59,11 @@ form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in 
             margin-bottom: 15px;
         }
 
+             #popUp-header .close{
+                 width: 25px;
+                 text-align: center;
+                 float: right;
+             }
         #popUp-content{
             min-height: 200px;
         }

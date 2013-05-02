@@ -841,7 +841,8 @@ class Ccore extends CManage
 
     public function ctrl_postRequest(){
 
-        //var_dump($_POST);
+
+       // var_dump($_POST);
         if(isset($_POST['moduleName']) && isset($_POST['methName']))
         {
 
@@ -869,6 +870,7 @@ class Ccore extends CManage
                     {
 
                         $obj->{$methName}();
+
                         unset($_POST);
                         // =================[refresh page]======================
 
@@ -878,7 +880,6 @@ class Ccore extends CManage
                     unset($_POST);
 
                 } else{
-
                     $obj->{$methName}();
                     unset($_POST);
                      // =================[refresh page]======================
@@ -886,8 +887,18 @@ class Ccore extends CManage
                 }
 
             }
+            else{
 
+             /*   if(!is_object($this->$moduleName))
+                    echo "There is no object ".$moduleName;
+                if(! method_exists($this->$moduleName,$methName))
+                    echo " with method ".$methName;*/
 
+            }
+
+        }
+        else {
+         //   echo "No post moduleName or methName";
         }
 
        // echo "<b>moduleName</b> ".$_POST['moduleName']." <b>methName</b> ".$_POST['methName'];

@@ -150,7 +150,7 @@ trait TrenderTmpl {
                 $display = '';
                 # pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
                 $o  = &$obj;
-                foreach($items AS $i)
+                foreach($items AS $key => $i)
                 {
                     $displayItem = '';
                     eval("\$displayItem = \"$content\";");

@@ -9,7 +9,9 @@
 ?>
 
 <script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js" type="text/javascript"></script>
+<!--<script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js" type="text/javascript"></script>
+<script type="text/javascript"  src="fw/GENERAL/core/js/_dep_GEN.js" type="text/javascript"></script>-->
+
 <!-- <script type="text/javascript"  src="fw/GENERAL/core/js/rect.js"></script>-->
 <!-- <script type="text/javascript"  src="GENERAL/js/kcfinder"></script>-->
 <!-- <script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js"></script>-->
