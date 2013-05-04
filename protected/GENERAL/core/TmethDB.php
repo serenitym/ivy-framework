@@ -10,267 +10,173 @@
  * @author  Ioana Cristea
  * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
  */
-trait TmethDB{
+trait TmethDB {
 
-    // deprecateded
-    #=============================[ MANAGE wheres ]=======================================
-    public function CONCAT_queryWheres(&$obj1, &$obj2,$where='WHERE '){
+    use _dep_TmethDB;
 
-
-        $RETwhere = '';
-        if(isset($obj1->queryWheres) && isset($obj2->queryWheres))
-        {
-            $queryWheres = array_merge($obj1->queryWheres,$obj2->queryWheres );
-
-            if(count($queryWheres) > 0)
-                $RETwhere = $where.implode(" AND ", $queryWheres);
-
-        }
-        return $RETwhere;
-
-    }
 
     /**
-     * STRINGUL DE WHERE pentru un query bazat pe arrayul queryWheres
-     *
-     * @param $obj
-     * @return string  - returneaza un string de forma [WHERE] / [AND] + conditii din arrayul queryWheres
-     *                   al obiectului $obj furnizat
-     */
-    public function SET_queryWheres(&$obj, $where='WHERE '){
-
-        $RETwhere = '';
-
-        if(isset($obj->queryWheres) && count($obj->queryWheres) > 0)
-            $RETwhere = $where. implode(" AND ", $obj->queryWheres);
-
-        return $RETwhere;
-    }
-
-    /**
-     * Adauga o conditie la un string de conditii deja existent
-     *
-     * @param $wheresSTR - stringul de conditii la care se adauga
-     * @param $where     - conditia adaugat
-     * @return string    - stringul de conditii returnat
-     */
-    static function ADD_toStr_queryWhere($wheresSTR, $where ){
-
-        $whereConcat = $wheresSTR ? ' AND ' : ' WHERE ';
-
-        return $wheresSTR.$whereConcat.$where;
-    }
-
-    /**
-     * adauga conditii in arrayul queryWheres ale obiectului $obj
-     * daca arrayul nu este setat inca metoda il va seta
-     *
-     * @param $obj      - obiectul pentru care se seteaza wherurile
-     * @param $where    - conditia care se adauga
-     */
-    public function ADD_queryWheres(&$obj,$where){
-
-
-        if(!isset($obj->queryWheres)) $obj->queryWheres = array();
-
-        array_push($obj->queryWheres," ".$where." " );
-
-    }
-
-
-
-
-
-     /**
-     *  DB_table         = prefix + origin + postfix
-     *
-     * @param        $obj           - obiectul pentru care se fac setarile
-     * @param        $extKname      - numele cheii externe
-     * @param        $extKvalue     - valoarea cheii externe
-     * @param        $tbOrigin      - numele tabelului de origine
-     * @param string $tbPostfix
-     * @param string $tbPrefix
-     * @param string $bond          - concatenare nume DB_table
-     */
-    public function SET_tableRelations_settings
-             (&$obj,$extKname, $extKvalue, $tbOrigin, $tbPostfix='', $tbPrefix='', $bond='_') {
-
-
-        $obj->DB_extKey_name  = $extKname  ;
-        $obj->DB_extKey_value = $extKvalue ;
-        $obj->DB_table_origin = $tbOrigin  ;
-        $obj->DB_table_postfix = $tbPostfix ;
-        $obj->DB_table_prefix  = $tbPrefix  ;
-
-        $obj->DB_table = ($tbPrefix!='' ? $tbPrefix.$bond : '').
-                         ($tbOrigin!='' ? $tbOrigin : '').
-                         ($tbPostfix!='' ? $bond.$tbPostfix      : '');
-
-    }
-
-    /**
-     * Array multidimesional cu datele ret de query si procesate de $obj->processResMethod
-     *
-     * @param $obj                      - obiectul care cheama metoda
-     * @param $query                    - queryul cerut
-     * @param string $processResMethod  - metoda care proceseaza fiecare rand returnat de query
-     * @param bool $onlyArr  = false    - (nu) va seta proprietati in cadrul obiectului daca doar un rand este returnat
-     * @return array                    - array-ul multidimens cu datele ret de $query
-     */
+         * Array multidimesional cu datele ret de query si procesate de $obj->processResMethod
+         *
+         * @param $obj                      - obiectul care cheama metoda
+         * @param $query                    - queryul cerut
+         * @param string $processResMethod  - metoda care proceseaza fiecare rand returnat de query
+         * @param bool $onlyArr  = false    - (nu) va seta proprietati in cadrul obiectului daca doar un rand este returnat
+         * @return array                    - array-ul multidimens cu datele ret de $query
+         */
 
     public static function GET_resultArray ($result, $method = 'fetch_assoc') {
-        $output = array();
-        while ($row = $result->{$method}())
-            array_push($output, $row);
-        return $output;
-    }
+            $output = array();
+            while ($row = $result->{$method}())
+                array_push($output, $row);
+            return $output;
+        }
 
     /**
-     *
-     * @param $obj                        - obiectul care a apelat metoda
-     * @param $query                      - query-ul de procesat
-     * @param string $processResMethod    - metoda a $obj care proceseaza orice rand returnat
-     * @param bool $onlyArr               - daca queryul ret un singur record
-     *                                              false - va seta valoriile ret la obj
-     *                                              true - va returna un array[0] = array(colum=>value);
-     * @return array                      - array muldimensional cu toate recordurile returnate de query
-     *                                      si procesate de processResMethod
-     */
+         *
+         * @param $obj                        - obiectul care a apelat metoda
+         * @param $query                      - query-ul de procesat
+         * @param string $processResMethod    - metoda a $obj care proceseaza orice rand returnat
+         * @param bool $onlyArr               - daca queryul ret un singur record
+         *                                              false - va seta valoriile ret la obj
+         *                                              true - va returna un array[0] = array(colum=>value);
+         * @return array                      - array muldimensional cu toate recordurile returnate de query
+         *                                      si procesate de processResMethod
+         */
     public function GET_objProperties(&$obj,$query,$processResMethod='', $onlyArr = false) {
 
 
-        /**
-         * DESCRIERE
-         *
-         * RET:
-         *  - returneaza un array multiDimensional cu toate in registrarile gasite pe $query-ul dat
-         *  - pt un singur record returnat si onlyArr = false
-         *      => variabilele vor fii setate ca proprietati ale obiectului
-         *      => deasemenea se returneaza un array cu un singur record
-         *
-         * OPT: $processResMethod
-         *  - metoda a obiectului , apelata pentru fiecare record inparte
-         *  - poate altera un rand sau returna false in cazul in care randul este invalid
-         */
-        $allRecords = array();
-        $res = $this->DB->query($query);
+            /**
+             * DESCRIERE
+             *
+             * RET:
+             *  - returneaza un array multiDimensional cu toate in registrarile gasite pe $query-ul dat
+             *  - pt un singur record returnat si onlyArr = false
+             *      => variabilele vor fii setate ca proprietati ale obiectului
+             *      => deasemenea se returneaza un array cu un singur record
+             *
+             * OPT: $processResMethod
+             *  - metoda a obiectului , apelata pentru fiecare record inparte
+             *  - poate altera un rand sau returna false in cazul in care randul este invalid
+             */
+            $allRecords = array();
+            $res = $this->DB->query($query);
 
-        if($res->num_rows > 0)
-        {
-            if($res->num_rows == 1 && !$onlyArr )
+            if($res->num_rows > 0)
             {
-
-                $row = $res->fetch_assoc();
-
-                if($processResMethod!='' && method_exists($obj,$processResMethod) )
-                    $row = $obj->{$processResMethod}($row);
-
-                if($row)
+                if($res->num_rows == 1 && !$onlyArr )
                 {
-                    if(is_array($row) && count($row) > 0)
+
+                    $row = $res->fetch_assoc();
+
+                    if($processResMethod!='' && method_exists($obj,$processResMethod) )
+                        $row = $obj->{$processResMethod}($row);
+
+                    if($row)
                     {
-                        foreach($row AS $recordName => $recordValue)         # atribuim valori direct in prop obiectului
-                            $obj->$recordName = $recordValue;
+                        if(is_array($row) && count($row) > 0)
+                        {
+                            foreach($row AS $recordName => $recordValue)         # atribuim valori direct in prop obiectului
+                                $obj->$recordName = $recordValue;
 
+                        }
+                        $allRecords[0] = $row;
                     }
-                    $allRecords[0] = $row;
+                    # else   error_log('eroare la query-ul '.$query);
+
+
+
                 }
-                # else   error_log('eroare la query-ul '.$query);
-
-
-
-            }
-            else
-            {
-                if($processResMethod!='' && method_exists($obj,$processResMethod)){
-                    while($row = $res->fetch_assoc())
-                    {
-                          $row = $obj->{$processResMethod}($row);
-                          if($row)
-                                 array_push($allRecords, $row);
+                else
+                {
+                    if($processResMethod!='' && method_exists($obj,$processResMethod)){
+                        while($row = $res->fetch_assoc())
+                        {
+                              $row = $obj->{$processResMethod}($row);
+                              if($row)
+                                     array_push($allRecords, $row);
+                        }
                     }
-                }
-                else{
-                    #TODO: GET_resultArray from a future commit from piu
-                    while($row = $res->fetch_assoc())
-                        array_push($allRecords, $row);
-                }
+                    else{
+                        #TODO: GET_resultArray from a future commit from piu
+                        while($row = $res->fetch_assoc())
+                            array_push($allRecords, $row);
+                    }
 
+                }
             }
+            return $allRecords;
+
+
+
+
         }
-        return $allRecords;
-
-
-
-
-    }
     public function GET_objProperties_byCat(&$obj,$query,$Col_name,$processResMethod=''){
 
-        # va returna un array de genul allRecords[Cat_name][0,1,2...] = array(children array);
-        # hmm..daca avem mai multe coloane atunci $allRecords[col][0,,1...]
+            # va returna un array de genul allRecords[Cat_name][0,1,2...] = array(children array);
+            # hmm..daca avem mai multe coloane atunci $allRecords[col][0,,1...]
 
 
 
-        $allRecords = array();
-        $res = $this->DB->query($query);
+            $allRecords = array();
+            $res = $this->DB->query($query);
 
-        if($res->num_rows > 0)
-        {
-            while($row = $res->fetch_assoc())
+            if($res->num_rows > 0)
             {
-
-                $col = $row[$Col_name];
-
-                if($processResMethod!='' && method_exists($obj,$processResMethod) )
+                while($row = $res->fetch_assoc())
                 {
 
-                    $row = $obj->{$processResMethod}($row);
+                    $col = $row[$Col_name];
+
+                    if($processResMethod!='' && method_exists($obj,$processResMethod) )
+                    {
+
+                        $row = $obj->{$processResMethod}($row);
+                    }
+
+                    $allRecords[$col] = array();
+                    array_push($allRecords[$col], $row);
+
+                    #var_dump($allRecords[$col]);
+                    # am impresia ca asta imi va da peste cap sortarile din query - ramane de vazut
+
+
                 }
 
-                $allRecords[$col] = array();
-                array_push($allRecords[$col], $row);
+                #var_dump($allRecords);
 
-                #var_dump($allRecords[$col]);
-                # am impresia ca asta imi va da peste cap sortarile din query - ramane de vazut
-
-
+                return $allRecords;
             }
 
-            #var_dump($allRecords);
 
-            return $allRecords;
         }
-
-
-    }
     public function GETtree_objProperties(&$obj,$query,$idC_name, $idP_name,$processResMethod='')   {
 
-        # va returna un array de genul allRecords[idP][idC] = array(children array);
-        # idC_name / idP_name = numele campurilor pt child / parent
+            # va returna un array de genul allRecords[idP][idC] = array(children array);
+            # idC_name / idP_name = numele campurilor pt child / parent
 
-        $allRecords = array();
-        $res = $this->DB->query($query);
+            $allRecords = array();
+            $res = $this->DB->query($query);
 
-        if($res->num_rows > 0)
-        {
-            while($row = $res->fetch_assoc())
+            if($res->num_rows > 0)
             {
-                $parentID = $row[$idP_name];
-                $ID       = $row[$idC_name];
-                if($processResMethod!='') $row = $obj->{$processResMethod}($row);
+                while($row = $res->fetch_assoc())
+                {
+                    $parentID = $row[$idP_name];
+                    $ID       = $row[$idC_name];
+                    if($processResMethod!='') $row = $obj->{$processResMethod}($row);
 
-                $allRecords[$parentID][$ID] = $row;
+                    $allRecords[$parentID][$ID] = $row;
 
-                # am impresia ca asta imi va da peste cap sortarile din query - ramane de vazut
+                    # am impresia ca asta imi va da peste cap sortarile din query - ramane de vazut
 
 
+                }
+
+                return $allRecords;
             }
 
-            return $allRecords;
         }
-
-    }
-
 
 
     #relocare remote ...sunt situatii cand e nevoie
@@ -315,6 +221,36 @@ trait TmethDB{
         if($reset)  $this->reLocate($location,$ANCORA,$paramAdd);
         else return $errorMessage;
 
+
+    }
+
+    #=============================[ Staging ]=======================================
+
+
+     /**
+     *  DB_table         = prefix + origin + postfix
+     *
+     * @param        $obj           - obiectul pentru care se fac setarile
+     * @param        $extKname      - numele cheii externe
+     * @param        $extKvalue     - valoarea cheii externe
+     * @param        $tbOrigin      - numele tabelului de origine
+     * @param string $tbPostfix
+     * @param string $tbPrefix
+     * @param string $bond          - concatenare nume DB_table
+     */
+    public function SET_tableRelations_settings
+             (&$obj,$extKname, $extKvalue, $tbOrigin, $tbPostfix='', $tbPrefix='', $bond='_') {
+
+
+        $obj->DB_extKey_name  = $extKname  ;
+        $obj->DB_extKey_value = $extKvalue ;
+        $obj->DB_table_origin = $tbOrigin  ;
+        $obj->DB_table_postfix = $tbPostfix ;
+        $obj->DB_table_prefix  = $tbPrefix  ;
+
+        $obj->DB_table = ($tbPrefix!='' ? $tbPrefix.$bond : '').
+                         ($tbOrigin!='' ? $tbOrigin : '').
+                         ($tbPostfix!='' ? $bond.$tbPostfix      : '');
 
     }
 

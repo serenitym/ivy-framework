@@ -841,6 +841,8 @@ class Ccore extends CManage
 
     public function ctrl_postRequest(){
 
+
+       // var_dump($_POST);
         if(isset($_POST['moduleName']) && isset($_POST['methName']))
         {
 
@@ -849,6 +851,7 @@ class Ccore extends CManage
 
             if(is_object($this->$moduleName) && method_exists($this->$moduleName,$methName))
             {
+                $obj = &$this->$moduleName;
                 //===============[solve request Modules ]==========================
 
                 /**
@@ -860,28 +863,42 @@ class Ccore extends CManage
                  * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
                  * daca nu se mai intampla nimic
                 */
-                if(method_exists($this->$moduleName,'_handlePosts_'.$methName))
+                if(method_exists($obj,'_hook_'.$methName))
                 {
-                    $validData =$this->$moduleName->{'_handlePosts_'.$methName}();
+                    $validData =$obj->{'_hook_'.$methName}();
                     if($validData)
                     {
-                        $this->$moduleName->{$methName}();
+
+                        $obj->{$methName}();
+
+                        unset($_POST);
                         // =================[refresh page]======================
+
                         $this->reLocate();
                     }
                     //safty reasons
                     unset($_POST);
 
                 } else{
-
-                    $this->$moduleName->{$methName}();
+                    $obj->{$methName}();
+                    unset($_POST);
                      // =================[refresh page]======================
                     $this->reLocate();
                 }
 
             }
+            else{
 
+             /*   if(!is_object($this->$moduleName))
+                    echo "There is no object ".$moduleName;
+                if(! method_exists($this->$moduleName,$methName))
+                    echo " with method ".$methName;*/
 
+            }
+
+        }
+        else {
+         //   echo "No post moduleName or methName";
         }
 
        // echo "<b>moduleName</b> ".$_POST['moduleName']." <b>methName</b> ".$_POST['methName'];
