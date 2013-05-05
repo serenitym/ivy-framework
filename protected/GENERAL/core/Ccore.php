@@ -214,12 +214,12 @@ class Ccore extends CgenTools
             #===========================================================================================================
 
 
-            error_log('fisierul EXISTA '.$file_yml."\n\n"); #echo 'fisierul '.$file_yml.' EXISTA <br>';
+            error_log('File is present: '.$file_yml); #echo 'fisierul '.$file_yml.' EXISTA <br>';
             return true;
         }
 
         else {
-            error_log('fisierul nu exista '.$file_yml."\n\n"); # echo 'fisierul '.$file_yml.' nu exista <br>';
+            error_log('File is not present: '.$file_yml); # echo 'fisierul '.$file_yml.' nu exista <br>';
             return false;
         }
 
@@ -428,7 +428,7 @@ class Ccore extends CgenTools
 
             # return $this->$mod_name;
 
-            Console::logSpeed($OB_name);
+            //Console::logSpeed($OB_name);
             return true;  #obiectul a fost creat
         }
 
