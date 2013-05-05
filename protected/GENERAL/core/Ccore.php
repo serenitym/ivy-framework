@@ -329,12 +329,14 @@ class Ccore extends CManage
             #===========================================================================================================
 
 
-            error_log('File is present: '.$file_yml); #echo 'fisierul '.$file_yml.' EXISTA <br>';
+            if(defined('DEBUG') && DEBUG == 1)
+                error_log('File is present: '.$file_yml);
             return true;
         }
 
         else {
-            error_log('File is not present: '.$file_yml); # echo 'fisierul '.$file_yml.' nu exista <br>';
+            if(defined('DEBUG') && DEBUG == 1)
+                error_log('File is not present: '.$file_yml);
             return false;
         }
 
