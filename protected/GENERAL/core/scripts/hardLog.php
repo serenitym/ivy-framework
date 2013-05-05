@@ -2,14 +2,15 @@
 
 //session_start();
 // ------[ get the class loader ]-------
-require fw_incPath.'GENERAL/core/classLoader.inc';
+require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
+require incPath.'etc/hardLogKey.php';
 #=======================================
 
 
     // ---------[ admin.php login ]---------
     # /!\ DEPRECATED
     if(isset($_POST['password'])) {
-        if($_POST['password']=='adminPro') $_SESSION['admin']=1;
+        if($_POST['password']== $psw) $_SESSION['admin']=1;
     }
     #=======================================
 

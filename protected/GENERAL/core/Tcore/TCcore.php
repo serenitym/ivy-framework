@@ -14,9 +14,13 @@
 
 
 
-class Ccore extends CgenTools
+//class TCcore extends item
+class TCcore
 {
-
+    use TrenderTmpl;
+    use TmethDB;
+    use TgenTools;
+    use TManage
 
 # manage function - should be put in TgenTools respectiv create ATgenTools
     static function debugMess($mess){ return '';}

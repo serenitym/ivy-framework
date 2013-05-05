@@ -2,7 +2,7 @@
 
 
 // ------[ get the class loader ]-------
-require fw_incPath.'GENERAL/core/classLoader.inc';
+require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
 #=======================================
 
 // ----[ look for the login cookie ] ---

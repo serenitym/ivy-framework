@@ -2,7 +2,7 @@
 
    trigger_error($_POST['parsePOSTfile'],E_USER_NOTICE);
 
-   require fw_incPath.'GENERAL/core/classLoader.inc';
+   require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
 
    if((!isset($_POST['restoreCore']) || $_POST['restoreCore'] == true ) && file_exists(varPath.'tmp/sercore.txt'))
    {
