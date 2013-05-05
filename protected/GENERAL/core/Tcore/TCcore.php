@@ -14,9 +14,13 @@
 
 
 
-class Ccore extends CgenTools
+//class TCcore extends item
+class TCcore
 {
-
+    use TrenderTmpl;
+    use TmethDB;
+    use TgenTools;
+    use TManage
 
 # manage function - should be put in TgenTools respectiv create ATgenTools
     static function debugMess($mess){ return '';}
@@ -214,14 +218,12 @@ class Ccore extends CgenTools
             #===========================================================================================================
 
 
-            if(defined('DEBUG') && DEBUG == 1)
-                error_log('File is present: '.$file_yml);
+            error_log('fisierul EXISTA '.$file_yml."\n\n"); #echo 'fisierul '.$file_yml.' EXISTA <br>';
             return true;
         }
 
         else {
-            if(defined('DEBUG') && DEBUG == 1)
-                error_log('File is not present: '.$file_yml);
+            error_log('fisierul nu exista '.$file_yml."\n\n"); # echo 'fisierul '.$file_yml.' nu exista <br>';
             return false;
         }
 
@@ -430,7 +432,7 @@ class Ccore extends CgenTools
 
             # return $this->$mod_name;
 
-            //Console::logSpeed($OB_name);
+            Console::logSpeed($OB_name);
             return true;  #obiectul a fost creat
         }
 
