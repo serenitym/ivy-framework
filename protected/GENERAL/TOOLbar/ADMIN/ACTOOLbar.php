@@ -56,7 +56,7 @@ class ACTOOLbar
         $this->uname = isset($_SESSION['auth']->uname) ? : 'admin';
 
         array_push( $this->buttons,
-            "<a href='index.php?logOUT=1' id='logOUT'>Log OUT  </a>"
+            "<a href='index.php?logOUT=1' id='logOUT'>Log out ({$this->uname})  </a>"
             );
 
 
