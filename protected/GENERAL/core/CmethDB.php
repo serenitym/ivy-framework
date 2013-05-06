@@ -12,7 +12,7 @@
  */
 class CmethDB extends CrenderTmpl {
 
-    use _dep_TmethDB;
+   // use _dep_TmethDB;
 
 
     /**
