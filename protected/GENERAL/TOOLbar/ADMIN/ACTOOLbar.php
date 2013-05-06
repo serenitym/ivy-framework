@@ -53,9 +53,9 @@ class ACTOOLbar
         $this->statusPOPUP = "<input type='hidden' name='statusPOPUP' value='".$currentPOPUP."' />".
                              "<input type='hidden' name='statusPOPUP_modeType' value='".$currentPOPUP_modeType."' />" ;
 
-        $this->uname = $_SESSION['auth']->uname;
+        //$this->uname = $_SESSION['auth']->uname;
         array_push( $this->buttons,
-            "<a href='index.php?logOUT=1' id='logOUT'>Log OUT (".$this->uname.") </a>"
+            "<a href='index.php?logOUT=1' id='logOUT'>Log OUT  </a>"
             );
 
 

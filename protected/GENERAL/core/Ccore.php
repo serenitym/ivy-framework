@@ -726,7 +726,7 @@ class Ccore extends CgenTools
 #=======================================================================================================================
 
 
-    public function ctrl_postRequest(){
+    public function ctrl_postRequest($relocate = true){
 
 
        // var_dump($_POST);
@@ -760,8 +760,8 @@ class Ccore extends CgenTools
 
                         unset($_POST);
                         // =================[refresh page]======================
-
-                        $this->reLocate();
+                        if($relocate)
+                            $this->reLocate();
                     }
                     //safty reasons
                     unset($_POST);
@@ -770,7 +770,8 @@ class Ccore extends CgenTools
                     $obj->{$methName}();
                     unset($_POST);
                      // =================[refresh page]======================
-                    $this->reLocate();
+                    if($relocate)
+                        $this->reLocate();
                 }
 
             }
@@ -922,6 +923,11 @@ class Ccore extends CgenTools
         }
 
 
+    }
+
+    public function __wakeup(){
+        $this->DB_reConnect();
+        $this->ctrl_postRequest(false);
     }
 
 

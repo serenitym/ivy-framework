@@ -103,7 +103,7 @@ class CrenderTmpl extends item {
             }
             else {
 
-                 return $this->debugMess("getDisplay_Items -error: Nu exista continut de template <br>");
+                 return $this->debugMess("getDisplay_Items -error: Nu exista continut de template $tmplPath <br>");
             }
         } else {
                 return $this->debugMess("getDisplay_Items -error: There are no items <br>");
