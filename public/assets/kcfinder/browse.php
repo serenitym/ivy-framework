@@ -12,8 +12,9 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-require "core/autoload.php";
+
+require dirname(__FILE__) . "/core/autoload.php";
+
 $browser = new browser();
 $browser->action();
 
-?>
