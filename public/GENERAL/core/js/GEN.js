@@ -279,6 +279,11 @@ var fmw = function(){
 
 }();
 
+fmw.admin = 0;
+fmw.idT = 0;
+fmw.idC = 0;
+fmw.lg = 'ro';
+
 fmw.popUp = {
 
     /**
