@@ -15,7 +15,19 @@
 <!-- <script type="text/javascript"  src="fw/GENERAL/core/js/rect.js"></script>-->
 <!-- <script type="text/javascript"  src="GENERAL/js/kcfinder"></script>-->
 <!-- <script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js"></script>-->
+    <script type="text/javascript">
+        $(document).ready(function(){
 
+            <?php
+                if(isset($core->admin) && $core->admin)
+                    echo "fmw.admin = 1;";
+                 echo "fmw.idC = $core->idC;
+                       fmw.idT = $core->idT;";
+            ?>
+        });
+
+
+    </script>
 
  <?php
    echo $core->INC_js;
