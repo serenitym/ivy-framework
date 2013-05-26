@@ -5,8 +5,8 @@
 #========================================
 
 
-mainModel: newsPaper
-mainTemplate: blackSea
+mainTemplate: prographic
+mainModel: sitePrezentare
 
 
 #========================================
@@ -15,13 +15,13 @@ mainTemplate: blackSea
 mods: [PLUGINS, MODELS, GENERAL, LOCALS]
 
 #nu imi e foarte clar la ce sunt bune urmatoarele
-models: [profile, masterBlog, articles, blog, comments, siteMap, contact, products, single,basket, mainPOPup]
+models: [contact,  single]
 
-plugins: [toolbar, MENUhorizontal, MENU_h_multiLevel, rating]
+plugins: [toolbar, ivyMenu, feedback]
 
-general: [TOOLbar, GEN_edit, EDITmode, user, authManager, usrManager]
+general: [TOOLbar, GEN_edit, EDITmode]
 
-
+locals: [  gallery, team, portfolio, news ]
 
 #========================================
 # modulele instantiate automat
@@ -36,7 +36,7 @@ default_GENERAL: []
 default_MODELS: []
 #  - mainPOPup
 
-default_PLUGINS: [LANG, SEO, MENUhorizontal]
+default_PLUGINS: [LANG, ivyMenu, feedback, childrenDisplay]
 
 
 #=========================================
@@ -49,9 +49,9 @@ tree: []
 type: single
 type_MOD: MODELS
 
-id: 85
-idT: 85
-idC: 85
+id: 1
+idT: 1
+idC: 1
 
 
 
@@ -69,19 +69,18 @@ admin: false
 # exlicatii necesare
 # key = table.MENUS - col.idM
 menus:
-  1: MENUhorizontal
-  2: MENUhorizontalv
+  1: ivyMenu
 
 
 
 #==========================================
 # language
 #==========================================
-lang: en
-lang2: ro
+lang: ro
+lang2: en
 langs:
-  - en
   - ro
+  - en
 
 #===========================================
 # other stuff

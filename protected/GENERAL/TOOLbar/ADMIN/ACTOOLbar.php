@@ -17,10 +17,10 @@ class ACTOOLbar
     {
         //_____________________________________[Setting buttons]__________________
         //$disp = "<div id='admin_TOOLbar'>";
-        $disp = "<div class='container-fluid'><div id='admin_TOOLbar' class='well well-small'>";
+        $disp = "<div id='admin_TOOLbar' class=''>";
             foreach($this->buttons as $button)
                 $disp .= "<span>{$button}</span>";
-        $disp .="</div></div>";
+        $disp .="</div>";
         //________________________________________________________________________
 
 

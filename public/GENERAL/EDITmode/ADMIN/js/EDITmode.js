@@ -232,32 +232,45 @@ var iEdit = function(){
              BLOCK.find('*[class^=ED]').map(function(){
                  // selELEM =  $(this).attr('class')+' ';
 
-                  var desc = ($(this).attr('class')+' ').split(' ');
-                  var EDtype  = desc[0];
-                  var EDname  = desc[desc.length-2]; //  (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca pune un elem in plus , nu stiu de ce
+                 if($(this).parents('*[class^=allENTS]').length <= 1)
+                 {
 
-                  if(EDtype=='EDeditor' || EDtype=='EDpic')
-                      var EDvalue = $.trim($(this).html());
-                  else
-                      var EDvalue = $.trim($(this).text());
+                     var desc = ($(this).attr('class')+' ').split(' ');
+                     var EDtype  = desc[0];
+                     var EDname  = desc[desc.length-2]; //  (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca pune un elem in plus , nu stiu de ce
+
+                     if(EDtype=='EDeditor' || EDtype=='EDpic')
+                         var EDvalue = $.trim($(this).html());
+                     else
+                         var EDvalue = $.trim($(this).text());
 
 
 
-                //  alert('EDname '+EDtype+'  EDname '+EDname+' value '+EDvalue);
-                  replace(EDtype, EDname, EDvalue,formSelector, elmName);
+                     //  alert('EDname '+EDtype+'  EDname '+EDname+' value '+EDvalue);
+                     var EDtag  = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
+                     var jqEDtag = $(EDtag);
+
+                     if(jqEDtag.length > 0)
+                         replace(EDtype, EDname, EDvalue,formSelector, jqEDtag);
+                     /* else
+                      alert(EDtag);*/
+
+                 }
+
           });
     }
 
-    function replace(EDtype, EDname, EDvalue,formSelector, elmName){
+    function replace(EDtype, EDname, EDvalue,formSelector, jqEDtag){
 
           //alert(EDtype+' '+EDname+" "+EDvalue+" "+formSelector);
 
-        var EDtag        = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
+       // var EDtag        = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
         var INPUTname    = EDname+"_"+LG;
         var INPUTclass   = 'EDITOR '+EDname;
-        var INPUTclasses = $(EDtag).attr('class').replace(EDtype, 'EDITOR');
-        var EDtag_height = $(EDtag).height();
-        var EDtag_width  = $(EDtag).width();
+
+        var INPUTclasses =jqEDtag.attr('class').replace(EDtype, 'EDITOR');
+        var EDtag_height =jqEDtag.height();
+        var EDtag_width  =jqEDtag.width();
 
 
         var EDreplace ={
@@ -293,7 +306,7 @@ var iEdit = function(){
                                                      "</div>" +
                                                  "</div>"
                                                  ;*/
-                            var imgSrc = $(EDtag).attr('src');
+                            var imgSrc =jqEDtag.attr('src');
 
                             /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );
                             var hiddenValue = $(EDtag+"[src*=placehold.it]").length > 0
@@ -312,7 +325,7 @@ var iEdit = function(){
 
                  },
             EDaddPic : function(){
-                            var imgSrc = $(EDtag).attr('src');
+                            var imgSrc =jqEDtag.attr('src');
 
                             //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
 
@@ -469,7 +482,7 @@ var iEdit = function(){
         if( eval('typeof ' +EDreplace[EDtype]) == 'function' )
         {
 
-            $(EDtag).replaceWith( EDreplace[EDtype]() );
+           jqEDtag.replaceWith( EDreplace[EDtype]() );
             if(eval('typeof ' +EDcallback[EDtype]) == 'function')
             EDcallback[EDtype]();
 
@@ -542,7 +555,7 @@ var iEdit = function(){
                 this.tools_addEnt();
 
                 $("*[class^=ENT] , *[class^=SING]").live({
-                    mouseover   : function() { $(this).not('form').find('.TOOLSem').show();},
+                    mouseover   : function() { $(this).not('form').find('.TOOLSem:first').show();},
                     mouseout    : function() { $(this).not('form').find('.TOOLSem').hide();  }
                 });
             },
