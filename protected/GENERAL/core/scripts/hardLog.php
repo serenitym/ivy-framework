@@ -3,9 +3,9 @@
 //session_start();
 // ------[ get the class loader ]-------
 require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
-//require incPath.'etc/hardLogKey.php';
+require incPath.'etc/hardLogKey.php';
 
-$psw = 'adminPro';
+//$psw = 'adminPro';
 #=======================================
 
 

@@ -1,8 +1,25 @@
 @charset "UTF-8";
 /*RESETS */
-p{
-    margin: 0.5em 0em;
+p{    margin: 0.5em 0em; }
+
+input[type="submit"].ivy,
+input[type="reset"].ivy,
+input[type="button"].ivy,
+button.ivy{
+    cursor: pointer;
+    border-radius: 4px;
+    background: rgba(150,150,150,0.5);
+    border: 1px solid rgba(200,200,200,0.3);
 }
+input[type="submit"].ivy:hover,
+input[type="reset"].ivy:hover,
+input[type="button"].ivy:hover,
+button.ivy:hover{
+    background: rgba(150,150,150,0.7);
+
+}
+
+/*===========================================================  =============================================== */
 
 
 .hidden {visibility: visible !important;}
@@ -68,28 +85,6 @@ form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in 
             min-height: 200px;
         }
 
-/*=======================================[ icons Styling ]============================================================*/
-*[id^=uRating] i{cursor: pointer;}
-
-.iconBig{
-    font-weight: bold;
-    font-size: 15pt;
-    background-size: 55px;
-    display: block;
-    width: 55px;
-    height: 55px;
-}
-.iconBig > *
-{
-    padding-left: 22px;
-    padding-top: 20px;
-}
-.iconBig-star{background-image: url("img/star_full.png");}
-.iconBig-star-none{background-image: url("img/star_none.png");}
-
-.icon-blue{background-image: url("img/glyphicons-halflings-blue.png") !important;}
-.icon-muted{background-image: url("img/glyphicons-halflings-muted.png") !important;}
-.icon-light{background-image: url("img/glyphicons-halflings-light.png") !important;}
 
 
 /*=================================================================================================================== */

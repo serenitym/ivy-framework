@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+/*=======================================[ icons Styling - for Boootstrap]============================================================*/
+*[id^=uRating] i{cursor: pointer;}
+
+.iconBig{
+    font-weight: bold;
+    font-size: 15pt;
+    background-size: 55px;
+    display: block;
+    width: 55px;
+    height: 55px;
+}
+.iconBig > *
+{
+    padding-left: 22px;
+    padding-top: 20px;
+}
+.iconBig-star{background-image: url("img/star_full.png");}
+.iconBig-star-none{background-image: url("img/star_none.png");}
+
+.icon-blue{background-image: url("img/glyphicons-halflings-blue.png") !important;}
+.icon-muted{background-image: url("img/glyphicons-halflings-muted.png") !important;}
+.icon-light{background-image: url("img/glyphicons-halflings-light.png") !important;}
