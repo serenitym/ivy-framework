@@ -129,12 +129,12 @@ class uploader {
         require "config.php";
 
         // SETTING UP SESSION
-        if (isset($_CONFIG['_sessionLifetime']))
-            ini_set('session.gc_maxlifetime', $_CONFIG['_sessionLifetime'] * 60);
-        if (isset($_CONFIG['_sessionDir']))
-            ini_set('session.save_path', $_CONFIG['_sessionDir']);
-        if (isset($_CONFIG['_sessionDomain']))
-            ini_set('session.cookie_domain', $_CONFIG['_sessionDomain']);
+        //if (isset($_CONFIG['_sessionLifetime']))
+            //ini_set('session.gc_maxlifetime', $_CONFIG['_sessionLifetime'] * 60);
+        //if (isset($_CONFIG['_sessionDir']))
+            //ini_set('session.save_path', $_CONFIG['_sessionDir']);
+        //if (isset($_CONFIG['_sessionDomain']))
+            //ini_set('session.cookie_domain', $_CONFIG['_sessionDomain']);
         switch ($this->cms) {
             case "drupal": break;
             default: session_start(); break;

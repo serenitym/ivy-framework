@@ -27,6 +27,9 @@
 
     ?>
 
+        <link rel="icon" type="image/png"
+        href="<?php echo FAV_ICON; ?>">
+
 
 
 </head>

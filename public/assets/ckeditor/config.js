@@ -16,8 +16,8 @@ CKEDITOR.editorConfig = function( config )
 					//config.extraPlugins = 'scayt';
 					config.language = 'ro';
 					config.skin = 'moono';
-					
-					
+
+
 
     config.filebrowserBrowseUrl          = './assets/kcfinder/browse.php?type=files';
     config.filebrowserImageBrowseUrl     = './assets/kcfinder/browse.php?type=images';
@@ -44,10 +44,11 @@ CKEDITOR.editorConfig = function( config )
       [
 
 
-          { name: 'styles', items : ['FontSize' ] },
+          { name: 'document', items : [ 'Source'] },
           { name: 'basicstyles', items : [ 'Bold','Italic','Underline','RemoveFormat' ] },
           { name: 'paragraph', items : ['JustifyLeft','JustifyCenter','BulletedList' ] },
-          { name: 'colors', items : [ 'TextColor' ] }
+          { name: 'colors', items : [ 'TextColor' ] },
+          { name: 'insert', items : [ 'Image', 'Link' ] }
 
       ];
 
@@ -67,7 +68,7 @@ config.toolbar_Full =
 	{ name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
 	{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 	{ name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
-	{ name: 'forms', items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 
+	{ name: 'forms', items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
         'HiddenField' ] },
 	'/',
 	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },

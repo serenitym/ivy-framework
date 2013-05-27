@@ -602,11 +602,7 @@ class Ccore extends CgenTools
 
           $tree_SER = serialize($this->TMPtree);
           #umask(0777);
-
-          if(is_dir(fw_resTree))
-              $succes  = file_put_contents($pathTree,$tree_SER);
-          else
-              system('mkdir -p ' . fw_resTree, $success);
+          $succes  = file_put_contents($pathTree,$tree_SER);
 
           //if(defined('UMASK')) umask(UMASK);
           if(!$succes)
