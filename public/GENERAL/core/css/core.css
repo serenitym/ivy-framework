@@ -21,6 +21,7 @@ button.ivy:hover{
 
 /*===========================================================  =============================================== */
 
+.no-display{ display: none;}
 
 .hidden {visibility: visible !important;}
 body{line-height: initial;}
@@ -40,7 +41,9 @@ form[id^="EDITform"] .ATmpl-inline
     display: inline-block !important;
 }      /*  cand ajunge in cadrul unui form se face vizibil  */
 
-form[id^="EDITform"] .noATmpl {display: none;}  /*Ce nu ar trebui sa se vada in cadrul unui formde EDITARE*/
+form[id^="EDITform"] .noATmpl,
+.addForm .noATmpl
+{display: none;}  /*Ce nu ar trebui sa se vada in cadrul unui formde EDITARE*/
 
 
 

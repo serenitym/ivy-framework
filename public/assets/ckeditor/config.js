@@ -56,7 +56,8 @@ CKEDITOR.editorConfig = function( config )
     [
 
 
-        { name: 'styles', items : [ 'Font','FontSize' ] },
+        { name: 'styles', items : [ 'FontSize' ] },
+        { name: 'links', items : [ 'Link','Unlink'] },
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','RemoveFormat' ] },
         { name: 'paragraph', items : ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','BulletedList' ] },
         { name: 'colors', items : [ 'TextColor','BGColor' ] },

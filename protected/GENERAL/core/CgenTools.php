@@ -172,6 +172,8 @@ class CgenTools extends CManage{
    }
 
 
+    /*=================[ meth - images] ====================================*/
+
     public function get_resImages_paths($modName){
         /**
          * USE
@@ -212,6 +214,14 @@ class CgenTools extends CManage{
 
         return $imgFiles_Urls;
     }
+
+    public function set_imgRelativePath( $full_urlPath){
+
+        return str_replace(baseURL, '', $full_urlPath);
+    }
+
+
+    /*=================[ END - meth - images] ====================================*/
 
 
 
@@ -289,7 +299,29 @@ class CgenTools extends CManage{
         return false;
       }
   }
-  function processPosts( $expectedPosts){
+
+  function validatePosts(&$expectedPosts,&$psts){
+
+      foreach($psts->vars AS $prop => $pst){
+     // foreach($expectedPosts AS $prop => $det){
+
+          $det = $expectedPosts[$prop];
+
+          // vezi daca are reguli de validare
+          if(isset($det['validRules']))
+              foreach($det['validRules'] AS $validRule => $validDet){
+
+                  $psts->validation = $this->{'valid_'.$validRule}( $pst, $validDet['fbk'] );
+
+              }
+      }
+
+
+
+  }
+
+
+  function processPosts( $expectedPosts, $notEmpty = true, $validation = true){
 
       /**
        *
@@ -315,34 +347,34 @@ class CgenTools extends CManage{
                 newsPic: ""
       */
 
-      $psts = new stdClass();
       $lg = $this->lang;
 
+      $psts = new stdClass();
       $psts->validation = true;
       $psts->vars = new stdClass();
 
       foreach($expectedPosts AS $prop => $det){
 
+
           // preia valoarea din post
           $varName = isset($det['pstVal']) ? $det['pstVal'] : $prop;
+          $varName_lg = $varName.'_'.$lg;
 
-          $pst = isset($_POST[$varName."_".$lg])
-                 ?  $_POST[$varName."_".$lg]
-                 : ($_POST[$varName] ? $_POST[$varName] : '' );
+          $pst = isset($_POST[$varName_lg])
+                    ?  $_POST[$varName_lg]
+                    : ($_POST[$varName] ? $_POST[$varName] : '' );
 
-          // retine postul in obiect
-          $psts->vars->$prop = $pst = trim($pst);
+          $pst = trim($pst);
+
+          if($pst || !$notEmpty)
+              // retine postul in obiect
+              $psts->vars->$prop =$pst;
 
 
-          //echo $varName." = ".$pst."<br>";
-          // vezi daca are reguli de validare
-          if(isset($det['validRules']))
-              foreach($det['validRules'] AS $validRule => $validDet){
-
-                  $psts->validation = $this->{'valid_'.$validRule}( $pst, $validDet['fbk'] );
-
-              }
       }
+
+     /* if($validation)
+          $this->validatePosts($expectedPosts,$psts);*/
 
       return $psts;
 

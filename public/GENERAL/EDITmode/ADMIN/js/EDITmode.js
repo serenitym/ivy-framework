@@ -292,16 +292,16 @@ var iEdit = function(){
                                                  ;*/
                             var imgSrc =jqEDtag.attr('src');
 
-                            /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );
-                            var hiddenValue = $(EDtag+"[src*=placehold.it]").length > 0
+                            /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );*/
+                            var hiddenValue = imgSrc.search("placehold") > 0
                                               ? ''
-                                              : imgSrc;*/
+                                              : imgSrc;
 
-
+                           // alert('hiddenValue is '+hiddenValue+ ' '+imgSrc.search("placehold"));
                             //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
 
                             return   "<img class='"+INPUTclasses+"' src='"+imgSrc+"' id='editImg_"+INPUTname+"'>" +
-                                     "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                                     "<input type='hidden' name='"+INPUTname+"' value='"+hiddenValue+"' />" +
                                      "<input type='button' name='replaceImg' value='loadImg' " +
                                                           " style='left: 0;position: absolute;'" +
                                                           " onclick='iEdit.evCallback.loadPic(\"editImg_"+INPUTname+"\")'>";
