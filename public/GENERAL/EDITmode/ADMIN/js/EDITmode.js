@@ -56,7 +56,21 @@ var iEdit = function(){
      *                },
      *            edit: {},
      *            deleteBt : {methName:'', status : 1, atrName:"delete_"+Name, atrValue: 'd' },
-                  saveBt : {methName:'',status : 1, atrName:"save_"+Name, atrValue: 's' }
+                  saveBt : {methName:'',status : 1, atrName:"save_"+Name, atrValue: 's' },
+
+                  extraBts:
+                  {
+                      manageGroup: {
+                          callBack: "ivyMods.team.showManageGroups();",
+                          atrValue: 'manage Groups',
+                          class: ''
+                      },
+                      showAllmembers:{
+                          callBack: "ivyMods.team.showAllMembers();",
+                          atrValue: 'show all Members',
+                          class: ''
+                      }
+                  }
 
      *       },
      *
@@ -76,37 +90,7 @@ var iEdit = function(){
                 saveBt: {status : false}
             }
 
-           /*,
-            teamMember:{
-                addBt: {name: 'add new Member'},
-                extraBts:{
-                    manageGroup: {
-                        callBack: "javascript: alert('bun');",
-                        value: 'manage Groups',
-                        class: ''
-                    },
-                    showAllmembers:{
-                        callBack: "javascript: alert('bun');",
-                        value: 'show all Members',
-                        class: ''
-                    }
-                }
-            }*/
 
-
-            /*
-            // setate din picManager.js
-            'pic-full' : {
-                addBt  : { status : false },
-                saveBt : { async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/savePic.php' , restoreCore : false },
-                                                 { callBack_fn : (typeof carousel_savePic == 'function'  ? carousel_savePic : 'altceva')}
-                                                )
-                        },
-                deleteBt :{ async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/deletePic.php', restoreCore : false},
-                                                  { callBack_fn : (typeof carousel_deletePic == 'function' ? carousel_deletePic : 'altceva')}
-                                                 )
-                        }
-            }*/
 
 
     };
@@ -308,16 +292,16 @@ var iEdit = function(){
                                                  ;*/
                             var imgSrc =jqEDtag.attr('src');
 
-                            /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );
-                            var hiddenValue = $(EDtag+"[src*=placehold.it]").length > 0
+                            /*alert(EDtag + ' '+ $(EDtag+"[src*=placehold.it]").attr('src') );*/
+                            var hiddenValue = imgSrc.search("placehold") > 0
                                               ? ''
-                                              : imgSrc;*/
+                                              : imgSrc;
 
-
+                           // alert('hiddenValue is '+hiddenValue+ ' '+imgSrc.search("placehold"));
                             //return  "<img class='"+imgClasses+"' src='"+imgSrc+"'>";
 
                             return   "<img class='"+INPUTclasses+"' src='"+imgSrc+"' id='editImg_"+INPUTname+"'>" +
-                                     "<input type='hidden' name='"+INPUTname+"' value='' />" +
+                                     "<input type='hidden' name='"+INPUTname+"' value='"+hiddenValue+"' />" +
                                      "<input type='button' name='replaceImg' value='loadImg' " +
                                                           " style='left: 0;position: absolute;'" +
                                                           " onclick='iEdit.evCallback.loadPic(\"editImg_"+INPUTname+"\")'>";
@@ -431,7 +415,7 @@ var iEdit = function(){
                                          },
                                         "json"
                                     );
-
+extraBts
                                 },*/
                          source:
                                 function( request, response )
@@ -725,8 +709,8 @@ var iEdit = function(){
 
                       if(firstENT.length > 0) // daca sunt elemente in cadrul allENTS
                       {
-                        var elD = get_elmDet(firstENT); //from element Details
-                        /**
+                           var elD = get_elmDet(firstENT); //from element Details
+                            /**
                          * uses
                          * BTT {style, name, status}
                          *
@@ -735,9 +719,23 @@ var iEdit = function(){
                          * FORM_id
                          * content
                          * */
-                          //daca nu este eliminat butonul
-                          if(elD.BTT.status)
-                          {
+                            //daca nu este eliminat butonul sau exista butoane extra
+
+                           var html_addBtn = elD.BTT.status
+                                             ? "<span>" +
+                                                      "<input type='button'  class='editModeBTT' "+elD.BTT.style+"  name='addNewENT' value='"+elD.BTT.atrValue+"' " +
+                                                                        " onclick=\"iEdit.evCallback.addEnt('"+elD.nameENT+"')\">" +
+                                                      "<i>Add new</i>" +
+                                                "</span>"
+                                             : "";
+
+
+                           /**
+                            * Daca exista buton de add sau extra butoane pentru toate ENT-urile
+                            * */
+                           if(html_addBtn!='' || elD.html_extraBTTS!='')
+                           {
+
                                 //alert(BTTstatus);
                                  allENTS.prepend
                                  (
@@ -745,20 +743,20 @@ var iEdit = function(){
                                        "<div class='TOOLSbtn'>" +
 
                                             elD.html_extraBTTS+
-
-                                            "<span>" +
-                                                  "<input type='button'  class='editModeBTT' "+elD.BTT.style+"  name='addNewENT' value='"+elD.BTT.atrValue+"' " +
-                                                                        " onclick=\"iEdit.evCallback.addEnt('"+elD.nameENT+"')\">" +
-                                                  "<i>Add new</i>" +
-                                            "</span>" +
-
-
+                                            html_addBtn +
 
                                        "</div>" +
                                    "</div>"
 
                                  );
 
+                           }
+                          /**
+                           * creaza buton de formul de add conform primului ENT din lista
+                           * transformand toate campurile editabile in inputuri
+                           * */
+                           if(elD.BTT.status)
+                           {
                                   //____________________________________________________________________________________________
                                 firstENT.before
                                 (
