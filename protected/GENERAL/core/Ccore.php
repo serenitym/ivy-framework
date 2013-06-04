@@ -14,7 +14,7 @@
 
 
 
-class Ccore extends CgenTools
+class Ccore extends CLcore
 {
 
 
@@ -726,7 +726,7 @@ class Ccore extends CgenTools
 #=======================================================================================================================
 
 
-    public function ctrl_postRequest($relocate = true){
+    public function ctrl_postRequest(){
 
 
        // var_dump($_POST);
@@ -735,6 +735,7 @@ class Ccore extends CgenTools
 
             $moduleName = $_POST['moduleName'];
             $methName   = $_POST['methName'];
+            $relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : true ;
 
             if(is_object($this->$moduleName) && method_exists($this->$moduleName,$methName))
             {
@@ -758,20 +759,24 @@ class Ccore extends CgenTools
 
                         $obj->{$methName}();
 
-                        unset($_POST);
                         // =================[refresh page]======================
-                        if($relocate)
+                        if($relocate){
+
+                            unset($_POST);
                             $this->reLocate();
+                        }
                     }
                     //safty reasons
                     unset($_POST);
 
                 } else{
                     $obj->{$methName}();
-                    unset($_POST);
                      // =================[refresh page]======================
                     if($relocate)
+                    {
+                        unset($_POST);
                         $this->reLocate();
+                    }
                 }
 
             }

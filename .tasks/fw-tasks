@@ -24,12 +24,23 @@ DONE »[] - creat un mainModel
     - scos templateurile din core + css-uri + js-uri
     - si creat acest mainModel in MODELS
 
+[] - hardLog.php nu este pozitionat corect in framework
+
 =====================[ PRIORITIES ]=========================================================
+IDEE
+    - despre templaturi locale
+    idea este sa caute / creeze path-urile catre template intai catre
+    LOCALS si apoi daca path-ul nu exista sa caute via modType
+
 
 PROBLEMS
 
-[] - hardLog.php nu este pozitionat corect in framework
+- problema lucrurilor deprecated
+    * eventual o clasa locala care sa fie extinsa de / prin "core" unde sa stea
+    aceste lucruri deprecated
 
+    * de exemplu functiile de validare vreau sa le trec in deprecated,
+    mi se pare ca le-am folosit la prographic...sa vedem....
 
 ** cred ca e rezolvata - check
 GEN_edit

@@ -65,9 +65,7 @@ var ivyMods = {
 
 //=============================[ framework related functions ]==============================
 var fmw = function(){
-// all this functions should be refered from outside as fmw.FunctionName
-
-
+    // all this functions should be refered from outside as fmw.FunctionName
 
    function openKCFinder_popUp(callBackFn){
        window.KCFinder = {
@@ -158,7 +156,6 @@ var fmw = function(){
 
        }
 
-
     /**
      * RET a confing object for async actions
      *
@@ -167,32 +164,26 @@ var fmw = function(){
      * @return {*}
      */
    function asyncConf(options, callBack){
-        /*
-          options:
-           - parsePOSTfile
-
+         /*
+         options:
+          - parsePOSTfile
            - moduleName
-           - methName
-
+          - methName
           callBack_fn :  callbackTest
-          * */
-          var defaults = {
-              procesSCRIPT : 'procesSCRIPT.php',
-              restoreCore : true
-          };
-
+         * */
+         var defaults = {
+             procesSCRIPT : 'procesSCRIPT.php',
+             restoreCore : true
+         };
           var prop = $.extend(true,{},defaults, options,callBack);
-
           var fns = {
                   neApelata : function(apel){
                       console.log("Aceasta functie nu ar trebui niciodata apelata "+apel);
                   },
-
                   callBackFn_dummy: function(data, func){
                       console.log('Nu a fost setata sau trimisa nici o functie de callback '+data + ' chemat de '+ func);
                   },
-
-                  fnpost: function(sendData, callBack_fn){
+                  fnpost:  function(sendData, callBack_fn){
 
                       console.log("Am apelat functia fnpost");
 
@@ -266,7 +257,7 @@ var fmw = function(){
 
           return $.extend(prop, fns);
 
-      }
+   }
 
 
   //=========================================================================
