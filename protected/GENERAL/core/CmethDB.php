@@ -312,7 +312,7 @@ class CmethDB extends CrenderTmpl {
         $set = '';
         foreach($varValues AS $varName=>$varValue) {
             $varValue = $this->DB->real_escape_string($varValue);
-            $set .= "$varName = '".$varValue."', ";
+            $set .= "$varName = '".stripslashes($varValue)."', ";
         }
 
         $set = substr($set,0,-2);
@@ -327,7 +327,7 @@ class CmethDB extends CrenderTmpl {
         $set = '';
         foreach($values AS $varName=>$varValue) {
             $varValue = $this->DB->real_escape_string($varValue);
-            $set .= "$varName = '".$varValue."', ";
+            $set .= "$varName = '".stripslashes($varValue)."', ";
         }
 
         $set = substr($set,0,-2);
