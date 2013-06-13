@@ -24,7 +24,12 @@ function INIadmin_GEN_edit()  {
              {
 
                    but_ol =    $('ol.sortable').nestedSortable('toHierarchy', {startDepthCount: 0})  ;
-                   $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,action:'updateTREE' , but_ol : but_ol   } );
+                   $.post(procesSCRIPT_file,
+                       {   parsePOSTfile : parsePOSTfile ,
+                           restoreCore: 0,
+                           action:'updateTREE' ,
+                           but_ol : but_ol
+                       } );
 
                    setFOLDING('false');
 
@@ -34,7 +39,11 @@ function INIadmin_GEN_edit()  {
   		});
 
    /***********************************************************[preparare pt editare]**********************************/
-       $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,deleteCHANGES:'deleteCHANGES'  } );
+       $.post(procesSCRIPT_file,
+           {   parsePOSTfile : parsePOSTfile ,
+               restoreCore: 0,
+               deleteCHANGES:'deleteCHANGES'
+           } );
 
 
        $('ol.sortable > li > ol li>div').map(function(){ setTOOLS_GE($(this));  });
@@ -291,11 +300,21 @@ function deleteITEM(id)       {
 
     //_________________________________________________________________________________________________________________
 
-        $.post( procesSCRIPT_file,   {parsePOSTfile : parsePOSTfile ,action : 'deleteITEM', id : id } );
+        $.post( procesSCRIPT_file,
+            {   parsePOSTfile : parsePOSTfile ,
+                restoreCore: 0,
+                action : 'deleteITEM',
+                id : id
+            } );
 
     //______________________________________[necesar sa se updateze tree-urile  la delete ]____________________________
         but_ol =    $('ol.sortable').nestedSortable('toHierarchy', {startDepthCount: 0})  ;
-        $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,action:'updateTREE' , but_ol : but_ol   });
+        $.post(procesSCRIPT_file,
+            {   parsePOSTfile : parsePOSTfile ,
+                restoreCore: 0,
+                action:'updateTREE' ,
+                but_ol : but_ol
+            });
 
 
 }
@@ -328,6 +347,7 @@ function Save_SEOEdit(id)     {
          $.post( procesSCRIPT_file,
                    {
                        parsePOSTfile : parsePOSTfile ,
+                       restoreCore: 0,
                        action : 'seoITEM',
                        id : id,
                        title_tag       : title_tag,
@@ -372,6 +392,7 @@ function SaveEditITEM(id)     {
     $.post( procesSCRIPT_file,
            {
                parsePOSTfile : parsePOSTfile ,
+               restoreCore: 0,
                action : 'updateITEM',
                id : id,
                val : val,
@@ -383,6 +404,7 @@ function SaveEditITEM(id)     {
     $.post(procesSCRIPT_file,
            {
                parsePOSTfile : parsePOSTfile ,
+               restoreCore: 0,
                action:'updateTREE' ,
                but_ol : but_ol
            });
@@ -417,7 +439,13 @@ function addNewITEM()         {
 
     //================================= [ trimit action = add new ITEM ] ===============================================
 
-    $.post( procesSCRIPT_file,   {parsePOSTfile : parsePOSTfile ,action : 'addNewITEM', id : lastID, val : itemName, type:itemTYPE   } );
+    $.post( procesSCRIPT_file,
+        { parsePOSTfile : parsePOSTfile ,
+          restoreCore: 0,
+          action : 'addNewITEM',
+          id : lastID,
+          val : itemName, type:itemTYPE
+        } );
 
 
 }

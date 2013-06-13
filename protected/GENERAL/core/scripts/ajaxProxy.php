@@ -4,9 +4,10 @@
 
    require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
 
-   if((!isset($_POST['restoreCore']) || $_POST['restoreCore'] == true ) && file_exists(varPath.'tmp/sercore.txt'))
+   if((!isset($_POST['restoreCore']) || $_POST['restoreCore'] === true ) && file_exists(varPath.'tmp/sercore.txt'))
    {
 
+       error_log("Restore Core restoreCore = ".$_POST['restoreCore']);
        $sercore  = file_get_contents(varPath.'tmp/sercore.txt');
        $core     = unserialize($sercore);
 

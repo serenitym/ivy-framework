@@ -53,6 +53,8 @@ GEN_edit
 
 GEN.js - trebuie spart in deprecGEN
     -   acele functii care nu sunt encapsulate cum trebuie
+    - deasemenea trebuie rezolvata problema claselor ( din nestedsortable) care se
+    suprapun de multe ori cu alte clase in pagina
 
 as vrea sa creez in var / trees un master tree care sa existe mereu
 
