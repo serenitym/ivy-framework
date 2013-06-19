@@ -173,7 +173,7 @@ var fmw = function(){
          * */
          var defaults = {
              procesSCRIPT : 'procesSCRIPT.php',
-             restoreCore : true
+             restoreCore : 1
          };
           var prop = $.extend(true,{},defaults, options,callBack);
           var fns = {

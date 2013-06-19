@@ -61,7 +61,7 @@ var bttConf = function()
                                  methName: 'methName',
                                  parsePOSTfile : 'filePath.php' ,
                                  callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
-                                 restoreCore : false
+                                 restoreCore : 0
                              })
                  },
              deleteBt:{},
@@ -90,11 +90,11 @@ var bttConf = function()
 
         /*'pic-full' : {
             addBt  : { status : false },
-            saveBt : { async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/savePic.php' , restoreCore : false },
+            saveBt : { async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/savePic.php' , restoreCore : 0 },
                                              { callBack_fn : (typeof carousel_savePic == 'function'  ? carousel_savePic : 'altceva')}
                                             )
                     },
-            deleteBt :{ async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/deletePic.php', restoreCore : false},
+            deleteBt :{ async : new asyncConf({ parsePOSTfile : 'PLUGINS/picManager/ADMIN/deletePic.php', restoreCore : 0},
                                               { callBack_fn : (typeof carousel_deletePic == 'function' ? carousel_deletePic : 'altceva')}
                                              )
                     }
@@ -116,7 +116,7 @@ var bttConf = function()
  *                                methName: 'methName',
  *                                parsePOSTfile : 'filePath.php' ,
  *                                callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
- *                                restoreCore : false
+ *                                restoreCore : 0
  *                            })
  *                },
  *            delete:{},

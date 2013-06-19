@@ -1523,6 +1523,7 @@ class Securimage
         } else {
             $code = $this->code;
         }
+        //echo "<br>Codul introdus este = {$this->code_entered}  & codul valid este = {$code}";
 
         if ($this->case_sensitive == false && preg_match('/[A-Z]/', $code)) {
             // case sensitive was set from securimage_show.php but not in class
@@ -1535,13 +1536,13 @@ class Securimage
                         );
         $this->correct_code = false;
 
+
         if ($code != '') {
             if (strpos($code, ' ') !== false) {
                 // for multi word captchas, remove more than once space from input
                 $code_entered = preg_replace('/\s+/', ' ', $code_entered);
                 $code_entered = strtolower($code_entered);
             }
-            
             if ($code == $code_entered) {
                 $this->correct_code = true;
                 if ($this->no_session != true) {

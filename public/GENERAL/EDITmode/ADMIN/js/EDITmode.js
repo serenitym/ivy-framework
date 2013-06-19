@@ -51,7 +51,7 @@ var iEdit = function(){
      *                                methName: 'methName',
      *                                parsePOSTfile : 'filePath.php' ,
      *                                callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
-     *                                restoreCore : false
+     *                                restoreCore : 0
      *                            })
      *                },
      *            edit: {},

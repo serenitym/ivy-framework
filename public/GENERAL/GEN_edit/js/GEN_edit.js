@@ -165,8 +165,6 @@ function setTOOLS_GE(liDIV)   {
      */
 }
 
-
-
 function editITEM(id)         {
     /**
        *  HTML - start:
