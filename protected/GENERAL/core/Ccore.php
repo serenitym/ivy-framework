@@ -422,10 +422,7 @@ class Ccore extends CLcore
         {
             $this->$mod_name = new $OB_name($this);
             # echo fw_incPath.$type_MOD."/$mod_name".$ADMINstr."/".$OB_name.'.php'."<br/>";
-            $this->GET_objREQ($this->$mod_name,$type_MOD,$mod_name);
-            # preia si seteaza toate cele necesare pentru respectivul model
-            # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nameF
-            # si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
+
 
 
             # return $this->$mod_name;
@@ -464,6 +461,10 @@ class Ccore extends CLcore
 
             if( $objectCreat_stat )
             {
+		$this->GET_objREQ($this->$mod_name,$type_MOD,$mod_name);
+		# preia si seteaza toate cele necesare pentru respectivul model
+		# exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nameF
+		# si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
                 $this->SET_INC_extObj_jsCss($this->$mod_name,$ADMINstr);
                 $this->SET_INC_assetsObj($this->$mod_name);
             }
@@ -630,6 +631,8 @@ class Ccore extends CLcore
               return  unserialize(file_get_contents($pathTree));
           else{
 
+	      // GET_tree_fromDB
+	      // scrie tree-ul in res SET_REStree
               $tree =  $this->SET_REStree($pathTree, $idT);
               unset($this->TMPtree);
               return $tree;
