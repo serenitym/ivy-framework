@@ -274,7 +274,7 @@ var QUnit = {
 			expected = null;
 		}
 		// is 2nd argument a testEnvironment?
-		if ( expected && typeof expected === 'object') {
+		if ( expected && typeof expected === 'modect') {
 			testEnvironmentArg =  expected;
 			expected = null;
 		}
@@ -326,8 +326,8 @@ var QUnit = {
 	 *
 	 * @example equal( format("Received {0} bytes.", 2), "Received 2 bytes." );
 	 *
-	 * @param Object actual
-	 * @param Object expected
+	 * @param modect actual
+	 * @param modect expected
 	 * @param String message (optional)
 	 */
 	equal: function(actual, expected, message) {
@@ -373,7 +373,7 @@ var QUnit = {
 			if (!expected) {
 				ok = true;
 			// expected is a regexp
-			} else if (QUnit.objectType(expected) === "regexp") {
+			} else if (QUnit.modectType(expected) === "regexp") {
 				ok = expected.test(actual);
 			// expected is a constructor
 			} else if (actual instanceof expected) {
@@ -476,7 +476,7 @@ var config = {
 })();
 
 // Expose the API as global variables, unless an 'exports'
-// object exists, in that case we assume we're in CommonJS
+// modect exists, in that case we assume we're in CommonJS
 if ( typeof exports === "undefined" || typeof require === "undefined" ) {
 	extend(window, QUnit);
 	window.QUnit = QUnit;
@@ -565,27 +565,27 @@ extend(QUnit, {
 		}
 	},
 
-	// Safe object type checking
-	is: function( type, obj ) {
-		return QUnit.objectType( obj ) == type;
+	// Safe modect type checking
+	is: function( type, mod ) {
+		return QUnit.modectType( mod ) == type;
 	},
 
-	objectType: function( obj ) {
-		if (typeof obj === "undefined") {
+	modectType: function( mod ) {
+		if (typeof mod === "undefined") {
 				return "undefined";
 
-		// consider: typeof null === object
+		// consider: typeof null === modect
 		}
-		if (obj === null) {
+		if (mod === null) {
 				return "null";
 		}
 
-		var type = Object.prototype.toString.call( obj )
-			.match(/^\[object\s(.*)\]$/)[1] || '';
+		var type = modect.prototype.toString.call( mod )
+			.match(/^\[modect\s(.*)\]$/)[1] || '';
 
 		switch (type) {
 				case 'Number':
-						if (isNaN(obj)) {
+						if (isNaN(mod)) {
 								return "nan";
 						} else {
 								return "number";
@@ -598,8 +598,8 @@ extend(QUnit, {
 				case 'Function':
 						return type.toLowerCase();
 		}
-		if (typeof obj === "object") {
-				return "object";
+		if (typeof mod === "modect") {
+				return "modect";
 		}
 		return undefined;
 	},
@@ -963,9 +963,9 @@ QUnit.equiv = function () {
 
     // Call the o related callback with the given arguments.
     function bindCallbacks(o, callbacks, args) {
-        var prop = QUnit.objectType(o);
+        var prop = QUnit.modectType(o);
         if (prop) {
-            if (QUnit.objectType(callbacks[prop]) === "function") {
+            if (QUnit.modectType(callbacks[prop]) === "function") {
                 return callbacks[prop].apply(callbacks, args);
             } else {
                 return callbacks[prop]; // or undefined
@@ -999,11 +999,11 @@ QUnit.equiv = function () {
             },
 
             "date": function (b, a) {
-                return QUnit.objectType(b) === "date" && a.valueOf() === b.valueOf();
+                return QUnit.modectType(b) === "date" && a.valueOf() === b.valueOf();
             },
 
             "regexp": function (b, a) {
-                return QUnit.objectType(b) === "regexp" &&
+                return QUnit.modectType(b) === "regexp" &&
                     a.source === b.source && // the regex itself
                     a.global === b.global && // and its modifers (gmi) ...
                     a.ignoreCase === b.ignoreCase &&
@@ -1015,7 +1015,7 @@ QUnit.equiv = function () {
             //   initial === would have catch identical references anyway
             "function": function () {
                 var caller = callers[callers.length - 1];
-                return caller !== Object &&
+                return caller !== modect &&
                         typeof caller !== "undefined";
             },
 
@@ -1023,8 +1023,8 @@ QUnit.equiv = function () {
                 var i, j, loop;
                 var len;
 
-                // b could be an object literal here
-                if ( ! (QUnit.objectType(b) === "array")) {
+                // b could be an modect literal here
+                if ( ! (QUnit.modectType(b) === "array")) {
                     return false;
                 }
 
@@ -1051,7 +1051,7 @@ QUnit.equiv = function () {
                 return true;
             },
 
-            "object": function (b, a) {
+            "modect": function (b, a) {
                 var i, j, loop;
                 var eq = true; // unless we can proove it
                 var aProperties = [], bProperties = []; // collection of strings
@@ -1102,7 +1102,7 @@ QUnit.equiv = function () {
         return (function (a, b) {
             if (a === b) {
                 return true; // catch the most you can
-            } else if (a === null || b === null || typeof a === "undefined" || typeof b === "undefined" || QUnit.objectType(a) !== QUnit.objectType(b)) {
+            } else if (a === null || b === null || typeof a === "undefined" || typeof b === "undefined" || QUnit.modectType(a) !== QUnit.modectType(b)) {
                 return false; // don't lose time with error prone cases
             } else {
                 return bindCallbacks(a, callbacks, [b, a]);
@@ -1155,36 +1155,36 @@ QUnit.jsDump = (function() {
 	var reName = /^function (\w+)/;
 
 	var jsDump = {
-		parse:function( obj, type ) { //type is used mostly internally, you can fix a (custom)type in advance
-			var	parser = this.parsers[ type || this.typeOf(obj) ];
+		parse:function( mod, type ) { //type is used mostly internally, you can fix a (custom)type in advance
+			var	parser = this.parsers[ type || this.typeOf(mod) ];
 			type = typeof parser;
 
-			return type == 'function' ? parser.call( this, obj ) :
+			return type == 'function' ? parser.call( this, mod ) :
 				   type == 'string' ? parser :
 				   this.parsers.error;
 		},
-		typeOf:function( obj ) {
+		typeOf:function( mod ) {
 			var type;
-			if ( obj === null ) {
+			if ( mod === null ) {
 				type = "null";
-			} else if (typeof obj === "undefined") {
+			} else if (typeof mod === "undefined") {
 				type = "undefined";
-			} else if (QUnit.is("RegExp", obj)) {
+			} else if (QUnit.is("RegExp", mod)) {
 				type = "regexp";
-			} else if (QUnit.is("Date", obj)) {
+			} else if (QUnit.is("Date", mod)) {
 				type = "date";
-			} else if (QUnit.is("Function", obj)) {
+			} else if (QUnit.is("Function", mod)) {
 				type = "function";
-			} else if (typeof obj.setInterval !== undefined && typeof obj.document !== "undefined" && typeof obj.nodeType === "undefined") {
+			} else if (typeof mod.setInterval !== undefined && typeof mod.document !== "undefined" && typeof mod.nodeType === "undefined") {
 				type = "window";
-			} else if (obj.nodeType === 9) {
+			} else if (mod.nodeType === 9) {
 				type = "document";
-			} else if (obj.nodeType) {
+			} else if (mod.nodeType) {
 				type = "node";
-			} else if (typeof obj === "object" && typeof obj.length === "number" && obj.length >= 0) {
+			} else if (typeof mod === "modect" && typeof mod.length === "number" && mod.length >= 0) {
 				type = "array";
 			} else {
-				type = typeof obj;
+				type = typeof mod;
 			}
 			return type;
 		},
@@ -1235,7 +1235,7 @@ QUnit.jsDump = (function() {
 			array: array,
 			nodelist: array,
 			arguments: array,
-			object:function( map ) {
+			modect:function( map ) {
 				var ret = [ ];
 				QUnit.jsDump.up();
 				for ( var key in map )
@@ -1266,7 +1266,7 @@ QUnit.jsDump = (function() {
 					args[l] = String.fromCharCode(97+l);//97 is 'a'
 				return ' ' + args.join(', ') + ' ';
 			},
-			key:quote, //object calls it internally, the key part of an item in a map
+			key:quote, //modect calls it internally, the key part of an item in a map
 			functionCode:'[code]', //function calls it internally, it's the content of the function
 			attribute:quote, //node calls it internally, it's an html attribute value
 			string:quote,
@@ -1324,8 +1324,8 @@ function getText( elems ) {
  */
 QUnit.diff = (function() {
 	function diff(o, n){
-		var ns = new Object();
-		var os = new Object();
+		var ns = new modect();
+		var os = new modect();
 
 		for (var i = 0; i < n.length; i++) {
 			if (ns[n[i]] == null)

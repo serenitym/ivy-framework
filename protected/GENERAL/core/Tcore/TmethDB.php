@@ -16,9 +16,9 @@ trait TmethDB {
 
 
     /**
-         * Array multidimesional cu datele ret de query si procesate de $obj->processResMethod
+         * Array multidimesional cu datele ret de query si procesate de $mod->processResMethod
          *
-         * @param $obj                      - obiectul care cheama metoda
+         * @param $mod                      - obiectul care cheama metoda
          * @param $query                    - queryul cerut
          * @param string $processResMethod  - metoda care proceseaza fiecare rand returnat de query
          * @param bool $onlyArr  = false    - (nu) va seta proprietati in cadrul obiectului daca doar un rand este returnat
@@ -34,16 +34,16 @@ trait TmethDB {
 
     /**
          *
-         * @param $obj                        - obiectul care a apelat metoda
+         * @param $mod                        - obiectul care a apelat metoda
          * @param $query                      - query-ul de procesat
-         * @param string $processResMethod    - metoda a $obj care proceseaza orice rand returnat
+         * @param string $processResMethod    - metoda a $mod care proceseaza orice rand returnat
          * @param bool $onlyArr               - daca queryul ret un singur record
-         *                                              false - va seta valoriile ret la obj
+         *                                              false - va seta valoriile ret la mod
          *                                              true - va returna un array[0] = array(colum=>value);
          * @return array                      - array muldimensional cu toate recordurile returnate de query
          *                                      si procesate de processResMethod
          */
-    public function GET_objProperties(&$obj,$query,$processResMethod='', $onlyArr = false) {
+    public function GET_modProperties(&$mod,$query,$processResMethod='', $onlyArr = false) {
 
 
             /**
@@ -69,15 +69,15 @@ trait TmethDB {
 
                     $row = $res->fetch_assoc();
 
-                    if($processResMethod!='' && method_exists($obj,$processResMethod) )
-                        $row = $obj->{$processResMethod}($row);
+                    if($processResMethod!='' && method_exists($mod,$processResMethod) )
+                        $row = $mod->{$processResMethod}($row);
 
                     if($row)
                     {
                         if(is_array($row) && count($row) > 0)
                         {
                             foreach($row AS $recordName => $recordValue)         # atribuim valori direct in prop obiectului
-                                $obj->$recordName = $recordValue;
+                                $mod->$recordName = $recordValue;
 
                         }
                         $allRecords[0] = $row;
@@ -89,10 +89,10 @@ trait TmethDB {
                 }
                 else
                 {
-                    if($processResMethod!='' && method_exists($obj,$processResMethod)){
+                    if($processResMethod!='' && method_exists($mod,$processResMethod)){
                         while($row = $res->fetch_assoc())
                         {
-                              $row = $obj->{$processResMethod}($row);
+                              $row = $mod->{$processResMethod}($row);
                               if($row)
                                      array_push($allRecords, $row);
                         }
@@ -111,7 +111,7 @@ trait TmethDB {
 
 
         }
-    public function GET_objProperties_byCat(&$obj,$query,$Col_name,$processResMethod=''){
+    public function GET_modProperties_byCat(&$mod,$query,$Col_name,$processResMethod=''){
 
             # va returna un array de genul allRecords[Cat_name][0,1,2...] = array(children array);
             # hmm..daca avem mai multe coloane atunci $allRecords[col][0,,1...]
@@ -128,10 +128,10 @@ trait TmethDB {
 
                     $col = $row[$Col_name];
 
-                    if($processResMethod!='' && method_exists($obj,$processResMethod) )
+                    if($processResMethod!='' && method_exists($mod,$processResMethod) )
                     {
 
-                        $row = $obj->{$processResMethod}($row);
+                        $row = $mod->{$processResMethod}($row);
                     }
 
                     $allRecords[$col] = array();
@@ -150,7 +150,7 @@ trait TmethDB {
 
 
         }
-    public function GETtree_objProperties(&$obj,$query,$idC_name, $idP_name,$processResMethod='')   {
+    public function GETtree_modProperties(&$mod,$query,$idC_name, $idP_name,$processResMethod='')   {
 
             # va returna un array de genul allRecords[idP][idC] = array(children array);
             # idC_name / idP_name = numele campurilor pt child / parent
@@ -164,7 +164,7 @@ trait TmethDB {
                 {
                     $parentID = $row[$idP_name];
                     $ID       = $row[$idC_name];
-                    if($processResMethod!='') $row = $obj->{$processResMethod}($row);
+                    if($processResMethod!='') $row = $mod->{$processResMethod}($row);
 
                     $allRecords[$parentID][$ID] = $row;
 
@@ -230,7 +230,7 @@ trait TmethDB {
      /**
      *  DB_table         = prefix + origin + postfix
      *
-     * @param        $obj           - obiectul pentru care se fac setarile
+     * @param        $mod           - obiectul pentru care se fac setarile
      * @param        $extKname      - numele cheii externe
      * @param        $extKvalue     - valoarea cheii externe
      * @param        $tbOrigin      - numele tabelului de origine
@@ -239,16 +239,16 @@ trait TmethDB {
      * @param string $bond          - concatenare nume DB_table
      */
     public function SET_tableRelations_settings
-             (&$obj,$extKname, $extKvalue, $tbOrigin, $tbPostfix='', $tbPrefix='', $bond='_') {
+             (&$mod,$extKname, $extKvalue, $tbOrigin, $tbPostfix='', $tbPrefix='', $bond='_') {
 
 
-        $obj->DB_extKey_name  = $extKname  ;
-        $obj->DB_extKey_value = $extKvalue ;
-        $obj->DB_table_origin = $tbOrigin  ;
-        $obj->DB_table_postfix = $tbPostfix ;
-        $obj->DB_table_prefix  = $tbPrefix  ;
+        $mod->DB_extKey_name  = $extKname  ;
+        $mod->DB_extKey_value = $extKvalue ;
+        $mod->DB_table_origin = $tbOrigin  ;
+        $mod->DB_table_postfix = $tbPostfix ;
+        $mod->DB_table_prefix  = $tbPrefix  ;
 
-        $obj->DB_table = ($tbPrefix!='' ? $tbPrefix.$bond : '').
+        $mod->DB_table = ($tbPrefix!='' ? $tbPrefix.$bond : '').
                          ($tbOrigin!='' ? $tbOrigin : '').
                          ($tbPostfix!='' ? $bond.$tbPostfix      : '');
 
@@ -270,13 +270,13 @@ trait TmethDB {
      *
      * @param $varNames
      * @param array $varValues
-     * @param string $obj
+     * @param string $mod
      * @param string $processPOST
      * @param bool $LG
      * @return string
      */
     public function DMLsql_setValues
-    ($varNames,$varValues=array(),&$obj='',$processPOST='', $LG=true){
+    ($varNames,$varValues=array(),&$mod='',$processPOST='', $LG=true){
 
 
         # daca exista undeva un array definit cu numele coloanelor aprox identice cu numele variabilelor de post
@@ -285,7 +285,7 @@ trait TmethDB {
 
 
         if($LG) $concatLG = '_'.$this->lang;           #hmm...?
-        if($processPOST!='') $obj->$processPOST();     #in cazul in care se doreste o preprocesare, o preprocesare oblibatorie ar trebui sa se creeze oricum
+        if($processPOST!='') $mod->$processPOST();     #in cazul in care se doreste o preprocesare, o preprocesare oblibatorie ar trebui sa se creeze oricum
 
 
 

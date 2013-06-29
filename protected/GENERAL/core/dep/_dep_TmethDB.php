@@ -4,13 +4,13 @@ trait _dep_TmethDB {
 
         // deprecateded
     #=============================[ MANAGE wheres ]=======================================
-    public function CONCAT_queryWheres(&$obj1, &$obj2,$where='WHERE '){
+    public function CONCAT_queryWheres(&$mod1, &$mod2,$where='WHERE '){
 
 
         $RETwhere = '';
-        if(isset($obj1->queryWheres) && isset($obj2->queryWheres))
+        if(isset($mod1->queryWheres) && isset($mod2->queryWheres))
         {
-            $queryWheres = array_merge($obj1->queryWheres,$obj2->queryWheres );
+            $queryWheres = array_merge($mod1->queryWheres,$mod2->queryWheres );
 
             if(count($queryWheres) > 0)
                 $RETwhere = $where.implode(" AND ", $queryWheres);
@@ -23,16 +23,16 @@ trait _dep_TmethDB {
     /**
      * STRINGUL DE WHERE pentru un query bazat pe arrayul queryWheres
      *
-     * @param $obj
+     * @param $mod
      * @return string  - returneaza un string de forma [WHERE] / [AND] + conditii din arrayul queryWheres
-     *                   al obiectului $obj furnizat
+     *                   al obiectului $mod furnizat
      */
-    public function SET_queryWheres(&$obj, $where='WHERE '){
+    public function SET_queryWheres(&$mod, $where='WHERE '){
 
         $RETwhere = '';
 
-        if(isset($obj->queryWheres) && count($obj->queryWheres) > 0)
-            $RETwhere = $where. implode(" AND ", $obj->queryWheres);
+        if(isset($mod->queryWheres) && count($mod->queryWheres) > 0)
+            $RETwhere = $where. implode(" AND ", $mod->queryWheres);
 
         return $RETwhere;
     }
@@ -52,18 +52,18 @@ trait _dep_TmethDB {
     }
 
     /**
-     * adauga conditii in arrayul queryWheres ale obiectului $obj
+     * adauga conditii in arrayul queryWheres ale obiectului $mod
      * daca arrayul nu este setat inca metoda il va seta
      *
-     * @param $obj      - obiectul pentru care se seteaza wherurile
+     * @param $mod      - obiectul pentru care se seteaza wherurile
      * @param $where    - conditia care se adauga
      */
-    public function ADD_queryWheres(&$obj,$where){
+    public function ADD_queryWheres(&$mod,$where){
 
 
-        if(!isset($obj->queryWheres)) $obj->queryWheres = array();
+        if(!isset($mod->queryWheres)) $mod->queryWheres = array();
 
-        array_push($obj->queryWheres," ".$where." " );
+        array_push($mod->queryWheres," ".$where." " );
 
     }
 

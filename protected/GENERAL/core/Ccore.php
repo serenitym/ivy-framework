@@ -14,470 +14,13 @@
 
 
 
-class Ccore extends CLcore
+class Ccore extends CsetModule
 {
 
 
 # manage function - should be put in TgenTools respectiv create ATgenTools
     static function debugMess($mess){ return '';}
 
-#=============================================[ incTags ]===============================================================
-
-    # incTags
-
-    # 1
-    public function GET_INCtag_js($SRC_path)  {
-        return "<script type='text/javascript'  src='".$SRC_path."'></script>"."\n";}
-    # 1
-    public function GET_INCtag_css($SRC_path) {
-        return "<link rel='stylesheet' href= '".$SRC_path."'  />"."\n";}
-
-    # 2
-    public function GET_INC_htmlTags($extension, $ext_PATH, $ext_SRC_PATH){
-
-        //if(method_exists($this,"GET_INCtag_".$extension))
-         $tags = '';
-
-
-         if(  is_dir($ext_PATH) )
-         {
-             $dir = dir($ext_PATH);
-
-             while(false!== ($file=$dir->read()) )
-             {
-                 $arr_file = explode('.',$file);
-                 if( end($arr_file) ==$extension  )
-                        $tags .= $this->{"GET_INCtag_".$extension}($ext_SRC_PATH.$file);
-             }
-
-             return $tags;
-         }
-
-        return '';
-    }
-
-    # 3 - A
-    /**
-     * utilizata cand se doreste css-ul sau js-ul unui anumit model (istantiat sau NEinstantiat)
-     *  - tagul de includere a fisierului va fi retinut in $this->INC_[extension]
-     *
-     *
-     * @param $mod_name        - modulul de la care se doresc preluate fisierule cu extensia ceruta
-     * @param $type_MOD        - tipul modelului GENERAL / MODELS /PLUGINS
-     * @param $extension       - extensia ex: js/ css
-     * @param string $folder   - folderul din cadrul caruia sa fie preluate fisierele cu extensia ceruta
-     * @param string $template - templateul daca este necesar
-     * @param string $ADMINstr - ADMIN
-     */
-    public function SET_INC_ext($mod_name,$type_MOD,$extension,$folder,$template='',$ADMINstr='') {
-
-
-            if($folder=='') $folder = $extension;
-            # $tmpl =/ [tmpl_name] /
-            $tmpl      =  $template ? 'tmpl_'.$template.'/' : '';  #daca s-a trimis un template modelul are un template
-           // $ADMINstr .=  $ADMINstr ? '/' : '';
-
-            $ext_PATH         =  fw_pubPath.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
-            $ext_SRC_PATH     =   fw_pubURL.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
-
-            #echo $ext_SRC_PATH.'<br>';
-            $this->{"INC_".$extension} .= $this->GET_INC_htmlTags($extension,$ext_PATH,$ext_SRC_PATH);
-
-
-
-    }
-
-    # 4
-    /**
-     * Automatic hmtl tag inclusion for an object
-     * @param $obj
-     * @param $extension
-     * @param string $folder
-     * @param string $ADMINstr
-     */
-    public function SET_INC_extObj(&$obj, $extension,$folder,$ADMINstr=''){
-
-        $template = isset($obj->template) ? $obj->template : '';
-
-        $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
-
-        /**
-         * daca obiectul are setat un template file atunci se va cauta un
-         * path = modType/ modName/ tmpl_tmplName/ js/ js_templateFileName/ ....js
-        */
-        if(isset($obj->template_file))
-        {
-             $folder = $folder."/"."{$folder}_".$obj->template_file;
-             $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
-        }
-
-    }
-
-    # 5
-   /**
-     * Automatic html tag css/js inclusion for object
-     *
-     * @param $obj
-     * @param string $folder
-     * @param string $ADMINstr
-     */
-   public function SET_INC_extObj_jsCss(&$obj,$ADMINstr=''){
-
-        $this->SET_INC_extObj($obj,'js','js',$ADMINstr);
-        $this->SET_INC_extObj($obj,'css','css',$ADMINstr);
-    }
-
-   //=====================[hard INCS]============================
-
-   #1
-   public function SET_INC_hardAdd($extension,$srcPath){
-
-        $this->{"INC_".$extension} .= $this->{"GET_INCtag_".$extension}($srcPath);
-    }
-
-   #2
-   public function SET_INC_assetsObj($obj){
-
-       # default assets   $obj->INC_assets[js / css]
-      if( isset($obj->assetsIC) )
-      foreach($obj->assetsINC AS $extension)
-           foreach($extension AS $srcPath)
-                $this->SET_INC_hardAdd($extension, $srcPath);
-
-     /**
-     * Assets for a template file  $obj->INC_assets_tmplF[ template_file ] [js / csss]
-     */
-     if( isset($obj->template_file)
-          && isset($obj->{'assetsINC_'.$obj->template_file}) )
-     {
-             $tmplFile_assets = &$obj->{'assetsINC_'.$obj->template_file};
-
-             foreach($tmplFile_assets AS $extension => $paths)
-                 foreach($paths AS $srcPath)
-                     $this->SET_INC_hardAdd($extension, $srcPath);
-
-     }
-
-
-
-   }
-
-
-
-
-#============================================[ objConf ]================================================================
-
-    # 1
-    static function GETconf(&$obj,$file_yml, $mod_name='' ){
-
-        // ATENTIE!!! -- La ce mai este nevoie de $mod_name?
-        # functie pentru popularea unui obiect cu date dintr-un fisier de config yaml
-
-        if(file_exists($file_yml))
-        {
-            #===========================================================================================================
-            /**
-             * setarea proprietatilor pentru obiectul $obj
-             * daca obiectul are deja setat un array atunci configul va adauga la acel array
-             * daca nu va adauga ca proprietate noua
-             */
-            $yml_array = Spyc::YAMLLoad($file_yml);
-            #var_dump($yml_array);
-
-            foreach($yml_array AS $var_name => $var_value)
-            {
-                if(isset($obj->$var_name) && is_array($obj->$var_name) && count($obj->$var_name) > 0)
-                    $obj->$var_name = array_merge($obj->$var_name,$var_value);
-
-                else $obj->$var_name = $var_value;
-
-            }
-
-
-            #===========================================================================================================
-            /**
-             * include yaml IN yaml
-             * daca fisierul yaml contine un vector "include" cu path-uri atunci la el se adauga incPath si se reapeleaza aceasta fct
-             * configurile acelui yaml vor fii atribuite obiectului curent
-             */
-
-
-            $incFile_yml = 'incFisier';
-            if(isset($yml_array['include']) && is_array($yml_array['include']))
-            {
-                foreach($yml_array['include'] AS $incFile_yml) {
-                    # echo 'inluded file '.$incFile_yml."<br>";
-                    self::GETconf($obj,incPath.$incFile_yml, $mod_name );
-                }
-            }
-
-            #===========================================================================================================
-
-
-            if(defined('DEBUG') && DEBUG == 1)
-                error_log('File is present: '.$file_yml);
-            return true;
-        }
-
-        else {
-            if(defined('DEBUG') && DEBUG == 1)
-                error_log('File is not present: '.$file_yml);
-            return false;
-        }
-
-
-    }
-
-    # deprecated
-    /**
-       * public function GET_objCONF(&$obj,$type_MOD, $mod_name,$admin='',$template='')     {
-       *
-
-           $file_yml =  incPath.'etc/'
-                               .$type_MOD.'/'
-                                   .$mod_name.'/'
-                                       .($template=='' ?
-                                                   $admin.$mod_name.'.yml':
-                                           'tmpl_'.$admin.$template.'.yml');
-
-
-           $this->GETconf($obj, $file_yml, $mod_name);
-
-           #===========================================================================================================
-           # 2
-           if(isset($obj->template) && $obj->template!=''  && $template == '' )
-               self::GET_objCONF($obj,$type_MOD,$mod_name,$admin,$obj->template);
-
-       }*/
-
-    # 2 - A
-    /**
-     * configurarea obiectelor via yaml
-     *
-     * # 2
-     *  daca in configul modelului gaseste declarat un template
-     *  atunci incearca sa vada daca nu cumva acel template are si el un config - tmpl_[A][templateName].yml
-     *
-     * @param $obj
-     * @param string $admin      [A / '']
-     * @param string $template  - numele templateului
-     */
-    public function GET_objCONF(&$obj,$admin='',$template='')     {	
-
-        $type_MOD = $obj->modType;
-        $mod_name = $obj->modName;
-        #===========================================================================================================
-
-        $file_yml =  incPath.'etc/'
-                            .$type_MOD.'/'
-                                .$mod_name.'/'
-                                    .($template=='' ?
-                                                $admin.$mod_name.'.yml':
-                                        'tmpl_'.$admin.$template.'.yml');
-
-
-        $this->GETconf($obj, $file_yml, $mod_name);
-
-        #===========================================================================================================
-        # 2
-        if(isset($obj->template) && $obj->template!=''  && $template == '' )
-            self::GET_objCONF($obj,$admin,$obj->template);
-
-    }
-
-
-
-#============================================[ objReq ]================================================================
-
-    # 1
-    /**
-     * proprietati adaugate la orice obiect [model]
-     * @param $obj
-     * @param $type_MOD
-     * @param $mod_name
-     */
-    public function SET_objStandardREQ(&$obj,$type_MOD,$mod_name){
-
-        $obj->C      =  &$this;
-        # situatie core
-        $obj->DB     =  &$this->DB;
-        $obj->admin  =  &$this->admin;
-        $obj->LG     =  &$this->lang;
-        $obj->lang   =  &$this->lang;
-        $obj->nameF  =  &$this->nameF;
-
-
-        # date ale modulului curent
-        $obj->idC    =  &$this->idC;
-        $obj->idT    =  &$this->idT;
-        $obj->level  =  &$this->level;
-        $obj->type   =  &$this->type;
-
-
-        #date despre acest modul
-        $obj->modName = $mod_name;
-        $obj->modType = $type_MOD;
-
-
-        #error_log('modName '.$mod_name."\n\n");
-    }
-
-    /**
-     * Setarea proprietatilor in plus din core sau din alte module
-     * @param $obj
-     * @param $objREQ = ['modName': 'varName1', 0: 'varName2']
-     *     array cu numele variabilelor dorite din CsetINI
-     *     sau dintr-un anumit model ex model: nume variabila  sau model:[var1, var2]
-     *     daca key-ul nu este string atunci se cauta variabila in core
-     */
-    public function SET_objExternalREQ(&$obj, $objREQ){
-
-
-        foreach($objREQ AS $key=>$propName){
-            if(is_string($key)) {
-                # atunci se cere obiectul cu numele key si cu prop propName
-                if(is_array($propName)){
-                    # daca $propName este un array atunci inseamna ca se doresc mai multe
-                    # proprietati ale obiectului cu numele  $key
-                    foreach($propName AS $subPropName)
-                        $obj->$subPropName = &$this->$key->$subPropName;
-                }
-                else{
-                    $obj->$propName = &$this->$key->$propName;
-                }
-            }
-            else $obj->$propName = &$this->$propName;
-
-            #echo $key.' '.var_dump($propName).'<br>';
-
-        }
-
-    }
-
-    # 2 + #2 - objConf
-    /**
-     * standard confing of a model REQ, CONF, obj-> [ objREQ, _setINI() ]
-     *
-     * STEPS:
-     *  - setarea proprietatilor standard
-     *  - citirea configului yml ( redirectat catre cel de admin so we are all right)
-     *  - [opt] Setarea a proprietatilor in plus din core sau din alte module
-     *  - [opt] Apelarea unui second construct _setINI al obiectului (daca metoda exista)
-     *          util pentru procesele care depind de configurilea modulului
-     *
-     * @param $obj
-     * @param $type_MOD
-     * @param $mod_name
-     */
-    public function GET_objREQ(&$obj,$type_MOD,$mod_name)   {
-
-
-        # i dont know if this is really necessary
-        /*if($res) $obj->RESpath = $this->GET_resPath($this->type_MOD,
-                                                    '',
-                                                    $this->type,
-                                                    $this->nameF,
-                                                    $this->lang);*/
-
-        $this->SET_objStandardREQ($obj,$type_MOD,$mod_name);  //MARKER
-
-        $this->GET_objCONF($obj);
-
-        if(isset($obj->objREQ))
-         $this->SET_objExternalREQ($obj,$obj->objREQ);
-
-        if(method_exists($obj,"_setINI"))  $obj->_setINI();
-        elseif(method_exists($obj,"_init"))  $obj->_init();
-         //__init
-     /*   else{
-            if($obj->modName == 'single')
-            echo "GET_objREQ obiectul $obj->modName nu are _setINI()";
-        }*/
-
-
-        #TODO: atentie la admin!!!
-
-    }
-
-
-
-#================================================[ objIni]==============================================================
-
-    # 1 + #2objReq
-    /**
-     * SET:  $this->mod_name;
-     *
-     * USE: GENERAL: $this->mod_name->display();
-     *      CURRENT: $this->{$this->type}->display();
-     */
-    public function SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre='C',$ADMINstr='')      {
-
-        # set REQUIERD objects   $OB_name = Cmod_name or $OB_name= CAmod_name (admin, if it has one);
-
-
-        $OB_name = $ADMINpre.$mod_name;
-
-
-        if(file_exists(fw_incPath.$type_MOD."/$mod_name/".$ADMINstr.$OB_name.'.php'))
-        {
-            $this->$mod_name = new $OB_name($this);
-            # echo fw_incPath.$type_MOD."/$mod_name".$ADMINstr."/".$OB_name.'.php'."<br/>";
-
-
-
-            # return $this->$mod_name;
-
-            //Console::logSpeed($OB_name);
-            return true;  #obiectul a fost creat
-        }
-
-        else
-        {
-            Console::logSpeed($OB_name);
-            return false;
-        }
-        /*elseif( file_exists(fw_pubPath.'MODELS/'.$mod_name.'/RES/TMPL_'.$mod_name.'.html') )
-            $this->$mod_name = new Cmodel($mod_name,$this);*/
-
-
-    }
-
-    # 2  + incTags #5  - A
-    /**
-     * Instantierea unui obiect cu tot ce ii trebuie + css, js html tags for inclusion
-     * @param $mod_name
-     * @param $type_MOD
-     * @param string $ADMINstr
-     * @param string $ADMINpre
-     * @return bool
-     */
-    public function SET_general_mod($mod_name,$type_MOD,$ADMINstr='',$ADMINpre='C')   {
-
-        # daca obiectul nu a fost setat
-
-        if(!isset($this->$mod_name)){
-
-            $objectCreat_stat =  $this->SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre,$ADMINstr);
-
-            if( $objectCreat_stat )
-            {
-		$this->GET_objREQ($this->$mod_name,$type_MOD,$mod_name);
-		# preia si seteaza toate cele necesare pentru respectivul model
-		# exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nameF
-		# si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
-                $this->SET_INC_extObj_jsCss($this->$mod_name,$ADMINstr);
-                $this->SET_INC_assetsObj($this->$mod_name);
-            }
-
-            return $objectCreat_stat; #daca a fost sau nu creat obiectul
-        }
-        else
-            return false;
-
-
-
-       /* var_dump($mod_name);*/
-}
 
     # 3
     /**
@@ -486,25 +29,23 @@ class Ccore extends CLcore
     */
     public function SET_current()        {
 
-        if(!is_object($this->type))
-            $this->SET_general_mod($this->type,$this->type_MOD) ;
-
-       }
+        $this->Module_Build($this->type,$this->modType) ;
+    }
 
     # 3
     /**
-     * Sets default objects (modules) declared in yml files of core AND tmpl_core
+     * Sets default modects (modules) declared in yml files of core AND tmpl_core
      */
     public function SET_default()        {
 
-
-
         foreach($this->mods AS $modType)
+        {
             foreach($this->{'default_'.$modType} AS $modName)
             {
                 # error_log("SET_default ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
-                $this->SET_general_mod($modName,$modType);
+                $this->Module_Build($modName,$modType);
             }
+        }
     }
 
 
@@ -720,9 +261,9 @@ class Ccore extends CLcore
         $this->p_id      = &$this->tree[$this->idC]->p_id;
         $this->level     = &$this->tree[$this->idC]->level;
 
-         if(    in_array($this->type,$this->models )) $this->type_MOD = 'MODELS';
-         elseif(in_array($this->type,$this->plugins)) $this->type_MOD = 'PLUGINS';
-         elseif(in_array($this->type,$this->locals)) $this->type_MOD = 'LOCALS';
+         if(    in_array($this->type,$this->models )) $this->modType = 'MODELS';
+         elseif(in_array($this->type,$this->plugins)) $this->modType = 'PLUGINS';
+         elseif(in_array($this->type,$this->locals)) $this->modType = 'LOCALS';
 
     }
 
@@ -740,9 +281,9 @@ class Ccore extends CLcore
             $methName   = $_POST['methName'];
             $relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : true ;
 
-            if(is_object($this->$moduleName) && method_exists($this->$moduleName,$methName))
+            if(is_modect($this->$moduleName) && method_exists($this->$moduleName,$methName))
             {
-                $obj = &$this->$moduleName;
+                $mod = &$this->$moduleName;
                 //===============[solve request Modules ]==========================
 
                 /**
@@ -754,13 +295,13 @@ class Ccore extends CLcore
                  * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
                  * daca nu se mai intampla nimic
                 */
-                if(method_exists($obj,'_hook_'.$methName))
+                if(method_exists($mod,'_hook_'.$methName))
                 {
-                    $validData =$obj->{'_hook_'.$methName}();
+                    $validData =$mod->{'_hook_'.$methName}();
                     if($validData)
                     {
 
-                        $obj->{$methName}();
+                        $mod->{$methName}();
 
                         // =================[refresh page]======================
                         if($relocate){
@@ -773,7 +314,7 @@ class Ccore extends CLcore
                     unset($_POST);
 
                 } else{
-                    $obj->{$methName}();
+                    $mod->{$methName}();
                      // =================[refresh page]======================
                     if($relocate)
                     {
@@ -785,8 +326,8 @@ class Ccore extends CLcore
             }
             else{
 
-             /*   if(!is_object($this->$moduleName))
-                    echo "There is no object ".$moduleName;
+             /*   if(!is_modect($this->$moduleName))
+                    echo "There is no modect ".$moduleName;
                 if(! method_exists($this->$moduleName,$methName))
                     echo " with method ".$methName;*/
 
@@ -813,7 +354,7 @@ class Ccore extends CLcore
        *
        *  - sets the default mod.'s     => le instantiaza obiectele si seteaza tagurile  js/css aferente ;
       */
-    public function CONTROL_setINI()     {
+    public function _init_modules()     {
 
        #================[ set current tree & module ]==================================
 
@@ -862,8 +403,8 @@ class Ccore extends CLcore
         #atentie daca nu are template o sa includa tot din core/js si core/css
         $this->modName = 'core';
         $this->modType = 'GENERAL';
-        $this->GET_objCONF($this);          #seteaza variabilele personalizate
-        $this->SET_INC_extObj_jsCss($this);
+        $this->Module_Fs_configYamlProps($this);          #seteaza variabilele personalizate
+        $this->Module_Set_incFilesJsCss($this);
 
 
         /**
@@ -885,15 +426,15 @@ class Ccore extends CLcore
          */
         if(isset($this->mainModel) && isset($this->mainTemplate))
         {
-            #  SET_INC_ext($mod_name,$type_MOD,$extension,$folder='',$template='',$ADMINstr='')
-            $this->SET_INC_ext($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
-            $this->SET_INC_ext($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
+            #  Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
+            $this->Set_incFiles($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
+            $this->Set_incFiles($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
         }
 
 
 
 
-        $this->CONTROL_setINI();
+        $this->_init_modules();
 
         #echo 'Ccore: __construct';
         #var_dump($this);

@@ -71,10 +71,10 @@
 		uuid = 0,
 
 		/**
-		 * Internal collection of all RoundRect objects. Used to ensure all
+		 * Internal collection of all RoundRect modects. Used to ensure all
 		 * RoundRects are properly cleaned up so that IE does not leak memory
 		 * all over the ground.
-		 * @type {Object.<string, RoundRect>}
+		 * @type {modect.<string, RoundRect>}
 		 */
 		collection = {},
 
@@ -97,7 +97,7 @@
 		 * A map of images that are used as background-images. This is needed
 		 * in order to get the correct size of the original image in order to
 		 * clip it for repeat-x and repeat-y.
-		 * @type {Object.<string, (Image|Object)>}
+		 * @type {modect.<string, (Image|modect)>}
 		 */
 		imageMap = {},
 
@@ -118,13 +118,13 @@
 
 	/**
 	 * Proxy function.
-	 * @param {Object} obj Object to bind as ‘this’
+	 * @param {modect} mod modect to bind as ‘this’
 	 * @param {Function} fn Function to call
 	 * @return {Function}
 	 */
-	function proxy(obj, fn) {
+	function proxy(mod, fn) {
 		return function () {
-			return fn.apply(obj || this, arguments);
+			return fn.apply(mod || this, arguments);
 		};
 	}
 
@@ -312,7 +312,7 @@
 	});
 
 	/**
-	 * Creates a new RoundRect object.
+	 * Creates a new RoundRect modect.
 	 * @class RoundRect
 	 * @constructor
 	 * @param {Element} element
@@ -345,7 +345,7 @@
 		});
 
 		this.onVmlStateChangeProxy = proxy(this, function () {
-			// IE seems to sometimes ditch properties from the event object
+			// IE seems to sometimes ditch properties from the event modect
 			// if we do not create references to them here before passing to
 			// the statechange function
 			var eventType = window.event.type;
@@ -375,12 +375,12 @@
 	/**
 	 * A hash map of nodeNames that will fail if we try to round them. What a
 	 * bummer.
-	 * @type {Object.<string, boolean>}
+	 * @type {modect.<string, boolean>}
 	 */
 	RoundRect.disallowed = { BODY: true, TABLE: true, TR: true, TD: true, SELECT: !ie8, OPTION: true };
 
 	/**
-	 * Creates a new RoundRect object, or returns the one that already exists
+	 * Creates a new RoundRect modect, or returns the one that already exists
 	 * in the collection for the given element. This is the preferred method of
 	 * RoundRect instantiation.
 	 * @param {Element} element
@@ -388,18 +388,18 @@
 	 * @return {RoundRect}
 	 */
 	RoundRect.create = function (element, dynamic) {
-		var id = element[expando], obj;
-		if (id && (obj = collection[id])) {
-			if (dynamic !== undefined && obj.dynamic !== dynamic) {
-				if (obj.dynamic) {
-					obj.start();
+		var id = element[expando], mod;
+		if (id && (mod = collection[id])) {
+			if (dynamic !== undefined && mod.dynamic !== dynamic) {
+				if (mod.dynamic) {
+					mod.start();
 				}
 				else {
-					obj.stop();
+					mod.stop();
 				}
 			}
 
-			return obj;
+			return mod;
 		}
 
 		return new RoundRect(element, dynamic);
@@ -408,8 +408,8 @@
 	/**
 	 * Manually destroy references of all elements not currently in the DOM in
 	 * order to allow IE to garbage collect and free memory. If you need to
-	 * call this, you are failing to destroy RoundRect objects, which is bad!
-	 * Call the destroy method on objects you remove instead, whenever
+	 * call this, you are failing to destroy RoundRect modects, which is bad!
+	 * Call the destroy method on modects you remove instead, whenever
 	 * possible.
 	 */
 	RoundRect.gc = function () {
@@ -432,7 +432,7 @@
 
 		/**
 		 * :hover -> ns + -hover
-		 * @param {Object} sheet CSSStyleSheet, IE style.
+		 * @param {modect} sheet CSSStyleSheet, IE style.
 		 */
 		function processStyleSheet(sheet) {
 			var i, rule;
@@ -517,7 +517,7 @@
 
 	RoundRect.prototype = {
 		/**
-		 * The element referenced by this object.
+		 * The element referenced by this modect.
 		 * @type {Element}
 		 * @private
 		 */
@@ -532,7 +532,7 @@
 
 		/**
 		 * Cached values for the element’s width, height, top, and left offset.
-		 * @type {Object.<string, *>}
+		 * @type {modect.<string, *>}
 		 * @private
 		 */
 		dimensions: undefined,
@@ -546,14 +546,14 @@
 
 		/**
 		 * Cached values for the top, right, bottom, and left border widths.
-		 * @type {Object.<string, *>}
+		 * @type {modect.<string, *>}
 		 * @private
 		 */
 		borderWidths: undefined,
 
 		/**
 		 * VML elements used to draw the border and background.
-		 * @type {Object.<string, Element>}
+		 * @type {modect.<string, Element>}
 		 */
 		vml: undefined,
 
@@ -570,7 +570,7 @@
 		backgroundImage: null,
 
 		/**
-		 * @type {Object.<string, string>}
+		 * @type {modect.<string, string>}
 		 * @private
 		 */
 		originalStyles: undefined,
@@ -579,7 +579,7 @@
 		 * References to event handlers for this element and its container.
 		 * Required in order to prevent memory leaks.
 		 * Defined in the constructor.
-		 * @type {Object.<string, Object.<string, Array.<Function>>>}
+		 * @type {modect.<string, modect.<string, Array.<Function>>>}
 		 * @private
 		 */
 		events: undefined,
@@ -757,7 +757,7 @@
 		},
 
 		/**
-		 * Add a class to the element referenced by this RoundRect object.
+		 * Add a class to the element referenced by this RoundRect modect.
 		 * @type {string} className
 		 */
 		addClass: function (className) {
@@ -769,7 +769,7 @@
 		},
 
 		/**
-		 * Remove a class from the element referenced by this RoundRect object.
+		 * Remove a class from the element referenced by this RoundRect modect.
 		 * @type {string} className
 		 */
 		removeClass: function (className) {
@@ -987,7 +987,7 @@
 
 		/**
 		 * Calculates the width, height, top, and left offset of the element.
-		 * @return {Object.<string, number>} Object with four keys: width,
+		 * @return {modect.<string, number>} modect with four keys: width,
 		 * height, top, left.
 		 * @private
 		 */
@@ -1002,7 +1002,7 @@
 
 		/**
 		 * Calculates the element’s border widths.
-		 * @return {Object.<string, number>} Object with four keys: top,
+		 * @return {modect.<string, number>} modect with four keys: top,
 		 * right, bottom, left.
 		 * @private
 		 */
@@ -1112,12 +1112,12 @@
 			// Without a timeout, IE will throw “unspecified error”s
 			setTimeout(proxy(this, function () {
 				this.addEvent('container', 'mouseenter', proxy(this, function () {
-					var fakeEvent = document.createEventObject(window.event);
+					var fakeEvent = document.createEventmodect(window.event);
 					fakeEvent.toElement = fakeEvent.srcElement = this.element;
 					this.element.fireEvent('on' + window.event.type, fakeEvent);
 				}));
 				this.addEvent('container', 'mouseleave', proxy(this, function () {
-					var fakeEvent = document.createEventObject(window.event);
+					var fakeEvent = document.createEventmodect(window.event);
 					fakeEvent.fromElement = fakeEvent.srcElement = this.element;
 					this.element.fireEvent('on' + window.event.type, fakeEvent);
 				}));
@@ -1378,7 +1378,7 @@
 				if (imageMap[vmlBg] === undefined) {
 					img = new Image();
 					img.attachEvent('onload', proxy(this, function () {
-						// Replace the Image object in the map with something
+						// Replace the Image modect in the map with something
 						// more primitive to save memory
 						imageMap[vmlBg] = {
 							width: this.width,

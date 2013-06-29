@@ -13,7 +13,7 @@ class ADMIN_vars extends Ccore
 {
 
     var $TMPtree=array();
-    var $user;                   #NOT IMPLEMENTED obj de tip Perms;
+    var $user;                   #NOT IMPLEMENTED mod de tip Perms;
     var $HTML_GEN_edit = '';     #????
 
     var $admin_MOD             = array();

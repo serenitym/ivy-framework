@@ -22,8 +22,8 @@ class Cvars extends item
      *
      * MODELS & PLUGINS
      *
-     * PROTECTED part - cls. REQ - C[$mod_name].php
-     *                - cls. OPT - AC[$mod_name].php               --> used for CMS ADMIN
+     * PROTECTED part - cls. REQ - C[$modName].php
+     *                - cls. OPT - AC[$modName].php               --> used for CMS ADMIN
      *
      * PUBLIC part    - MODELS  - OPT  -  js/anyName.js
      *                                 -  css/anyName.css
@@ -39,8 +39,8 @@ class Cvars extends item
      *   $default_PLUGINS    - the models & plugins that should be integrated at any refresh of the site;
      *   $default_MODELS
      *__________________________________________________________________________________________________________________
-     *   $admin_MOD  - array('mod_name'=>true, ... );         -- if a module has a class for ADMIN should be declared here;
-     *   $theme_MOD  - array('mod_name'=>'theme_[name]',...); -- if a module or model has other themes than the default ones;
+     *   $admin_MOD  - array('modName'=>true, ... );         -- if a module has a class for ADMIN should be declared here;
+     *   $theme_MOD  - array('modName'=>'theme_[name]',...); -- if a module or model has other themes than the default ones;
      *
      */
 
@@ -69,10 +69,10 @@ class Cvars extends item
     var  $idC=1;                            # id curent
 
 /*  var  $type='products';                  # type mod. aferent itemului cu idC;
-    var  $type_MOD = 'MODELS';              # module || models*/
+    var  $modType = 'MODELS';              # module || models*/
 
     var  $type;                             # type mod. aferent itemului cu idC;
-    var  $type_MOD;                         # plugins || models || templates
+    var  $modType;                         # plugins || models || templates
     var  $template;                         # denumirea templateului
 
     var  $tree=array();                     # array( idC=>item OBJECT );
@@ -92,7 +92,7 @@ class Cvars extends item
 
     var  $INC_css;                          # string de taguri css / js    - automat create de FMW;
     var  $INC_js;
-    var  $TMPL_css;                         #TMPL_css[$type_MOD.'_'.$mod_name]  ? = true  => setari personalizare pt modele sau pluginuri
+    var  $TMPL_css;                         #TMPL_css[$modType.'_'.$modName]  ? = true  => setari personalizare pt modele sau pluginuri
                                             #
 #_______________________________________________________________________________________________________________________
     var  $admin;                            #  true | false    - determinat in LOG.php

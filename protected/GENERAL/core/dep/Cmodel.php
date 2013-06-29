@@ -11,7 +11,7 @@
 class Cmodel
 {
     var $page;
-    var $mod_name;
+    var $modName;
     var $lang = 'ro';
     var $C;
     var $LG;
@@ -19,11 +19,11 @@ class Cmodel
     function __construct($type,$C)  {
         $this->C  = &$C;
         $this->LG = &$C->lang;
-        $this->mod_name = $type;
+        $this->modName = $type;
 
 
         if($this->C->nameF) $this->page =$this->C->nameF;                          // the page name is taken from tree
-        else $this->page = isset($_GET['page']) ? $_GET['page'] : $this->mod_name; // the page name is taken static from $_GET['page'];
+        else $this->page = isset($_GET['page']) ? $_GET['page'] : $this->modName; // the page name is taken static from $_GET['page'];
 
     }
      function  __get($name) {
@@ -31,7 +31,7 @@ class Cmodel
          /*$LG = $this->LG;
 
          $name =( $name=='content') ? $LG.'/' : $LG.'/'.$name.'/';
-         $path = publicPath.'MODELS/'.$this->mod_name.'/RES/'.$name;
+         $path = publicPath.'MODELS/'.$this->modName.'/RES/'.$name;
          #________________________________________________________________________
 
 
@@ -42,8 +42,8 @@ class Cmodel
 
          #==============================================================================================================
 
-         # C->GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
-         $path = $this->C->GET_resPath('','',$this->mod_name,$name,$this->LG);
+         # C->GET_resPath($modType='',$resName='', $modName='' ,$nameF='', $lang = '')
+         $path = $this->C->GET_resPath('','',$this->modName,$name,$this->LG);
          return $this->C->GET_resContent($path);
 
      }
@@ -53,7 +53,7 @@ class Cmodel
 
     function DISPLAY() {
 
-        $path =fw_pubPath.'MODELS/'.$this->mod_name.'/RES/TMPL_'.$this->mod_name.'.html';
+        $path =fw_pubPath.'MODELS/'.$this->modName.'/RES/TMPL_'.$this->modName.'.html';
         if(file_exists($path))
         {
             $content = file_get_contents($path);

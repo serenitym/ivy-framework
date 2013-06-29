@@ -266,7 +266,7 @@ class CHANGES {
 
             foreach($this->langs AS $LGS)
             {
-                # GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+                # GET_resPath($modType='',$resName='', $modName='' ,$nameF='', $lang = '')
 
                 $modTypeOld = $this->C->get_modType($type_old);
                 $modTypeNew = $this->C->get_modType($type_new);
@@ -341,7 +341,7 @@ class CHANGES {
         #_______________________________________________________________________________________________________________
 //???
 
-                # C->GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+                # C->GET_resPath($modType='',$resName='', $modName='' ,$nameF='', $lang = '')
                 #  get_resPath($modType, $modName,$lang='', $resName='')
               foreach($this->langs AS $LGS)
                 #$fullPath_new = $this->C->GET_resPath('','',$type_new,$nameF_new,$LGS);
@@ -392,7 +392,7 @@ class CHANGES {
 
                      foreach($this->langs AS $LGS)
                      {
-                         # GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+                         # GET_resPath($modType='',$resName='', $modName='' ,$nameF='', $lang = '')
                          #$fullPath = $this->C->GET_resPath('','',$type,$nameF,$LGS);
                          $modType = $this->C->get_modType($type);
                          $fullPath  = $this->C->get_resPath($modType,$type,$LGS,$nameF);

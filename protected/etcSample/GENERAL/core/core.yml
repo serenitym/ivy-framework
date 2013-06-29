@@ -47,7 +47,7 @@ tree: []
 
 # typeul / modelul default cand se intra
 type: single
-type_MOD: MODELS
+modType: MODELS
 
 id: 1
 idT: 1

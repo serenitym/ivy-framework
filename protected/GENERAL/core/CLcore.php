@@ -149,15 +149,15 @@ class CLcore extends CgenTools{
                 echo "<p class='text-success '><b> $from :</b> $message </p>";
         }
 
-    static function error_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+    static function error_ech_modMod($message,&$mod, $meth='', $var_dump=''){
 
-            echo "<p class='text-error '><b> {$obj->modName}->  $meth :</b> $message </p>";
+            echo "<p class='text-error '><b> {$mod->modName}->  $meth :</b> $message </p>";
             if($var_dump)
                 var_dump($var_dump);
         }
-    static function info_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+    static function info_ech_modMod($message,&$mod, $meth='', $var_dump=''){
 
-                echo "<p class='text-success '><b> {$obj->modName} -> $meth :</b> $message </p>";
+                echo "<p class='text-success '><b> {$mod->modName} -> $meth :</b> $message </p>";
                if($var_dump)
                   var_dump($var_dump);
         }

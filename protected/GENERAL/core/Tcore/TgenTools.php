@@ -11,7 +11,7 @@
  */
 trait TgenTools{
 
-   var $renderObj;
+   var $rendermod;
    var $historyArgs;   #array setat de model
 
 
@@ -101,7 +101,7 @@ trait TgenTools{
 
            }
 
-   public function GET_pagination($query,$nrItems,$GETargs,$uniq,&$obj='', $ANCORA='')   {
+   public function GET_pagination($query,$nrItems,$GETargs,$uniq,&$mod='', $ANCORA='')   {
 
           #echo '<b>pagination Query</b> '.$query."<br>";
            //@todo: probabil ca hreful ar trebui cumva refacut
@@ -130,12 +130,12 @@ trait TgenTools{
            # daca se trimite un pointer al obiectului care cere paginarea atunci pentru acest obiect
            # se vor seta urmatoarele variabile
            # LimitStart poate sa aiba presetata limita
-               if(is_object($obj))
+               if(is_modect($mod))
                {
 
-                    $obj->LimitStart += ($CURRENTpage - 1)*$nrItems;
-                    #$obj->LimitEnd   = $obj->LimitStart + $nrItems;
-                    $obj->Pn = $CURRENTpage;
+                    $mod->LimitStart += ($CURRENTpage - 1)*$nrItems;
+                    #$mod->LimitEnd   = $mod->LimitStart + $nrItems;
+                    $mod->Pn = $CURRENTpage;
 
                }
 
@@ -215,26 +215,26 @@ trait TgenTools{
 
 
 
-    static function READyml($file_yml, &$obj =''){
+    static function READyml($file_yml, &$mod =''){
 
-        if(!$obj)
+        if(!$mod)
         {
-            $obj = new stdClass();
-            $RETobj = true;
+            $mod = new stdClass();
+            $RETmod = true;
         }
-        Ccore::GETconf($obj,$file_yml);
-        if(isset($RETobj)) return $obj;
+        Ccore::Module_configYamlProps($mod,$file_yml);
+        if(isset($RETmod)) return $mod;
 
     }
 
-    public function GET_asincronMeth($objName, $methName){
+    public function GET_asincronMeth($modName, $methName){
 
 
-        if(is_object($this->$objName))
+        if(is_modect($this->$modName))
         {
-            if(method_exists($this->$objName, $methName)){
+            if(method_exists($this->$modName, $methName)){
 
-                return $this->$objName->{$methName}();
+                return $this->$modName->{$methName}();
             }
             else {
                 return " Metoda $methName nu exista sau nu poate fii accesata <br>";
@@ -242,7 +242,7 @@ trait TgenTools{
             }
 
         } else {
-            return " Obiectul $objName nu este instantiat <br>";
+            return " Obiectul $modName nu este instantiat <br>";
         }
     }
 
@@ -362,15 +362,15 @@ trait TgenTools{
                 echo "<p class='text-success '><b> $from :</b> $message </p>";
         }
 
-    static function error_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+    static function error_ech_modMod($message,&$mod, $meth='', $var_dump=''){
 
-            echo "<p class='text-error '><b> {$obj->modName}->  $meth :</b> $message </p>";
+            echo "<p class='text-error '><b> {$mod->modName}->  $meth :</b> $message </p>";
             if($var_dump)
                 var_dump($var_dump);
         }
-    static function info_ech_ObjMod($message,&$obj, $meth='', $var_dump=''){
+    static function info_ech_modMod($message,&$mod, $meth='', $var_dump=''){
 
-                echo "<p class='text-success '><b> {$obj->modName} -> $meth :</b> $message </p>";
+                echo "<p class='text-success '><b> {$mod->modName} -> $meth :</b> $message </p>";
                if($var_dump)
                   var_dump($var_dump);
         }

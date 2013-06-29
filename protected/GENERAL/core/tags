@@ -4,36 +4,36 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-CONTROL_setINI	Ccore.php	/^    public function CONTROL_setINI()     {$/;"	f
+_init_modules	Ccore.php	/^    public function _init_modules()     {$/;"	f
 Ccore	Ccore.php	/^class Ccore extends CLcore$/;"	c
 DB	Ccore.php	/^            $this->DB = '';$/;"	v
 DB	Ccore.php	/^            $this->DB = new mysqli(dbHost,dbUser,dbPass,dbName);$/;"	v
 DB	Ccore.php	/^       $this->DB = new mysqli('p:'.dbHost,dbUser,dbPass,dbName);$/;"	v
 DB_reConnect	Ccore.php	/^    public function DB_reConnect () {$/;"	f
 DBstat	Ccore.php	/^        $DBstat = $this->DB->ping();$/;"	v
-GET_INC_htmlTags	Ccore.php	/^    public function GET_INC_htmlTags($extension, $ext_PATH, $ext_SRC_PATH){$/;"	f
-GET_INCtag_css	Ccore.php	/^    public function GET_INCtag_css($SRC_path) {$/;"	f
-GET_INCtag_js	Ccore.php	/^    public function GET_INCtag_js($SRC_path)  {$/;"	f
-GET_objCONF	Ccore.php	/^    public function GET_objCONF(&$obj,$admin='',$template='')     {$/;"	f
-GET_objREQ	Ccore.php	/^    public function GET_objREQ(&$obj,$type_MOD,$mod_name)   {$/;"	f
+Get_incHtmlTags	Ccore.php	/^    public function Get_incHtmlTags($extension, $ext_PATH, $ext_SRC_PATH){$/;"	f
+Get_IncTag_css	Ccore.php	/^    public function Get_IncTag_css($SRC_path) {$/;"	f
+Get_IncTag_js	Ccore.php	/^    public function Get_IncTag_js($SRC_path)  {$/;"	f
+Module_Fs_configYamlProps	Ccore.php	/^    public function Module_Fs_configYamlProps(&$mod,$admin='',$template='')     {$/;"	f
+Module_config	Ccore.php	/^    public function Module_config(&$mod,$modType,$modName)   {$/;"	f
 GET_tree	Ccore.php	/^    public function GET_tree($idT)                {$/;"	f
 GET_tree_fromDB	Ccore.php	/^    public function GET_tree_fromDB($ch,$p_id='', $idT,$level=0) {$/;"	f
-GETconf	Ccore.php	/^    static function GETconf(&$obj,$file_yml, $mod_name='' ){$/;"	f
-OB_name	Ccore.php	/^        $OB_name = $ADMINpre.$mod_name;$/;"	v
+Module_configYamlProps	Ccore.php	/^    static function Module_configYamlProps(&$mod,$file_yml, $modName='' ){$/;"	f
+OB_name	Ccore.php	/^        $OB_name = $adminPrefix.$modName;$/;"	v
 SET_ID_item	Ccore.php	/^    public function SET_ID_item()       {$/;"	f
-SET_INC_assetsObj	Ccore.php	/^   public function SET_INC_assetsObj($obj){$/;"	f
-SET_INC_ext	Ccore.php	/^    public function SET_INC_ext($mod_name,$type_MOD,$extension,$folder,$template='',$ADMINstr='') {$/;"	f
-SET_INC_extObj	Ccore.php	/^    public function SET_INC_extObj(&$obj, $extension,$folder,$ADMINstr=''){$/;"	f
-SET_INC_extObj_jsCss	Ccore.php	/^   public function SET_INC_extObj_jsCss(&$obj,$ADMINstr=''){$/;"	f
-SET_INC_hardAdd	Ccore.php	/^   public function SET_INC_hardAdd($extension,$srcPath){$/;"	f
-SET_OBJ_mod	Ccore.php	/^    public function SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre='C',$ADMINstr='')      {$/;"	f
+Module_Set_incFilesAssets	Ccore.php	/^   public function Module_Set_incFilesAssets($mod){$/;"	f
+Set_incFiles	Ccore.php	/^    public function Set_incFiles($modName,$modType,$extension,$folder,$template='',$adminFolder='') {$/;"	f
+SET_INC_extmod	Ccore.php	/^    public function SET_INC_extmod(&$mod, $extension,$folder,$adminFolder=''){$/;"	f
+Module_Set_incFilesJsCss	Ccore.php	/^   public function Module_Set_incFilesJsCss(&$mod,$adminFolder=''){$/;"	f
+Module_Set_incFilesHard	Ccore.php	/^   public function Module_Set_incFilesHard($extension,$srcPath){$/;"	f
+Module_Build	Ccore.php	/^    public function Module_Build($modName,$modType,$adminPrefix='C',$adminFolder='')      {$/;"	f
 SET_REStree	Ccore.php	/^    public function SET_REStree($pathTree, $idT)  {$/;"	f
 SET_current	Ccore.php	/^    public function SET_current()        {$/;"	f
 SET_default	Ccore.php	/^    public function SET_default()        {$/;"	f
-SET_general_mod	Ccore.php	/^    public function SET_general_mod($mod_name,$type_MOD,$ADMINstr='',$ADMINpre='C')   {$/;"	f
+SET_general_mod	Ccore.php	/^    public function SET_general_mod($modName,$modType,$adminFolder='',$adminPrefix='C')   {$/;"	f
 SET_idTC	Ccore.php	/^    public function SET_idTC()          {$/;"	f
-SET_objExternalREQ	Ccore.php	/^    public function SET_objExternalREQ(&$obj, $objREQ){$/;"	f
-SET_objStandardREQ	Ccore.php	/^    public function SET_objStandardREQ(&$obj,$type_MOD,$mod_name){$/;"	f
+Module_configExternalPointers	Ccore.php	/^    public function Module_configExternalPointers(&$mod, $modREQ){$/;"	f
+Module_configCorePointers	Ccore.php	/^    public function Module_configCorePointers(&$mod,$modType,$modName){$/;"	f
 SET_tree	Ccore.php	/^    public function SET_tree()                    {$/;"	f
 SET_type	Ccore.php	/^    public function SET_type()          {$/;"	f
 __clone	Ccore.php	/^    public function __clone  () { }$/;"	f
@@ -45,11 +45,11 @@ children	Ccore.php	/^        $this->children  = &$this->tree[$this->idC]->childr
 ctrl_postRequest	Ccore.php	/^    public function ctrl_postRequest(){$/;"	f
 debugMess	Ccore.php	/^    static function debugMess($mess){ return '';}$/;"	f
 dir	Ccore.php	/^             $dir = dir($ext_PATH);$/;"	v
-ext_PATH	Ccore.php	/^            $ext_PATH         =  fw_pubPath.$type_MOD.'\/'.$mod_name.'\/'.$tmpl.$ADMINstr."$folder\/";$/;"	v
-ext_SRC_PATH	Ccore.php	/^            $ext_SRC_PATH     =   fw_pubURL.$type_MOD.'\/'.$mod_name.'\/'.$tmpl.$ADMINstr."$folder\/";$/;"	v
+ext_PATH	Ccore.php	/^            $ext_PATH         =  fw_pubPath.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
+ext_SRC_PATH	Ccore.php	/^            $ext_SRC_PATH     =   fw_pubURL.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
 file_yml	Ccore.php	/^           $file_yml =  incPath.'etc\/'$/;"	v
 file_yml	Ccore.php	/^        $file_yml =  incPath.'etc\/'$/;"	v
-folder	Ccore.php	/^             $folder = $folder."\/"."{$folder}_".$obj->template_file;$/;"	v
+folder	Ccore.php	/^             $folder = $folder."\/"."{$folder}_".$mod->template_file;$/;"	v
 id	Ccore.php	/^        $this->id        = &$this->tree[$this->idC]->id;$/;"	v
 idC	Ccore.php	/^               $this->idC = ( $_GET['idC'] ?  $_GET['idC'] : $this->idT );$/;"	v
 idT	Ccore.php	/^               $this->idT =   $_GET['idT'];$/;"	v
@@ -58,14 +58,14 @@ level	Ccore.php	/^        $this->level     = &$this->tree[$this->idC]->level;$/;
 methName	Ccore.php	/^            $methName   = $_POST['methName'];$/;"	v
 modName	Ccore.php	/^        $this->modName = 'core';$/;"	v
 modType	Ccore.php	/^        $this->modType = 'GENERAL';$/;"	v
-mod_name	Ccore.php	/^        $mod_name = $obj->modName;$/;"	v
+modName	Ccore.php	/^        $modName = $mod->modName;$/;"	v
 moduleName	Ccore.php	/^            $moduleName = $_POST['moduleName'];$/;"	v
 name	Ccore.php	/^        $this->name      = &$this->tree[$this->idC]->name;$/;"	v
 nameF	Ccore.php	/^        $this->nameF     = &$this->tree[$this->idC]->nameF;$/;"	v
 name_en	Ccore.php	/^        $this->name_en   = &$this->tree[$this->idC]->name_en;$/;"	v
 name_ro	Ccore.php	/^        $this->name_ro   = &$this->tree[$this->idC]->name_ro;$/;"	v
-obj	Ccore.php	/^                $obj = &$this->$moduleName;$/;"	v
-objectCreat_stat	Ccore.php	/^            $objectCreat_stat =  $this->SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre,$ADMINstr);$/;"	v
+mod	Ccore.php	/^                $mod = &$this->$moduleName;$/;"	v
+modectCreat_stat	Ccore.php	/^            $modectCreat_stat =  $this->Module_Build($modName,$modType,$adminPrefix,$adminFolder);$/;"	v
 p_id	Ccore.php	/^        $this->p_id      = &$this->tree[$this->idC]->p_id;$/;"	v
 pathTree	Ccore.php	/^          $pathTree = fw_resTree.'tree'.$idT.'.txt';$/;"	v
 profiler	Ccore.php	/^            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());$/;"	v
@@ -76,15 +76,15 @@ q_res	Ccore.php	/^                $q_res = $this->DB->query($q);$/;"	v
 relocate	Ccore.php	/^            $relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : true ;$/;"	v
 succes	Ccore.php	/^          $succes  = file_put_contents($pathTree,$tree_SER);$/;"	v
 tags	Ccore.php	/^         $tags = '';$/;"	v
-template	Ccore.php	/^        $template = isset($obj->template) ? $obj->template : '';$/;"	v
+template	Ccore.php	/^        $template = isset($mod->template) ? $mod->template : '';$/;"	v
 tmpl	Ccore.php	/^            $tmpl      =  $template ? 'tmpl_'.$template.'\/' : '';  #daca s-a trimis un template modelul are un template$/;"	v
-tmplFile_assets	Ccore.php	/^             $tmplFile_assets = &$obj->{'assetsINC_'.$obj->template_file};$/;"	v
+tmplFile_assets	Ccore.php	/^             $tmplFile_assets = &$mod->{'assetsInc_'.$mod->template_file};$/;"	v
 tree	Ccore.php	/^                $this->tree = array();$/;"	v
 tree	Ccore.php	/^              $tree =  $this->SET_REStree($pathTree, $idT);$/;"	v
 tree	Ccore.php	/^            $this->tree = $this->GET_tree($this->idT);$/;"	v
 tree_SER	Ccore.php	/^          $tree_SER = serialize($this->TMPtree);$/;"	v
 type	Ccore.php	/^        $this->type      =  $this->tree[$this->idC]->type;$/;"	v
-type_MOD	Ccore.php	/^        $type_MOD = $obj->modType;$/;"	v
+modType	Ccore.php	/^        $modType = $mod->modType;$/;"	v
 user	Ccore.php	/^            $this->user = &$auth->user;$/;"	v
-validData	Ccore.php	/^                    $validData =$obj->{'_hook_'.$methName}();$/;"	v
+validData	Ccore.php	/^                    $validData =$mod->{'_hook_'.$methName}();$/;"	v
 yml_array	Ccore.php	/^            $yml_array = Spyc::YAMLLoad($file_yml);$/;"	v

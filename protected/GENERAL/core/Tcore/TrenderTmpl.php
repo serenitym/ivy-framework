@@ -38,33 +38,33 @@ trait TrenderTmpl {
         return $content;
     }
 
-     //obj este pus pentru folosiri viitoare
+     //mod este pus pentru folosiri viitoare
     # render a single itemOfArr -- this function should be renamed
     # 1
     public function
-    renderDisplay_fromArr( &$aR, $tmplStr='', $tmplPath='',&$obj=''){
+    renderDisplay_fromArr( &$aR, $tmplStr='', $tmplPath='',&$mod=''){
 
         if(is_array($aR))
         {
            /* if(isset($renderFun))unset($renderFun);
             $renderFun = create_function('&$ao, &$o, &$core','  return "'.$content.' ";');
-            $display   = $renderFun($ao, $obj, $this);*/
+            $display   = $renderFun($ao, $mod, $this);*/
              $content = $this->get_renderContent($tmplStr, $tmplPath);
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if($content)
             {
                 # nu stiu daca asta este o varianta prea profitabila
                 # use $ao in templates for easy edit end reading
-                $ao = (object) $aR;
+                $ao = (modect) $aR;
                 # pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
-                $o  = &$obj;
+                $o  = &$mod;
                 $display = '';
                 eval("\$display = \"$content\";");
                 return $display;
 
             }
             else {
-                return $this->debugMess("$obj->modName Nu exista continut de template <br>");
+                return $this->debugMess("$mod->modName Nu exista continut de template <br>");
             }
         } else {
             return $this->debugMess("obiectul nu exista pt templateul $tmplStr sau $tmplPath <br>");
@@ -79,15 +79,15 @@ trait TrenderTmpl {
      * @param array $items           - array-ul de forma array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
      * @param string $tmplStr       - template trimis direct ca string in acest template ne vom referii la
      *                                  -  itemul unui array ca ~ao->propName
-     *                                  - optional la $o cu ~o (adta daca este trimis prin $obj)
+     *                                  - optional la $o cu ~o (adta daca este trimis prin $mod)
      *                                  - ghilimelele duble se vor scrie cu `
      * @param string $tmplPath      - path-ul la orice alt template care va folosii acest array
      *                                  - in acest template ne putem referii la variabile in modul normal $ si concatenari cu "
-     * @param string $obj           - daca se doreste sa se faca referire in interiorul templateului de array la obiectul principal
+     * @param string $mod           - daca se doreste sa se faca referire in interiorul templateului de array la obiectul principal
      * @return string               - returneaza templateul randat
      */
     public function
-    renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$obj='') {
+    renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$mod='') {
 
 
         if(is_array($items))
@@ -105,7 +105,7 @@ trait TrenderTmpl {
                 $display = '';
                 foreach($items AS $item)
                 {
-                    $display .= $this->renderDisplay_fromArr($item,$content,'',$obj);
+                    $display .= $this->renderDisplay_fromArr($item,$content,'',$mod);
                 }
 
                 return $display;
@@ -128,11 +128,11 @@ trait TrenderTmpl {
      * @param $items
      * @param string $tmplStr
      * @param string $tmplPath
-     * @param string $obj
+     * @param string $mod
      * @return string
      */
     public function
-    renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='') {
+    renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$mod='') {
 
 
         if(is_array($items) && count($items) > 0)
@@ -149,7 +149,7 @@ trait TrenderTmpl {
 
                 $display = '';
                 # pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
-                $o  = &$obj;
+                $o  = &$mod;
                 foreach($items AS $key => $i)
                 {
                     $displayItem = '';
@@ -171,34 +171,34 @@ trait TrenderTmpl {
 
 
     /**
-     * render Template with obj properties
-     * @param $obj
+     * render Template with mod properties
+     * @param $mod
      * @param string $tmplStr
      * @param string $tmplPath
      * @return string
      */
     public function
-    renderDisplay_fromObj(&$obj, $tmplStr='', $tmplPath=''){
+    renderDisplay_frommod(&$mod, $tmplStr='', $tmplPath=''){
 
-        // use in template $obj->varName or $o->varName
-        if(is_object($obj))
+        // use in template $mod->varName or $o->varName
+        if(is_modect($mod))
         {
             /*if(isset($renderFun))unset($renderFun);
             $content   = str_replace('$this','$core',$content);
-            $renderFun = create_function('&$obj, &$o, &$core','  return "'.$content.' ";');
-            $display   = $renderFun($obj, $obj, $this);*/
+            $renderFun = create_function('&$mod, &$o, &$core','  return "'.$content.' ";');
+            $display   = $renderFun($mod, $mod, $this);*/
              $content = $this->get_renderContent($tmplStr, $tmplPath);
              if($content)
              {
                  # use $o in templates for easy edit end reading
-                 $o = &$obj;
+                 $o = &$mod;
                  $display = '';
                  eval("\$display = \"$content\";");
                  return $display;
 
              }
              else {
-                return $this->debugMess("$obj->modName Nu exista continut de template pt <b>$tmplPath</b> <br>");
+                return $this->debugMess("$mod->modName Nu exista continut de template pt <b>$tmplPath</b> <br>");
             }
         } else{
                 return $this->debugMess("obiectul nu exista pt templateul $tmplStr sau $tmplPath <br>");
@@ -208,54 +208,54 @@ trait TrenderTmpl {
 
 
     public function
-    ctrlDisplay_fromObj(&$obj, $tmplFile=''){
+    ctrlDisplay_frommod(&$mod, $tmplFile=''){
 
         /**
          * Se poate seta un template si cere un anumit fisier de tmpl
          * */
-      if(is_object($obj))
+      if(is_modect($mod))
       {
 
-          $o = &$obj;
+          $o = &$mod;
 
           $tmpl_file = $tmplFile
                   ? $tmplFile
-                  :( isset($obj->template_file)
-                          ? $obj->template_file
-                          : $obj->modName );  #daca nu s-a declarat in ini fisierul de template ar trebui sa aiba numele modelului
+                  :( isset($mod->template_file)
+                          ? $mod->template_file
+                          : $mod->modName );  #daca nu s-a declarat in ini fisierul de template ar trebui sa aiba numele modelului
 
 
 
-          $modType = $obj->modType;
-          $modName = $obj->modName;
-          # echo "ctrlDisplay_fromObj ".$modName.' '.$modType."<br>";
+          $modType = $mod->modType;
+          $modName = $mod->modName;
+          # echo "ctrlDisplay_frommod ".$modName.' '.$modType."<br>";
 
-          $tmpl_dir = isset($obj->template) &&  $obj->template!=''
-                  ? '/tmpl_'.$obj->template
+          $tmpl_dir = isset($mod->template) &&  $mod->template!=''
+                  ? '/tmpl_'.$mod->template
                   : '' ;                           #daca nu exista nici un template name => nu exista nici un tmpl_dir
 
           $tmplPath     = $modType.'/'.$modName.$tmpl_dir.'/tmpl/'.$tmpl_file.'.html';
 
 
 
-          /* if($obj->modName == 'comments')
-             Console::logSpeed('randare Start '.$obj->modName);*/
+          /* if($mod->modName == 'comments')
+             Console::logSpeed('randare Start '.$mod->modName);*/
 
-          $display = $this->renderDisplay_fromObj($obj, '',$tmplPath);;
+          $display = $this->renderDisplay_frommod($mod, '',$tmplPath);;
 
-          /* if($obj->modName == 'comments')
-             Console::logSpeed('randare End '.$obj->modName);*/
+          /* if($mod->modName == 'comments')
+             Console::logSpeed('randare End '.$mod->modName);*/
 
       } else {
 
-          $display = 'There is no obj';
+          $display = 'There is no mod';
       }
 
 
 
       return $display;
 
-      #return $this->renderDisplay_fromObj($obj, '',$tmplPath);
+      #return $this->renderDisplay_frommod($mod, '',$tmplPath);
 
 
 
@@ -281,19 +281,19 @@ trait TrenderTmpl {
     }
 
     public function
-    get_resPath_forObj(&$obj, $resName=''){
+    get_resPath_formod(&$mod, $resName=''){
 
         # nu cred ca aceasta metoda de determinare mod_resName e foarte buna, scalabila
         $mod_resName = $resName ? $resName : $this->nameF;
-        $mod_resPath = $this->get_resPath($obj->modType, $obj->modName, $this->lang,$mod_resName );
+        $mod_resPath = $this->get_resPath($mod->modType, $mod->modName, $this->lang,$mod_resName );
         return $mod_resPath;
     }
 
-    # !!!! NEW RULE $obj->_setRes($resPath) true sau false
+    # !!!! NEW RULE $mod->_setRes($resPath) true sau false
     /**
      * Incearca sa returneze continutul static al unui modul
      *  -> daca exista fisier ii returneaza continutul
-     *  -> daca nu exista fisier testeaza daca obj este obiect
+     *  -> daca nu exista fisier testeaza daca mod este obiect
      *          - daca nu este obiect inseamna ca functia a fost apelata recursiv
      *          - si daca are o metoda de setat continut '_setRes'
      *                  - daca conditiile sunt indeplinite atunci se seteaza variabila resPath
@@ -306,7 +306,7 @@ trait TrenderTmpl {
      *
     */
     public function
-    get_resContent($resPath, &$obj=''){
+    get_resContent($resPath, &$mod=''){
 
          if(is_file($resPath))
          {
@@ -314,10 +314,10 @@ trait TrenderTmpl {
 
          } else {
 
-             if(is_object($obj) && method_exists($obj, '_setRes'))
+             if(is_modect($mod) && method_exists($mod, '_setRes'))
              {
-                $obj->resPath = $resPath;
-                $obj->_setRes($resPath);
+                $mod->resPath = $resPath;
+                $mod->_setRes($resPath);
                 if(is_file($resPath))
                     return file_get_contents($resPath);
 
@@ -334,13 +334,13 @@ trait TrenderTmpl {
     }
 
     public function
-    ctrlDisplay_fromObjRes(&$obj, $resName=''){
+    ctrlDisplay_frommodRes(&$mod, $resName=''){
 
 
-        $mod_resPath = isset($obj->resPath)
-                       ? $obj->resPath
-                       : $this->get_resPath_forObj($obj, $resName);
-        return $this->get_resContent($mod_resPath,$obj);
+        $mod_resPath = isset($mod->resPath)
+                       ? $mod->resPath
+                       : $this->get_resPath_formod($mod, $resName);
+        return $this->get_resContent($mod_resPath,$mod);
 
 
     }
@@ -349,31 +349,31 @@ trait TrenderTmpl {
 
     /**
      * INCEARCA SA SOLUTIONEZE display-ul pentru un obiect
-     *  - obj->DISPLAY()
-     *  - obj->DISPLAY_page
-     *  - obj->DISPLAY_ResPath
-     *  - obj->ctrlDisplay_fromObj($obj)
+     *  - mod->DISPLAY()
+     *  - mod->DISPLAY_page
+     *  - mod->DISPLAY_ResPath
+     *  - mod->ctrlDisplay_frommod($mod)
      *
-     * @param $obj
+     * @param $mod
      * @return string
      */
     public function
-    ctrlDisplay(&$obj){
+    ctrlDisplay(&$mod){
 
 
-           if(is_object($obj))
+           if(is_modect($mod))
            {
-               if(method_exists($obj,"DISPLAY")) {
-                   return $obj->DISPLAY();
+               if(method_exists($mod,"DISPLAY")) {
+                   return $mod->DISPLAY();
 
-               }  elseif(isset($obj->DISPLAY_page)) {
-                   return $obj->DISPLAY_page;
+               }  elseif(isset($mod->DISPLAY_page)) {
+                   return $mod->DISPLAY_page;
 
-               }  elseif(isset($obj->display_ResPath))  {
-                   return $this->get_renderContent($obj->display_ResPath);
+               }  elseif(isset($mod->display_ResPath))  {
+                   return $this->get_renderContent($mod->display_ResPath);
 
                }  else  {
-                          return $this-> ctrlDisplay_fromObj($obj);
+                          return $this-> ctrlDisplay_frommod($mod);
                }
 
            } else {

@@ -23,7 +23,7 @@ var jQuery = (function() {
 
 // Define a local copy of jQuery
 var jQuery = function( selector, context ) {
-		// The jQuery object is actually just the init constructor 'enhanced'
+		// The jQuery modect is actually just the init constructor 'enhanced'
 		return new jQuery.fn.init( selector, context, rootjQuery );
 	},
 
@@ -84,8 +84,8 @@ var jQuery = function( selector, context ) {
 	DOMContentLoaded,
 
 	// Save a reference to some core methods
-	toString = Object.prototype.toString,
-	hasOwn = Object.prototype.hasOwnProperty,
+	toString = modect.prototype.toString,
+	hasOwn = modect.prototype.hasOwnProperty,
 	push = Array.prototype.push,
 	slice = Array.prototype.slice,
 	trim = String.prototype.trim,
@@ -144,7 +144,7 @@ jQuery.fn = jQuery.prototype = {
 					ret = rsingleTag.exec( selector );
 
 					if ( ret ) {
-						if ( jQuery.isPlainObject( context ) ) {
+						if ( jQuery.isPlainmodect( context ) ) {
 							selector = [ document.createElement( ret[1] ) ];
 							jQuery.fn.attr.call( selector, context, true );
 
@@ -172,7 +172,7 @@ jQuery.fn = jQuery.prototype = {
 							return rootjQuery.find( selector );
 						}
 
-						// Otherwise, we inject the element directly into the jQuery object
+						// Otherwise, we inject the element directly into the jQuery modect
 						this.length = 1;
 						this[0] = elem;
 					}
@@ -212,7 +212,7 @@ jQuery.fn = jQuery.prototype = {
 	// The current version of jQuery being used
 	jquery: "1.7.2",
 
-	// The default length of a jQuery object is 0
+	// The default length of a jQuery modect is 0
 	length: 0,
 
 	// The number of elements contained in the matched element set
@@ -232,7 +232,7 @@ jQuery.fn = jQuery.prototype = {
 			// Return a 'clean' array
 			this.toArray() :
 
-			// Return just the object
+			// Return just the modect
 			( num < 0 ? this[ this.length + num ] : this[ num ] );
 	},
 
@@ -249,8 +249,8 @@ jQuery.fn = jQuery.prototype = {
 			jQuery.merge( ret, elems );
 		}
 
-		// Add the old object onto the stack (as a reference)
-		ret.prevObject = this;
+		// Add the old modect onto the stack (as a reference)
+		ret.prevmodect = this;
 
 		ret.context = this.context;
 
@@ -308,7 +308,7 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	end: function() {
-		return this.prevObject || this.constructor(null);
+		return this.prevmodect || this.constructor(null);
 	},
 
 	// For internal use only.
@@ -337,7 +337,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	}
 
 	// Handle case when target is a string or something (possible in deep copy)
-	if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+	if ( typeof target !== "modect" && !jQuery.isFunction(target) ) {
 		target = {};
 	}
 
@@ -350,7 +350,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	for ( ; i < length; i++ ) {
 		// Only deal with non-null/undefined values
 		if ( (options = arguments[ i ]) != null ) {
-			// Extend the base object
+			// Extend the base modect
 			for ( name in options ) {
 				src = target[ name ];
 				copy = options[ name ];
@@ -360,17 +360,17 @@ jQuery.extend = jQuery.fn.extend = function() {
 					continue;
 				}
 
-				// Recurse if we're merging plain objects or arrays
-				if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+				// Recurse if we're merging plain modects or arrays
+				if ( deep && copy && ( jQuery.isPlainmodect(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
 					if ( copyIsArray ) {
 						copyIsArray = false;
 						clone = src && jQuery.isArray(src) ? src : [];
 
 					} else {
-						clone = src && jQuery.isPlainObject(src) ? src : {};
+						clone = src && jQuery.isPlainmodect(src) ? src : {};
 					}
 
-					// Never move original objects, clone them
+					// Never move original modects, clone them
 					target[ name ] = jQuery.extend( deep, clone, copy );
 
 				// Don't bring in undefined values
@@ -381,7 +381,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 		}
 	}
 
-	// Return the modified object
+	// Return the modified modect
 	return target;
 };
 
@@ -489,45 +489,45 @@ jQuery.extend({
 	// See test/unit/core.js for details concerning isFunction.
 	// Since version 1.3, DOM methods and functions like alert
 	// aren't supported. They return false on IE (#2968).
-	isFunction: function( obj ) {
-		return jQuery.type(obj) === "function";
+	isFunction: function( mod ) {
+		return jQuery.type(mod) === "function";
 	},
 
-	isArray: Array.isArray || function( obj ) {
-		return jQuery.type(obj) === "array";
+	isArray: Array.isArray || function( mod ) {
+		return jQuery.type(mod) === "array";
 	},
 
-	isWindow: function( obj ) {
-		return obj != null && obj == obj.window;
+	isWindow: function( mod ) {
+		return mod != null && mod == mod.window;
 	},
 
-	isNumeric: function( obj ) {
-		return !isNaN( parseFloat(obj) ) && isFinite( obj );
+	isNumeric: function( mod ) {
+		return !isNaN( parseFloat(mod) ) && isFinite( mod );
 	},
 
-	type: function( obj ) {
-		return obj == null ?
-			String( obj ) :
-			class2type[ toString.call(obj) ] || "object";
+	type: function( mod ) {
+		return mod == null ?
+			String( mod ) :
+			class2type[ toString.call(mod) ] || "modect";
 	},
 
-	isPlainObject: function( obj ) {
-		// Must be an Object.
+	isPlainmodect: function( mod ) {
+		// Must be an modect.
 		// Because of IE, we also have to check the presence of the constructor property.
-		// Make sure that DOM nodes and window objects don't pass through, as well
-		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
+		// Make sure that DOM nodes and window modects don't pass through, as well
+		if ( !mod || jQuery.type(mod) !== "modect" || mod.nodeType || jQuery.isWindow( mod ) ) {
 			return false;
 		}
 
 		try {
-			// Not own constructor property must be Object
-			if ( obj.constructor &&
-				!hasOwn.call(obj, "constructor") &&
-				!hasOwn.call(obj.constructor.prototype, "isPrototypeOf") ) {
+			// Not own constructor property must be modect
+			if ( mod.constructor &&
+				!hasOwn.call(mod, "constructor") &&
+				!hasOwn.call(mod.constructor.prototype, "isPrototypeOf") ) {
 				return false;
 			}
 		} catch ( e ) {
-			// IE8,9 Will throw exceptions on certain host objects #9897
+			// IE8,9 Will throw exceptions on certain host modects #9897
 			return false;
 		}
 
@@ -535,13 +535,13 @@ jQuery.extend({
 		// if last one is own, then all properties are own.
 
 		var key;
-		for ( key in obj ) {}
+		for ( key in mod ) {}
 
-		return key === undefined || hasOwn.call( obj, key );
+		return key === undefined || hasOwn.call( mod, key );
 	},
 
-	isEmptyObject: function( obj ) {
-		for ( var name in obj ) {
+	isEmptymodect: function( mod ) {
+		for ( var name in mod ) {
 			return false;
 		}
 		return true;
@@ -587,7 +587,7 @@ jQuery.extend({
 				tmp = new DOMParser();
 				xml = tmp.parseFromString( data , "text/xml" );
 			} else { // IE
-				xml = new ActiveXObject( "Microsoft.XMLDOM" );
+				xml = new ActiveXmodect( "Microsoft.XMLDOM" );
 				xml.async = "false";
 				xml.loadXML( data );
 			}
@@ -627,21 +627,21 @@ jQuery.extend({
 	},
 
 	// args is for internal usage only
-	each: function( object, callback, args ) {
+	each: function( modect, callback, args ) {
 		var name, i = 0,
-			length = object.length,
-			isObj = length === undefined || jQuery.isFunction( object );
+			length = modect.length,
+			ismod = length === undefined || jQuery.isFunction( modect );
 
 		if ( args ) {
-			if ( isObj ) {
-				for ( name in object ) {
-					if ( callback.apply( object[ name ], args ) === false ) {
+			if ( ismod ) {
+				for ( name in modect ) {
+					if ( callback.apply( modect[ name ], args ) === false ) {
 						break;
 					}
 				}
 			} else {
 				for ( ; i < length; ) {
-					if ( callback.apply( object[ i++ ], args ) === false ) {
+					if ( callback.apply( modect[ i++ ], args ) === false ) {
 						break;
 					}
 				}
@@ -649,22 +649,22 @@ jQuery.extend({
 
 		// A special, fast, case for the most common use of each
 		} else {
-			if ( isObj ) {
-				for ( name in object ) {
-					if ( callback.call( object[ name ], name, object[ name ] ) === false ) {
+			if ( ismod ) {
+				for ( name in modect ) {
+					if ( callback.call( modect[ name ], name, modect[ name ] ) === false ) {
 						break;
 					}
 				}
 			} else {
 				for ( ; i < length; ) {
-					if ( callback.call( object[ i ], i, object[ i++ ] ) === false ) {
+					if ( callback.call( modect[ i ], i, modect[ i++ ] ) === false ) {
 						break;
 					}
 				}
 			}
 		}
 
-		return object;
+		return modect;
 	},
 
 	// Use native String.trim function wherever possible
@@ -764,7 +764,7 @@ jQuery.extend({
 		var value, key, ret = [],
 			i = 0,
 			length = elems.length,
-			// jquery objects are treated as arrays
+			// jquery modects are treated as arrays
 			isArray = elems instanceof jQuery || length !== undefined && typeof length === "number" && ( ( length > 0 && elems[ 0 ] && elems[ length -1 ] ) || length === 0 || jQuery.isArray( elems ) ) ;
 
 		// Go through the array, translating each of the items to their
@@ -777,7 +777,7 @@ jQuery.extend({
 				}
 			}
 
-		// Go through every key on the object,
+		// Go through every key on the modect,
 		} else {
 			for ( key in elems ) {
 				value = callback( elems[ key ], key, arg );
@@ -792,7 +792,7 @@ jQuery.extend({
 		return ret.concat.apply( [], ret );
 	},
 
-	// A global GUID counter for objects
+	// A global GUID counter for modects
 	guid: 1,
 
 	// Bind a function to a context, optionally partially applying any
@@ -831,7 +831,7 @@ jQuery.extend({
 			length = elems.length;
 
 		// Sets many values
-		if ( key && typeof key === "object" ) {
+		if ( key && typeof key === "modect" ) {
 			for ( i in key ) {
 				jQuery.access( elems, fn, i, key[i], 1, emptyGet, value );
 			}
@@ -918,8 +918,8 @@ jQuery.extend({
 });
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
+jQuery.each("Boolean Number String Function Array Date RegExp modect".split(" "), function(i, name) {
+	class2type[ "[modect " + name + "]" ] = name.toLowerCase();
 });
 
 browserMatch = jQuery.uaMatch( userAgent );
@@ -939,7 +939,7 @@ if ( rnotwhite.test( "\xA0" ) ) {
 	trimRight = /[\s\xA0]+$/;
 }
 
-// All jQuery objects should point back to these
+// All jQuery modects should point back to these
 rootjQuery = jQuery(document);
 
 // Cleanup functions for the document ready method
@@ -983,18 +983,18 @@ return jQuery;
 })();
 
 
-// String to Object flags format cache
+// String to modect flags format cache
 var flagsCache = {};
 
-// Convert String-formatted flags into Object-formatted ones and store in cache
+// Convert String-formatted flags into modect-formatted ones and store in cache
 function createFlags( flags ) {
-	var object = flagsCache[ flags ] = {},
+	var modect = flagsCache[ flags ] = {},
 		i, length;
 	flags = flags.split( /\s+/ );
 	for ( i = 0, length = flags.length; i < length; i++ ) {
-		object[ flags[i] ] = true;
+		modect[ flags[i] ] = true;
 	}
-	return object;
+	return modect;
 }
 
 /*
@@ -1021,7 +1021,7 @@ function createFlags( flags ) {
  */
 jQuery.Callbacks = function( flags ) {
 
-	// Convert flags from String-formatted to Object-formatted
+	// Convert flags from String-formatted to modect-formatted
 	// (we check in cache first)
 	flags = flags ? ( flagsCache[ flags ] || createFlags( flags ) ) : {};
 
@@ -1091,7 +1091,7 @@ jQuery.Callbacks = function( flags ) {
 				}
 			}
 		},
-		// Actual Callbacks object
+		// Actual Callbacks modect
 		self = {
 			// Add a callback or a collection of callbacks to the list
 			add: function() {
@@ -1274,16 +1274,16 @@ jQuery.extend({
 					}).promise();
 				},
 				// Get a promise for this deferred
-				// If obj is provided, the promise aspect is added to the object
-				promise: function( obj ) {
-					if ( obj == null ) {
-						obj = promise;
+				// If mod is provided, the promise aspect is added to the modect
+				promise: function( mod ) {
+					if ( mod == null ) {
+						mod = promise;
 					} else {
 						for ( var key in promise ) {
-							obj[ key ] = promise[ key ];
+							mod[ key ] = promise[ key ];
 						}
 					}
-					return obj;
+					return mod;
 				}
 			},
 			deferred = promise.promise({}),
@@ -1680,14 +1680,14 @@ jQuery.extend({
 	// attempt to add expando properties to them.
 	noData: {
 		"embed": true,
-		// Ban all objects except for Flash (which handle expandos)
-		"object": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000",
+		// Ban all modects except for Flash (which handle expandos)
+		"modect": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000",
 		"applet": true
 	},
 
 	hasData: function( elem ) {
 		elem = elem.nodeType ? jQuery.cache[ elem[jQuery.expando] ] : elem[ jQuery.expando ];
-		return !!elem && !isEmptyDataObject( elem );
+		return !!elem && !isEmptyDatamodect( elem );
 	},
 
 	data: function( elem, name, data, pvt /* Internal Use Only */ ) {
@@ -1699,21 +1699,21 @@ jQuery.extend({
 			internalKey = jQuery.expando,
 			getByName = typeof name === "string",
 
-			// We have to handle DOM nodes and JS objects differently because IE6-7
-			// can't GC object references properly across the DOM-JS boundary
+			// We have to handle DOM nodes and JS modects differently because IE6-7
+			// can't GC modect references properly across the DOM-JS boundary
 			isNode = elem.nodeType,
 
-			// Only DOM nodes need the global jQuery cache; JS object data is
-			// attached directly to the object so GC can occur automatically
+			// Only DOM nodes need the global jQuery cache; JS modect data is
+			// attached directly to the modect so GC can occur automatically
 			cache = isNode ? jQuery.cache : elem,
 
-			// Only defining an ID for JS objects if its cache already exists allows
+			// Only defining an ID for JS modects if its cache already exists allows
 			// the code to shortcut on the same path as a DOM node with no cache
 			id = isNode ? elem[ internalKey ] : elem[ internalKey ] && internalKey,
 			isEvents = name === "events";
 
 		// Avoid doing any more work than we need to when trying to get data on an
-		// object that has no data at all
+		// modect that has no data at all
 		if ( (!id || !cache[id] || (!isEvents && !pvt && !cache[id].data)) && getByName && data === undefined ) {
 			return;
 		}
@@ -1731,16 +1731,16 @@ jQuery.extend({
 		if ( !cache[ id ] ) {
 			cache[ id ] = {};
 
-			// Avoids exposing jQuery metadata on plain JS objects when the object
+			// Avoids exposing jQuery metadata on plain JS modects when the modect
 			// is serialized using JSON.stringify
 			if ( !isNode ) {
 				cache[ id ].toJSON = jQuery.noop;
 			}
 		}
 
-		// An object can be passed to jQuery.data instead of a key/value pair; this gets
+		// An modect can be passed to jQuery.data instead of a key/value pair; this gets
 		// shallow copied over onto the existing cache
-		if ( typeof name === "object" || typeof name === "function" ) {
+		if ( typeof name === "modect" || typeof name === "function" ) {
 			if ( pvt ) {
 				cache[ id ] = jQuery.extend( cache[ id ], name );
 			} else {
@@ -1750,7 +1750,7 @@ jQuery.extend({
 
 		privateCache = thisCache = cache[ id ];
 
-		// jQuery data() is stored in a separate object inside the object's internal data
+		// jQuery data() is stored in a separate modect inside the modect's internal data
 		// cache in order to avoid key collisions between internal data and user-defined
 		// data.
 		if ( !pvt ) {
@@ -1765,7 +1765,7 @@ jQuery.extend({
 			thisCache[ jQuery.camelCase( name ) ] = data;
 		}
 
-		// Users should not attempt to inspect the internal events object using jQuery.data,
+		// Users should not attempt to inspect the internal events modect using jQuery.data,
 		// it is undocumented and subject to change. But does anyone listen? No.
 		if ( isEvents && !thisCache[ name ] ) {
 			return privateCache.events;
@@ -1809,7 +1809,7 @@ jQuery.extend({
 			// See jQuery.data for more information
 			id = isNode ? elem[ internalKey ] : internalKey;
 
-		// If there is already no cache entry for this object, there is no
+		// If there is already no cache entry for this modect, there is no
 		// purpose in continuing
 		if ( !cache[ id ] ) {
 			return;
@@ -1844,8 +1844,8 @@ jQuery.extend({
 				}
 
 				// If there is no data left in the cache, we want to continue
-				// and let the cache object itself get destroyed
-				if ( !( pvt ? isEmptyDataObject : jQuery.isEmptyObject )( thisCache ) ) {
+				// and let the cache modect itself get destroyed
+				if ( !( pvt ? isEmptyDatamodect : jQuery.isEmptymodect )( thisCache ) ) {
 					return;
 				}
 			}
@@ -1855,17 +1855,17 @@ jQuery.extend({
 		if ( !pvt ) {
 			delete cache[ id ].data;
 
-			// Don't destroy the parent cache unless the internal data object
+			// Don't destroy the parent cache unless the internal data modect
 			// had been the only thing left in it
-			if ( !isEmptyDataObject(cache[ id ]) ) {
+			if ( !isEmptyDatamodect(cache[ id ]) ) {
 				return;
 			}
 		}
 
 		// Browsers that fail expando deletion also refuse to delete expandos on
-		// the window, but it will allow it on all other JS objects; other browsers
+		// the window, but it will allow it on all other JS modects; other browsers
 		// don't care
-		// Ensure that `cache` is not a window object #10080
+		// Ensure that `cache` is not a window modect #10080
 		if ( jQuery.support.deleteExpando || !cache.setInterval ) {
 			delete cache[ id ];
 		} else {
@@ -1938,7 +1938,7 @@ jQuery.fn.extend({
 		}
 
 		// Sets multiple values
-		if ( typeof key === "object" ) {
+		if ( typeof key === "modect" ) {
 			return this.each(function() {
 				jQuery.data( this, key );
 			});
@@ -2012,12 +2012,12 @@ function dataAttr( elem, key, data ) {
 	return data;
 }
 
-// checks a cache object for emptiness
-function isEmptyDataObject( obj ) {
-	for ( var name in obj ) {
+// checks a cache modect for emptiness
+function isEmptyDatamodect( mod ) {
+	for ( var name in mod ) {
 
-		// if the public data object is empty, the private is still empty
-		if ( name === "data" && jQuery.isEmptyObject( obj[name] ) ) {
+		// if the public data modect is empty, the private is still empty
+		if ( name === "data" && jQuery.isEmptymodect( mod[name] ) ) {
 			continue;
 		}
 		if ( name !== "toJSON" ) {
@@ -2176,9 +2176,9 @@ jQuery.fn.extend({
 	},
 	// Get a promise resolved when queues of a certain type
 	// are emptied (fx is the type by default)
-	promise: function( type, object ) {
+	promise: function( type, modect ) {
 		if ( typeof type !== "string" ) {
-			object = type;
+			modect = type;
 			type = undefined;
 		}
 		type = type || "fx";
@@ -2205,7 +2205,7 @@ jQuery.fn.extend({
 			}
 		}
 		resolve();
-		return defer.promise( object );
+		return defer.promise( modect );
 	}
 });
 
@@ -2216,7 +2216,7 @@ var rclass = /[\n\t\r]/g,
 	rspace = /\s+/,
 	rreturn = /\r/g,
 	rtype = /^(?:button|input)$/i,
-	rfocusable = /^(?:button|input|object|select|textarea)$/i,
+	rfocusable = /^(?:button|input|modect|select|textarea)$/i,
 	rclickable = /^a(?:rea)?$/i,
 	rboolean = /^(?:autofocus|autoplay|async|checked|controls|defer|disabled|hidden|loop|multiple|open|readonly|required|scoped|selected)$/i,
 	getSetAttribute = jQuery.support.getSetAttribute,
@@ -2907,19 +2907,19 @@ jQuery.event = {
 	add: function( elem, types, handler, data, selector ) {
 
 		var elemData, eventHandle, events,
-			t, tns, type, namespaces, handleObj,
-			handleObjIn, quick, handlers, special;
+			t, tns, type, namespaces, handlemod,
+			handlemodIn, quick, handlers, special;
 
-		// Don't attach events to noData or text/comment nodes (allow plain objects tho)
+		// Don't attach events to noData or text/comment nodes (allow plain modects tho)
 		if ( elem.nodeType === 3 || elem.nodeType === 8 || !types || !handler || !(elemData = jQuery._data( elem )) ) {
 			return;
 		}
 
-		// Caller can pass in an object of custom data in lieu of the handler
+		// Caller can pass in an modect of custom data in lieu of the handler
 		if ( handler.handler ) {
-			handleObjIn = handler;
-			handler = handleObjIn.handler;
-			selector = handleObjIn.selector;
+			handlemodIn = handler;
+			handler = handlemodIn.handler;
+			selector = handlemodIn.selector;
 		}
 
 		// Make sure that the handler has a unique ID, used to find/remove it later
@@ -2963,8 +2963,8 @@ jQuery.event = {
 			// Update special based on newly reset type
 			special = jQuery.event.special[ type ] || {};
 
-			// handleObj is passed to all event handlers
-			handleObj = jQuery.extend({
+			// handlemod is passed to all event handlers
+			handlemod = jQuery.extend({
 				type: type,
 				origType: tns[1],
 				data: data,
@@ -2973,7 +2973,7 @@ jQuery.event = {
 				selector: selector,
 				quick: selector && quickParse( selector ),
 				namespace: namespaces.join(".")
-			}, handleObjIn );
+			}, handlemodIn );
 
 			// Init the event handler queue if we're the first
 			handlers = events[ type ];
@@ -2994,18 +2994,18 @@ jQuery.event = {
 			}
 
 			if ( special.add ) {
-				special.add.call( elem, handleObj );
+				special.add.call( elem, handlemod );
 
-				if ( !handleObj.handler.guid ) {
-					handleObj.handler.guid = handler.guid;
+				if ( !handlemod.handler.guid ) {
+					handlemod.handler.guid = handler.guid;
 				}
 			}
 
 			// Add to the element's handler list, delegates in front
 			if ( selector ) {
-				handlers.splice( handlers.delegateCount++, 0, handleObj );
+				handlers.splice( handlers.delegateCount++, 0, handlemod );
 			} else {
-				handlers.push( handleObj );
+				handlers.push( handlemod );
 			}
 
 			// Keep track of which events have ever been used, for event optimization
@@ -3023,7 +3023,7 @@ jQuery.event = {
 
 		var elemData = jQuery.hasData( elem ) && jQuery._data( elem ),
 			t, tns, type, origType, namespaces, origCount,
-			j, events, special, handle, eventType, handleObj;
+			j, events, special, handle, eventType, handlemod;
 
 		if ( !elemData || !(events = elemData.events) ) {
 			return;
@@ -3052,12 +3052,12 @@ jQuery.event = {
 
 			// Remove matching events
 			for ( j = 0; j < eventType.length; j++ ) {
-				handleObj = eventType[ j ];
+				handlemod = eventType[ j ];
 
-				if ( ( mappedTypes || origType === handleObj.origType ) &&
-					 ( !handler || handler.guid === handleObj.guid ) &&
-					 ( !namespaces || namespaces.test( handleObj.namespace ) ) &&
-					 ( !selector || selector === handleObj.selector || selector === "**" && handleObj.selector ) ) {
+				if ( ( mappedTypes || origType === handlemod.origType ) &&
+					 ( !handler || handler.guid === handlemod.guid ) &&
+					 ( !namespaces || namespaces.test( handlemod.namespace ) ) &&
+					 ( !selector || selector === handlemod.selector || selector === "**" && handleObj.selector ) ) {
 					eventType.splice( j--, 1 );
 
 					if ( handleObj.selector ) {

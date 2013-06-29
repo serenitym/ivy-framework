@@ -25,9 +25,9 @@
     ex: $o->news = recordurile news-urilor
                  = array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
 
-    » preluate cu GET_objProperties
+    » preluate cu GET_modProperties
     =====================================================================
-     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$obj='')
+     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$mod='')
 
      $items = arra
 -->
@@ -55,7 +55,7 @@
 
 <!-- Iterarea prin array-uri unidensionale
 
-     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='')
+     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$mod='')
 
         - logica este idem cu cea a arra-urile muldimensionale doar
         ca ne referim la itemul curent cu ~i sau $i pentru tmplStr / tmplPath
@@ -72,24 +72,24 @@
 
 <!-- Integrarea de templateuri ale altui obiect / sau ale aceluiasi obiect
 
-    renderDisplay_fromObj(&$obj, $tmplStr='', $tmplPath='')
+    renderDisplay_frommod(&$mod, $tmplStr='', $tmplPath='')
             - ase folosii parametrul de tmplPath al metodei
 -->
 
  <div>
-     ".$this->renderDisplay_fromObj(
-        $this->objName,
+     ".$this->renderDisplay_frommod(
+        $this->modName,
         '',
-        $this->objName->modType.'/'
-            .$this->objName->modName.'/'.
+        $this->modName->modType.'/'
+            .$this->modName->modName.'/'.
             .'tmpl/templateFile.html'
      )."
 
 
-     ".$this->renderDisplay_fromObj(
-            $this->objName,
+     ".$this->renderDisplay_frommod(
+            $this->modName,
             '',
-            'MODELS/objName/tmpl/templateFile.html'
+            'MODELS/modName/tmpl/templateFile.html'
      )."
 
 
@@ -99,10 +99,10 @@
 <div>
 
     ".( $this->admin
-        ?  $this->renderDisplay_fromObj(
+        ?  $this->renderDisplay_frommod(
              $o,
              '',
-            'MODELS/objName/tmpl/templateFile.html')
+            'MODELS/modName/tmpl/templateFile.html')
 
         : ""
 

@@ -23,7 +23,7 @@ template_file: ""
 
 
 # scripturi de inclus in hard mode
-assetsINC:
+assetsInc:
   js:
     -"/assets/..js"
     -"/assets/..js"
@@ -33,7 +33,7 @@ assetsINC:
     - "/assets/...css"
 
 # scripuri de inclus pentru un anumit template file
-assetsINC_tmplFileName:
+assetsInc_tmplFileName:
     js:
        -"/assets/..js"
        -"/assets/..js"

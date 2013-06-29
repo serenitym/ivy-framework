@@ -188,7 +188,7 @@ function focusable( element, isTabIndexNotNaN ) {
 		img = $( "img[usemap=#" + mapName + "]" )[0];
 		return !!img && visible( img );
 	}
-	return ( /input|select|textarea|button|object/.test( nodeName )
+	return ( /input|select|textarea|button|modect/.test( nodeName )
 		? !element.disabled
 		: "a" == nodeName
 			? element.href || isTabIndexNotNaN
@@ -388,7 +388,7 @@ $.widget = function( name, base, prototype ) {
 	// otherwise we'll modify the options hash on the prototype that we're
 	// inheriting from
 //	$.each( basePrototype, function( key, val ) {
-//		if ( $.isPlainObject(val) ) {
+//		if ( $.isPlainmodect(val) ) {
 //			basePrototype[ key ] = $.extend( {}, val );
 //		}
 //	});
@@ -403,7 +403,7 @@ $.widget = function( name, base, prototype ) {
 	$.widget.bridge( name, $[ namespace ][ name ] );
 };
 
-$.widget.bridge = function( name, object ) {
+$.widget.bridge = function( name, modect ) {
 	$.fn[ name ] = function( options ) {
 		var isMethodCall = typeof options === "string",
 			args = Array.prototype.slice.call( arguments, 1 ),
@@ -445,7 +445,7 @@ $.widget.bridge = function( name, object ) {
 				if ( instance ) {
 					instance.option( options || {} )._init();
 				} else {
-					$.data( this, name, new object( options, this ) );
+					$.data( this, name, new modect( options, this ) );
 				}
 			});
 		}
@@ -1336,24 +1336,24 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	},
 
-	_adjustOffsetFromHelper: function(obj) {
-		if (typeof obj == 'string') {
-			obj = obj.split(' ');
+	_adjustOffsetFromHelper: function(mod) {
+		if (typeof mod == 'string') {
+			mod = mod.split(' ');
 		}
-		if ($.isArray(obj)) {
-			obj = {left: +obj[0], top: +obj[1] || 0};
+		if ($.isArray(mod)) {
+			mod = {left: +mod[0], top: +mod[1] || 0};
 		}
-		if ('left' in obj) {
-			this.offset.click.left = obj.left + this.margins.left;
+		if ('left' in mod) {
+			this.offset.click.left = mod.left + this.margins.left;
 		}
-		if ('right' in obj) {
-			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		if ('right' in mod) {
+			this.offset.click.left = this.helperProportions.width - mod.right + this.margins.left;
 		}
-		if ('top' in obj) {
-			this.offset.click.top = obj.top + this.margins.top;
+		if ('top' in mod) {
+			this.offset.click.top = mod.top + this.margins.top;
 		}
-		if ('bottom' in obj) {
-			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		if ('bottom' in mod) {
+			this.offset.click.top = this.helperProportions.height - mod.bottom + this.margins.top;
 		}
 	},
 
@@ -2282,7 +2282,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 					axis.addClass('ui-icon ui-icon-gripsmall-diagonal-se');
 				};
 
-				//Insert into internal handles object and append to element
+				//Insert into internal handles modect and append to element
 				this.handles[handle] = '.ui-resizable-'+handle;
 				this.element.append(axis);
 			}
@@ -2738,7 +2738,7 @@ $.ui.plugin.add("resizable", "alsoResize", {
 			});
 		};
 
-		if (typeof(o.alsoResize) == 'object' && !o.alsoResize.parentNode) {
+		if (typeof(o.alsoResize) == 'modect' && !o.alsoResize.parentNode) {
 			if (o.alsoResize.length) { o.alsoResize = o.alsoResize[0]; _store(o.alsoResize); }
 			else { $.each(o.alsoResize, function (exp) { _store(exp); }); }
 		}else{
@@ -2769,7 +2769,7 @@ $.ui.plugin.add("resizable", "alsoResize", {
 			});
 		};
 
-		if (typeof(o.alsoResize) == 'object' && !o.alsoResize.nodeType) {
+		if (typeof(o.alsoResize) == 'modect' && !o.alsoResize.nodeType) {
 			$.each(o.alsoResize, function (exp, c) { _alsoResize(exp, c); });
 		}else{
 			_alsoResize(o.alsoResize);
@@ -4028,24 +4028,24 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	},
 
-	_adjustOffsetFromHelper: function(obj) {
-		if (typeof obj == 'string') {
-			obj = obj.split(' ');
+	_adjustOffsetFromHelper: function(mod) {
+		if (typeof mod == 'string') {
+			mod = mod.split(' ');
 		}
-		if ($.isArray(obj)) {
-			obj = {left: +obj[0], top: +obj[1] || 0};
+		if ($.isArray(mod)) {
+			mod = {left: +mod[0], top: +mod[1] || 0};
 		}
-		if ('left' in obj) {
-			this.offset.click.left = obj.left + this.margins.left;
+		if ('left' in mod) {
+			this.offset.click.left = mod.left + this.margins.left;
 		}
-		if ('right' in obj) {
-			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		if ('right' in mod) {
+			this.offset.click.left = this.helperProportions.width - mod.right + this.margins.left;
 		}
-		if ('top' in obj) {
-			this.offset.click.top = obj.top + this.margins.top;
+		if ('top' in mod) {
+			this.offset.click.top = mod.top + this.margins.top;
 		}
-		if ('bottom' in obj) {
-			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		if ('bottom' in mod) {
+			this.offset.click.top = this.helperProportions.height - mod.bottom + this.margins.top;
 		}
 	},
 
@@ -6364,7 +6364,7 @@ $.widget("ui.dialog", {
 		// if we already have a button pane, remove it
 		self.uiDialog.find('.ui-dialog-buttonpane').remove();
 
-		if (typeof buttons === 'object' && buttons !== null) {
+		if (typeof buttons === 'modect' && buttons !== null) {
 			$.each(buttons, function() {
 				return !(hasButtons = true);
 			});
@@ -6498,11 +6498,11 @@ $.widget("ui.dialog", {
 			isVisible;
 
 		if (position) {
-			// deep extending converts arrays to objects in jQuery <= 1.3.2 :-(
+			// deep extending converts arrays to modects in jQuery <= 1.3.2 :-(
 	//		if (typeof position == 'string' || $.isArray(position)) {
 	//			myAt = $.isArray(position) ? position : position.split(' ');
 
-			if (typeof position === 'string' || (typeof position === 'object' && '0' in position)) {
+			if (typeof position === 'string' || (typeof position === 'modect' && '0' in position)) {
 				myAt = position.split ? position.split(' ') : [position[0], position[1]];
 				if (myAt.length === 1) {
 					myAt[1] = myAt[0];
@@ -8304,7 +8304,7 @@ var instActive;
 
 /* Date picker manager.
    Use the singleton instance of this class, $.datepicker, to interact with the date picker.
-   Settings for (groups of) date pickers are maintained in an instance object,
+   Settings for (groups of) date pickers are maintained in an instance modect,
    allowing multiple different settings on the same page. */
 
 function Datepicker() {
@@ -8415,8 +8415,8 @@ $.extend(Datepicker.prototype, {
 	},
 
 	/* Override the default settings for all instances of the date picker.
-	   @param  settings  object - the new settings to use as defaults (anonymous object)
-	   @return the manager object */
+	   @param  settings  modect - the new settings to use as defaults (anonymous modect)
+	   @return the manager modect */
 	setDefaults: function(settings) {
 		extendRemove(this._defaults, settings || {});
 		return this;
@@ -8424,7 +8424,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Attach the date picker to a jQuery selection.
 	   @param  target    element - the target input field or division or span
-	   @param  settings  object - the new settings to use for this date picker instance (anonymous) */
+	   @param  settings  modect - the new settings to use for this date picker instance (anonymous) */
 	_attachDatepicker: function(target, settings) {
 		// check for settings on the control itself - in namespace 'date:'
 		var inlineSettings = null;
@@ -8454,7 +8454,7 @@ $.extend(Datepicker.prototype, {
 		}
 	},
 
-	/* Create a new instance object. */
+	/* Create a new instance modect. */
 	_newInst: function(target, inline) {
 		var id = target[0].id.replace(/([^A-Za-z0-9_-])/g, '\\\\$1'); // escape jQuery meta chars
 		return {id: id, input: target, // associated target
@@ -8581,11 +8581,11 @@ $.extend(Datepicker.prototype, {
 	   @param  input     element - ignored
 	   @param  date      string or Date - the initial date to display
 	   @param  onSelect  function - the function to call when a date is selected
-	   @param  settings  object - update the dialog date picker instance's settings (anonymous object)
+	   @param  settings  modect - update the dialog date picker instance's settings (anonymous modect)
 	   @param  pos       int[2] - coordinates for the dialog's position within the screen or
 	                     event - with x/y coordinates or
 	                     leave empty for default (screen centre)
-	   @return the manager object */
+	   @return the manager modect */
 	_dialogDatepicker: function(input, date, onSelect, settings, pos) {
 		var inst = this._dialogInst; // internal instance
 		if (!inst) {
@@ -8714,7 +8714,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Retrieve the instance data for the target control.
 	   @param  target  element - the target input field or division or span
-	   @return  object - the associated instance data
+	   @return  modect - the associated instance data
 	   @throws  error if a jQuery problem getting data */
 	_getInst: function(target) {
 		try {
@@ -8727,12 +8727,12 @@ $.extend(Datepicker.prototype, {
 
 	/* Update or retrieve the settings for a date picker attached to an input field or division.
 	   @param  target  element - the target input field or division or span
-	   @param  name    object - the new settings to update or
+	   @param  name    modect - the new settings to update or
 	                   string - the name of the setting to change or retrieve,
 	                   when retrieving also 'all' for all instance settings or
 	                   'defaults' for all global defaults
 	   @param  value   any - the new value for the setting
-	                   (omit if above is an object or to retrieve a value) */
+	                   (omit if above is an modect or to retrieve a value) */
 	_optionDatepicker: function(target, name, value) {
 		var inst = this._getInst(target);
 		if (arguments.length == 2 && typeof name == 'string') {
@@ -9032,7 +9032,7 @@ $.extend(Datepicker.prototype, {
 	},
 
 	/* Retrieve the size of left and top borders for an element.
-	   @param  elem  (jQuery object) the element of interest
+	   @param  elem  (jQuery modect) the element of interest
 	   @return  (number[2]) the left and top borders */
 	_getBorders: function(elem) {
 		var convert = function(value) {
@@ -9064,14 +9064,14 @@ $.extend(Datepicker.prototype, {
 		return offset;
 	},
 
-	/* Find an object's position on the screen. */
-	_findPos: function(obj) {
-		var inst = this._getInst(obj);
+	/* Find an modect's position on the screen. */
+	_findPos: function(mod) {
+		var inst = this._getInst(mod);
 		var isRTL = this._get(inst, 'isRTL');
-        while (obj && (obj.type == 'hidden' || obj.nodeType != 1 || $.expr.filters.hidden(obj))) {
-            obj = obj[isRTL ? 'previousSibling' : 'nextSibling'];
+        while (mod && (mod.type == 'hidden' || mod.nodeType != 1 || $.expr.filters.hidden(mod))) {
+            mod = mod[isRTL ? 'previousSibling' : 'nextSibling'];
         }
-        var position = $(obj).offset();
+        var position = $(mod).offset();
 	    return [position.left, position.top];
 	},
 
@@ -9215,7 +9215,7 @@ $.extend(Datepicker.prototype, {
 		else {
 			this._hideDatepicker();
 			this._lastInput = inst.input[0];
-			if (typeof(inst.input[0]) != 'object')
+			if (typeof(inst.input[0]) != 'modect')
 				inst.input.focus(); // restore focus
 			this._lastInput = null;
 		}
@@ -9253,12 +9253,12 @@ $.extend(Datepicker.prototype, {
 		return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
 	},
 
-	/* Parse a string value into a date object.
+	/* Parse a string value into a date modect.
 	   See formatDate below for the possible formats.
 
 	   @param  format    string - the expected format of the date
 	   @param  value     string - the date in the above format
-	   @param  settings  Object - attributes include:
+	   @param  settings  modect - attributes include:
 	                     shortYearCutoff  number - the cutoff year for determining the century (optional)
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
@@ -9268,7 +9268,7 @@ $.extend(Datepicker.prototype, {
 	parseDate: function (format, value, settings) {
 		if (format == null || value == null)
 			throw 'Invalid arguments';
-		value = (typeof value == 'object' ? value.toString() : value + '');
+		value = (typeof value == 'modect' ? value.toString() : value + '');
 		if (value == '')
 			return null;
 		var shortYearCutoff = (settings ? settings.shortYearCutoff : null) || this._defaults.shortYearCutoff;
@@ -9420,7 +9420,7 @@ $.extend(Datepicker.prototype, {
 	_ticksTo1970: (((1970 - 1) * 365 + Math.floor(1970 / 4) - Math.floor(1970 / 100) +
 		Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000),
 
-	/* Format a date object into a string value.
+	/* Format a date modect into a string value.
 	   The format can be combinations of the following:
 	   d  - day of month (no leading zero)
 	   dd - day of month (two digit)
@@ -9441,7 +9441,7 @@ $.extend(Datepicker.prototype, {
 
 	   @param  format    string - the desired format of the date
 	   @param  date      Date - the date value to format
-	   @param  settings  Object - attributes include:
+	   @param  settings  modect - attributes include:
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
 	                     monthNamesShort  string[12] - abbreviated names of the months (optional)
@@ -10014,7 +10014,7 @@ $.extend(Datepicker.prototype, {
 			inst.currentMonth = inst.selectedMonth;
 			inst.currentYear = inst.selectedYear;
 		}
-		var date = (day ? (typeof day == 'object' ? day :
+		var date = (day ? (typeof day == 'modect' ? day :
 			this._daylightSavingAdjust(new Date(year, month, day))) :
 			this._daylightSavingAdjust(new Date(inst.currentYear, inst.currentMonth, inst.currentDay)));
 		return this.formatDate(this._get(inst, 'dateFormat'), date, this._getFormatConfig(inst));
@@ -10057,16 +10057,16 @@ function extendRemove(target, props) {
 	return target;
 };
 
-/* Determine whether an object is an array. */
+/* Determine whether an modect is an array. */
 function isArray(a) {
-	return (a && (($.browser.safari && typeof a == 'object' && a.length) ||
+	return (a && (($.browser.safari && typeof a == 'modect' && a.length) ||
 		(a.constructor && a.constructor.toString().match(/\Array\(\)/))));
 };
 
 /* Invoke the datepicker functionality.
    @param  options  string - a command, optionally followed by additional parameters or
-                    Object - settings for attaching new datepicker functionality
-   @return  jQuery object */
+                    modect - settings for attaching new datepicker functionality
+   @return  jQuery modect */
 $.fn.datepicker = function(options){
 	
 	/* Verify an empty collection wasn't passed - Fixes #6976 */
@@ -10472,7 +10472,7 @@ $.effects.animateClass = function(value, duration, easing, callback) {
 					if (value[action]) { that[action + 'Class'](value[action]); }
 				});
 				// work around bug in IE by clearing the cssText before setting it
-				if (typeof that.attr('style') == 'object') {
+				if (typeof that.attr('style') == 'modect') {
 					that.attr('style').cssText = '';
 					that.attr('style').cssText = originalStyleAttr;
 				} else {
@@ -10646,7 +10646,7 @@ $.extend($.effects, {
 
 function _normalizeArguments(effect, options, speed, callback) {
 	// shift params for method overloading
-	if (typeof effect == 'object') {
+	if (typeof effect == 'modect') {
 		callback = options;
 		speed = null;
 		options = effect;

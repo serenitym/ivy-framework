@@ -778,24 +778,24 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	},
 
-	_adjustOffsetFromHelper: function(obj) {
-		if (typeof obj == 'string') {
-			obj = obj.split(' ');
+	_adjustOffsetFromHelper: function(mod) {
+		if (typeof mod == 'string') {
+			mod = mod.split(' ');
 		}
-		if ($.isArray(obj)) {
-			obj = {left: +obj[0], top: +obj[1] || 0};
+		if ($.isArray(mod)) {
+			mod = {left: +mod[0], top: +mod[1] || 0};
 		}
-		if ('left' in obj) {
-			this.offset.click.left = obj.left + this.margins.left;
+		if ('left' in mod) {
+			this.offset.click.left = mod.left + this.margins.left;
 		}
-		if ('right' in obj) {
-			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		if ('right' in mod) {
+			this.offset.click.left = this.helperProportions.width - mod.right + this.margins.left;
 		}
-		if ('top' in obj) {
-			this.offset.click.top = obj.top + this.margins.top;
+		if ('top' in mod) {
+			this.offset.click.top = mod.top + this.margins.top;
 		}
-		if ('bottom' in obj) {
-			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		if ('bottom' in mod) {
+			this.offset.click.top = this.helperProportions.height - mod.bottom + this.margins.top;
 		}
 	},
 

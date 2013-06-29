@@ -57,9 +57,9 @@
 	
 	
 	//http://www.bigbold.com/snippets/posts/show/2630
-	function addClassName(objElement, strClass, blnMayAlreadyExist){
-	   if ( objElement.className ){
-	      var arrList = objElement.className.split(' ');
+	function addClassName(modElement, strClass, blnMayAlreadyExist){
+	   if ( modElement.className ){
+	      var arrList = modElement.className.split(' ');
 	      if ( blnMayAlreadyExist ){
 	         var strClassUpper = strClass.toUpperCase();
 	         for ( var i = 0; i < arrList.length; i++ ){
@@ -70,17 +70,17 @@
 	           }
 	      }
 	      arrList[arrList.length] = strClass;
-	      objElement.className = arrList.join(' ');
+	      modElement.className = arrList.join(' ');
 	   }
 	   else{  
-	      objElement.className = strClass;
+	      modElement.className = strClass;
 	      }
 	}
 
 	//http://www.bigbold.com/snippets/posts/show/2630
-	function removeClassName(objElement, strClass){
-	   if ( objElement.className ){
-	      var arrList = objElement.className.split(' ');
+	function removeClassName(modElement, strClass){
+	   if ( modElement.className ){
+	      var arrList = modElement.className.split(' ');
 	      var strClassUpper = strClass.toUpperCase();
 	      for ( var i = 0; i < arrList.length; i++ ){
 	         if ( arrList[i].toUpperCase() == strClassUpper ){
@@ -88,19 +88,19 @@
 	            i--;
 	         }
 	      }
-	      objElement.className = arrList.join(' ');
+	      modElement.className = arrList.join(' ');
 	   }
 	}
 
 	//http://ejohn.org/projects/flexible-javascript-events/
-	function addEvent( obj, type, fn ) {
-	  if ( obj.attachEvent ) {
-	    obj["e"+type+fn] = fn;
-	    obj[type+fn] = function() { obj["e"+type+fn]( window.event ) };
-	    obj.attachEvent( "on"+type, obj[type+fn] );
+	function addEvent( mod, type, fn ) {
+	  if ( mod.attachEvent ) {
+	    mod["e"+type+fn] = fn;
+	    mod[type+fn] = function() { mod["e"+type+fn]( window.event ) };
+	    mod.attachEvent( "on"+type, mod[type+fn] );
 	  } 
 	  else{
-	    obj.addEventListener( type, fn, false );	
+	    mod.addEventListener( type, fn, false );
 	  }
 	}
 </script>

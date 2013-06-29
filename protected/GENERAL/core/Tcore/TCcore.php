@@ -66,23 +66,23 @@ class TCcore
      *  - tagul de includere a fisierului va fi retinut in $this->INC_[extension]
      *
      *
-     * @param $mod_name        - modulul de la care se doresc preluate fisierule cu extensia ceruta
-     * @param $type_MOD        - tipul modelului GENERAL / MODELS /PLUGINS
+     * @param $modName        - modulul de la care se doresc preluate fisierule cu extensia ceruta
+     * @param $modType        - tipul modelului GENERAL / MODELS /PLUGINS
      * @param $extension       - extensia ex: js/ css
      * @param string $folder   - folderul din cadrul caruia sa fie preluate fisierele cu extensia ceruta
      * @param string $template - templateul daca este necesar
-     * @param string $ADMINstr - ADMIN
+     * @param string $adminFolder - ADMIN
      */
-    public function SET_INC_ext($mod_name,$type_MOD,$extension,$folder,$template='',$ADMINstr='') {
+    public function SET_INC_ext($modName,$modType,$extension,$folder,$template='',$adminFolder='') {
 
 
             if($folder=='') $folder = $extension;
             # $tmpl =/ [tmpl_name] /
             $tmpl      =  $template ? 'tmpl_'.$template.'/' : '';  #daca s-a trimis un template modelul are un template
-           // $ADMINstr .=  $ADMINstr ? '/' : '';
+           // $adminFolder .=  $adminFolder ? '/' : '';
 
-            $ext_PATH         =  fw_pubPath.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
-            $ext_SRC_PATH     =   fw_pubURL.$type_MOD.'/'.$mod_name.'/'.$tmpl.$ADMINstr."$folder/";
+            $ext_PATH         =  fw_pubPath.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
+            $ext_SRC_PATH     =   fw_pubURL.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
 
             #echo $ext_SRC_PATH.'<br>';
             $this->{"INC_".$extension} .= $this->GET_INC_htmlTags($extension,$ext_PATH,$ext_SRC_PATH);
@@ -97,13 +97,13 @@ class TCcore
      * @param $obj
      * @param $extension
      * @param string $folder
-     * @param string $ADMINstr
+     * @param string $adminFolder
      */
-    public function SET_INC_extObj(&$obj, $extension,$folder,$ADMINstr=''){
+    public function SET_INC_extObj(&$obj, $extension,$folder,$adminFolder=''){
 
         $template = isset($obj->template) ? $obj->template : '';
 
-        $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
+        $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
 
         /**
          * daca obiectul are setat un template file atunci se va cauta un
@@ -112,7 +112,7 @@ class TCcore
         if(isset($obj->template_file))
         {
              $folder = $folder."/"."{$folder}_".$obj->template_file;
-             $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$ADMINstr);
+             $this->SET_INC_ext($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
         }
 
     }
@@ -123,12 +123,12 @@ class TCcore
      *
      * @param $obj
      * @param string $folder
-     * @param string $ADMINstr
+     * @param string $adminFolder
      */
-   public function SET_INC_extObj_jsCss(&$obj,$ADMINstr=''){
+   public function SET_INC_extObj_jsCss(&$obj,$adminFolder=''){
 
-        $this->SET_INC_extObj($obj,'js','js',$ADMINstr);
-        $this->SET_INC_extObj($obj,'css','css',$ADMINstr);
+        $this->SET_INC_extObj($obj,'js','js',$adminFolder);
+        $this->SET_INC_extObj($obj,'css','css',$adminFolder);
     }
 
    //=====================[hard INCS]============================
@@ -144,7 +144,7 @@ class TCcore
 
        # default assets   $obj->INC_assets[js / css]
       if( isset($obj->assetsIC) )
-      foreach($obj->assetsINC AS $extension)
+      foreach($obj->assetsInc AS $extension)
            foreach($extension AS $srcPath)
                 $this->SET_INC_hardAdd($extension, $srcPath);
 
@@ -152,9 +152,9 @@ class TCcore
      * Assets for a template file  $obj->INC_assets_tmplF[ template_file ] [js / csss]
      */
      if( isset($obj->template_file)
-          && isset($obj->{'assetsINC_'.$obj->template_file}) )
+          && isset($obj->{'assetsInc_'.$obj->template_file}) )
      {
-             $tmplFile_assets = &$obj->{'assetsINC_'.$obj->template_file};
+             $tmplFile_assets = &$obj->{'assetsInc_'.$obj->template_file};
 
              foreach($tmplFile_assets AS $extension => $paths)
                  foreach($paths AS $srcPath)
@@ -172,9 +172,9 @@ class TCcore
 #============================================[ objConf ]================================================================
 
     # 1
-    static function GETconf(&$obj,$file_yml, $mod_name='' ){
+    static function GETconf(&$obj,$file_yml, $modName='' ){
 
-        // ATENTIE!!! -- La ce mai este nevoie de $mod_name?
+        // ATENTIE!!! -- La ce mai este nevoie de $modName?
         # functie pentru popularea unui obiect cu date dintr-un fisier de config yaml
 
         if(file_exists($file_yml))
@@ -211,7 +211,7 @@ class TCcore
             {
                 foreach($yml_array['include'] AS $incFile_yml) {
                     # echo 'inluded file '.$incFile_yml."<br>";
-                    self::GETconf($obj,incPath.$incFile_yml, $mod_name );
+                    self::GETconf($obj,incPath.$incFile_yml, $modName );
                 }
             }
 
@@ -232,23 +232,23 @@ class TCcore
 
     # deprecated
     /**
-       * public function GET_objCONF(&$obj,$type_MOD, $mod_name,$admin='',$template='')     {
+       * public function Module_Fs_configYamlProps(&$obj,$modType, $modName,$admin='',$template='')     {
        *
 
            $file_yml =  incPath.'etc/'
-                               .$type_MOD.'/'
-                                   .$mod_name.'/'
+                               .$modType.'/'
+                                   .$modName.'/'
                                        .($template=='' ?
-                                                   $admin.$mod_name.'.yml':
+                                                   $admin.$modName.'.yml':
                                            'tmpl_'.$admin.$template.'.yml');
 
 
-           $this->GETconf($obj, $file_yml, $mod_name);
+           $this->Module_configYamlProps($obj, $file_yml, $modName);
 
            #===========================================================================================================
            # 2
            if(isset($obj->template) && $obj->template!=''  && $template == '' )
-               self::GET_objCONF($obj,$type_MOD,$mod_name,$admin,$obj->template);
+               self::Module_Fs_configYamlProps($obj,$modType,$modName,$admin,$obj->template);
 
        }*/
 
@@ -266,19 +266,19 @@ class TCcore
      */
     public function GET_objCONF(&$obj,$admin='',$template='')     {
 
-        $type_MOD = $obj->modType;
-        $mod_name = $obj->modName;
+        $modType = $obj->modType;
+        $modName = $obj->modName;
         #===========================================================================================================
 
         $file_yml =  incPath.'etc/'
-                            .$type_MOD.'/'
-                                .$mod_name.'/'
+                            .$modType.'/'
+                                .$modName.'/'
                                     .($template=='' ?
-                                                $admin.$mod_name.'.yml':
+                                                $admin.$modName.'.yml':
                                         'tmpl_'.$admin.$template.'.yml');
 
 
-        $this->GETconf($obj, $file_yml, $mod_name);
+        $this->GETconf($obj, $file_yml, $modName);
 
         #===========================================================================================================
         # 2
@@ -295,10 +295,10 @@ class TCcore
     /**
      * proprietati adaugate la orice obiect [model]
      * @param $obj
-     * @param $type_MOD
-     * @param $mod_name
+     * @param $modType
+     * @param $modName
      */
-    public function SET_objStandardREQ(&$obj,$type_MOD,$mod_name){
+    public function SET_objStandardREQ(&$obj,$modType,$modName){
 
         $obj->C      =  &$this;
         # situatie core
@@ -317,11 +317,11 @@ class TCcore
 
 
         #date despre acest modul
-        $obj->modName = $mod_name;
-        $obj->modType = $type_MOD;
+        $obj->modName = $modName;
+        $obj->modType = $modType;
 
 
-        #error_log('modName '.$mod_name."\n\n");
+        #error_log('modName '.$modName."\n\n");
     }
 
     /**
@@ -368,20 +368,20 @@ class TCcore
      *          util pentru procesele care depind de configurilea modulului
      *
      * @param $obj
-     * @param $type_MOD
-     * @param $mod_name
+     * @param $modType
+     * @param $modName
      */
-    public function GET_objREQ(&$obj,$type_MOD,$mod_name)   {
+    public function GET_objREQ(&$obj,$modType,$modName)   {
 
 
         # i dont know if this is really necessary
-        /*if($res) $obj->RESpath = $this->GET_resPath($this->type_MOD,
+        /*if($res) $obj->RESpath = $this->GET_resPath($this->modType,
                                                     '',
                                                     $this->type,
                                                     $this->nameF,
                                                     $this->lang);*/
 
-        $this->SET_objStandardREQ($obj,$type_MOD,$mod_name);
+        $this->SET_objStandardREQ($obj,$modType,$modName);
 
         $this->GET_objCONF($obj);
 
@@ -393,7 +393,7 @@ class TCcore
          //__init
      /*   else{
             if($obj->modName == 'single')
-            echo "GET_objREQ obiectul $obj->modName nu are _setINI()";
+            echo "Module_config obiectul $obj->modName nu are _setINI()";
         }*/
 
 
@@ -407,30 +407,30 @@ class TCcore
 
     # 1 + #2objReq
     /**
-     * SET:  $this->mod_name;
+     * SET:  $this->modName;
      *
-     * USE: GENERAL: $this->mod_name->display();
+     * USE: GENERAL: $this->modName->display();
      *      CURRENT: $this->{$this->type}->display();
      */
-    public function SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre='C',$ADMINstr='')      {
+    public function SET_OBJ_mod($modName,$modType,$adminPrefix='C',$adminFolder='')      {
 
-        # set REQUIERD objects   $OB_name = Cmod_name or $OB_name= CAmod_name (admin, if it has one);
-
-
-        $OB_name = $ADMINpre.$mod_name;
+        # set REQUIERD objects   $OB_name = CmodName or $OB_name= CAmodName (admin, if it has one);
 
 
-        if(file_exists(fw_incPath.$type_MOD."/$mod_name/".$ADMINstr.$OB_name.'.php'))
+        $OB_name = $adminPrefix.$modName;
+
+
+        if(file_exists(fw_incPath.$modType."/$modName/".$adminFolder.$OB_name.'.php'))
         {
-            $this->$mod_name = new $OB_name($this);
-            # echo fw_incPath.$type_MOD."/$mod_name".$ADMINstr."/".$OB_name.'.php'."<br/>";
-            $this->GET_objREQ($this->$mod_name,$type_MOD,$mod_name);
+            $this->$modName = new $OB_name($this);
+            # echo fw_incPath.$modType."/$modName".$adminFolder."/".$OB_name.'.php'."<br/>";
+            $this->GET_objREQ($this->$modName,$modType,$modName);
             # preia si seteaza toate cele necesare pentru respectivul model
             # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nameF
             # si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
 
 
-            # return $this->$mod_name;
+            # return $this->$modName;
 
             Console::logSpeed($OB_name);
             return true;  #obiectul a fost creat
@@ -441,8 +441,8 @@ class TCcore
             Console::logSpeed($OB_name);
             return false;
         }
-        /*elseif( file_exists(fw_pubPath.'MODELS/'.$mod_name.'/RES/TMPL_'.$mod_name.'.html') )
-            $this->$mod_name = new Cmodel($mod_name,$this);*/
+        /*elseif( file_exists(fw_pubPath.'MODELS/'.$modName.'/RES/TMPL_'.$modName.'.html') )
+            $this->$modName = new Cmodel($modName,$this);*/
 
 
     }
@@ -450,24 +450,24 @@ class TCcore
     # 2  + incTags #5  - A
     /**
      * Instantierea unui obiect cu tot ce ii trebuie + css, js html tags for inclusion
-     * @param $mod_name
-     * @param $type_MOD
-     * @param string $ADMINstr
-     * @param string $ADMINpre
+     * @param $modName
+     * @param $modType
+     * @param string $adminFolder
+     * @param string $adminPrefix
      * @return bool
      */
-    public function SET_general_mod($mod_name,$type_MOD,$ADMINstr='',$ADMINpre='C')   {
+    public function SET_general_mod($modName,$modType,$adminFolder='',$adminPrefix='C')   {
 
         # daca obiectul nu a fost setat
 
-        if(!isset($this->$mod_name)){
+        if(!isset($this->$modName)){
 
-            $objectCreat_stat =  $this->SET_OBJ_mod($mod_name,$type_MOD,$ADMINpre,$ADMINstr);
+            $objectCreat_stat =  $this->SET_OBJ_mod($modName,$modType,$adminPrefix,$adminFolder);
 
             if( $objectCreat_stat )
             {
-                $this->SET_INC_extObj_jsCss($this->$mod_name,$ADMINstr);
-                $this->SET_INC_assetsObj($this->$mod_name);
+                $this->SET_INC_extObj_jsCss($this->$modName,$adminFolder);
+                $this->SET_INC_assetsObj($this->$modName);
             }
 
             return $objectCreat_stat; #daca a fost sau nu creat obiectul
@@ -477,7 +477,7 @@ class TCcore
 
 
 
-       /* var_dump($mod_name);*/
+       /* var_dump($modName);*/
 }
 
     # 3
@@ -488,7 +488,7 @@ class TCcore
     public function SET_current()        {
 
         if(!is_object($this->type))
-            $this->SET_general_mod($this->type,$this->type_MOD) ;
+            $this->SET_general_mod($this->type,$this->modType) ;
 
        }
 
@@ -719,9 +719,9 @@ class TCcore
         $this->p_id      = &$this->tree[$this->idC]->p_id;
         $this->level     = &$this->tree[$this->idC]->level;
 
-         if(    in_array($this->type,$this->models )) $this->type_MOD = 'MODELS';
-         elseif(in_array($this->type,$this->plugins)) $this->type_MOD = 'PLUGINS';
-         elseif(in_array($this->type,$this->locals)) $this->type_MOD = 'LOCALS';
+         if(    in_array($this->type,$this->models )) $this->modType = 'MODELS';
+         elseif(in_array($this->type,$this->plugins)) $this->modType = 'PLUGINS';
+         elseif(in_array($this->type,$this->locals)) $this->modType = 'LOCALS';
 
     }
 
@@ -878,7 +878,7 @@ class TCcore
          */
         if(isset($this->mainModel) && isset($this->mainTemplate))
         {
-            #  SET_INC_ext($mod_name,$type_MOD,$extension,$folder='',$template='',$ADMINstr='')
+            #  Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
             $this->SET_INC_ext($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
             $this->SET_INC_ext($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
         }

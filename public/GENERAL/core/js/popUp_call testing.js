@@ -44,7 +44,7 @@ function popUp_call(opt){
                                    ? opt.procesSCRIPT
                                    : procesSCRIPT_file;
 
-               this.dataSend     = opt.dataSend instanceof Object
+               this.dataSend     = opt.dataSend instanceof modect
                                    ? opt.dataSend
                                    : {};
 
@@ -67,17 +67,17 @@ function popUp_call(opt){
                    + '\n\n completeFunc '+this.completeFunc + ' length'+this.completeFunc.length
                    + '\n\n type '+(typeof this.completeFunc));*/
 
-               var obj      = this;
+               var mod      = this;
               // pentru ca this is not in the scope inside setTimeout function
 
                setTimeout(function(){
 
                    $('#popUp #popUp-content')
                          .load(
-                             obj.procesSCRIPT,
-                             obj.dataSend,
+                             mod.procesSCRIPT,
+                             mod.dataSend,
                              function(){
-                                   obj.popUp_callback();
+                                   mod.popUp_callback();
                              }
 
                           );
