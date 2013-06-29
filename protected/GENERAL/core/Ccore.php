@@ -262,7 +262,7 @@ class Ccore extends CLcore
      * @param string $admin      [A / '']
      * @param string $template  - numele templateului
      */
-    public function GET_objCONF(&$obj,$admin='',$template='')     {
+    public function GET_objCONF(&$obj,$admin='',$template='')     {	
 
         $type_MOD = $obj->modType;
         $mod_name = $obj->modName;
@@ -379,7 +379,7 @@ class Ccore extends CLcore
                                                     $this->nameF,
                                                     $this->lang);*/
 
-        $this->SET_objStandardREQ($obj,$type_MOD,$mod_name);
+        $this->SET_objStandardREQ($obj,$type_MOD,$mod_name);  //MARKER
 
         $this->GET_objCONF($obj);
 
