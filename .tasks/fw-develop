@@ -140,8 +140,8 @@ Thins strategy is pending for further developement
             * atentie aceasta varianta este mai expensive
               dar permite mai multa flexibilitate
 
-    3. - send moduleName & methName
-            - acceseaza direct moduleName->methName care sa proceseze requestul
+    3. - send modName & methName
+            - acceseaza direct modName->methName care sa proceseze requestul
 
     alte idei
      - ar trebui sa existe si optiunea de a nu deseriaziza core daca nu este nevoie

@@ -17,7 +17,7 @@ trait TManage
             unlink($file);
         }
     }
-    function solve_affectedMOD($affectedMOD,$typeMOD='PLUGINS') {
+    function solveAffectedModules($affectedMOD,$typeMOD='PLUGINS') {
         #var_dump($affectedMOD);
         if(is_array($affectedMOD))
             foreach($affectedMOD AS $modNAME)
@@ -33,7 +33,7 @@ trait TManage
             if( isset($affected_mods)){
                foreach($affected_mods AS $modType =>$mods)
                 {
-                    $this->solve_affectedMOD($mods,$modType);
+                    $this->solveAffectedModules($mods,$modType);
                 }
             }
 
@@ -41,18 +41,18 @@ trait TManage
 
         }
 
-    function regenerateALLtrees()    {
+    function regenerateAllTrees()    {
 
         /**
-         * Regenereaza toate tree-urile deletate de create_masterTREE
+         * Regenereaza toate tree-urile deletate de Build_masterTree
          */
         $queryRES = $this->DB->query("SELECT Cid AS idT from TREE WHERE Pid='0' ");
 
           while($row = $queryRES->fetch_assoc())
           {
 
-              $this->SET_REStree(fw_resTree.'tree'.$row['idT'].'.txt',  $row['idT']);
-              unset($this->TMPtree);
+              $this->Set_Fs_Tree(fw_resTree.'tree'.$row['idT'].'.txt',  $row['idT']);
+              unset($this->tempTree);
           }
     }
 
@@ -64,7 +64,7 @@ trait TManage
 
     function reset_currentTree(){
 
-           unlink(fw_resTree."tree{$this->idT}.txt");
+           unlink(fw_resTree."tree{$this->idTree}.txt");
 
     }
 
@@ -74,12 +74,12 @@ trait TManage
              unlink($treeFile);
     }
 
-    function create_masterTREE($unlinkTrees = true)     {
+    function Build_masterTree($unlinkTrees = true)     {
 
         /**
          *  - Creaza un master un array multidimensional cu toate tree-urile
          *  - deleteaza in acelasi timp toate tree-urile
-         *  - urmand sa fie regenerate de metoda regenerateALLtrees()
+         *  - urmand sa fie regenerate de metoda regenerateAllTrees()
           */
 
         $RES_TREE = fw_resTree ;

@@ -33,7 +33,7 @@ class CgenTools extends CManage{
          {
              $backName  = $this->tree[$id]->name;
 
-             $simpleHref = "href='index.php?idT={$this->idT}&idC={$id}{$argString}'";
+             $simpleHref = "href='index.php?idT={$this->idTree}&idC={$id}{$argString}'";
              $this->simpleHref_history .= "<li><a {$simpleHref}> $backName </a> $concat </li>".$end_ul;
 
 
@@ -63,10 +63,10 @@ class CgenTools extends CManage{
                    #old href:    index.php?idC={$idT}&idT={$idT}&level=nr
                    #newFormat:   idT-idC-L{level} / backName;
 
-                   $href = ($trueLEVEL==2 || $this->idT==1  ? '': "href='".$this->idT."-{$id}-L{$trueLEVEL}/$this->history_TITLE'");
+                   $href = ($trueLEVEL==2 || $this->idTree==1  ? '': "href='".$this->idTree."-{$id}-L{$trueLEVEL}/$this->history_TITLE'");
                    $this->history_HREF .="<a {$href}> $backName $concat </a>";
 
-                   $simpleHref = "href='index.php?idT={$this->idT}&idC={$id}'";
+                   $simpleHref = "href='index.php?idT={$this->idTree}&idC={$id}'";
                    $this->simpleHref_history .= "<a {$simpleHref}> $backName $concat </a>";
 
                    return $trueLEVEL+1;
@@ -95,7 +95,7 @@ class CgenTools extends CManage{
                    $row=$res->fetch_assoc();
 
                    if($row['Pid'] > 0)  { /* echo $row['Pid']; */  $this->GET_idT_from_idC($row['Pid']);}
-                   else $this->idT =  $Cid;
+                   else $this->idTree =  $Cid;
                }
 
 
@@ -130,7 +130,7 @@ class CgenTools extends CManage{
            # daca se trimite un pointer al obiectului care cere paginarea atunci pentru acest obiect
            # se vor seta urmatoarele variabile
            # LimitStart poate sa aiba presetata limita
-               if(is_modect($mod))
+               if(is_object($mod))
                {
 
                     $mod->LimitStart += ($CURRENTpage - 1)*$nrItems;
@@ -238,7 +238,7 @@ class CgenTools extends CManage{
     public function GET_asincronMeth($modName, $methName){
 
 
-        if(is_modect($this->$modName))
+        if(is_object($this->$modName))
         {
             if(method_exists($this->$modName, $methName)){
 

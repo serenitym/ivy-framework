@@ -18,20 +18,24 @@ class CsetModule extends CLcore
     {
 
         //if(method_exists($this,"GET_INCtag_".$extension))
-         $tags = '';
+        if (!method_exists($this,"Get_IncTag_".$extension)) {
+            return '';
 
-         if (is_dir($extPath)) {
-             $dir = dir($extPath);
-             while(false!== ($file=$dir->read()) )
-             {
-                 $arr_file = explode('.',$file);
-                 if (end($arr_file) ==$extension) {
-                     $tags .= $this->{"Get_IncTag_".$extension}($extSrcPath.$file);
-                 }
-             }
-             return $tags;
-         }
-        return '';
+        } else {
+            $tags = '';
+            if (is_dir($extPath)) {
+                $dir = dir($extPath);
+                while(false!== ($file=$dir->read()) )
+                {
+                    $arr_file = explode('.',$file);
+                    if (end($arr_file) ==$extension) {
+                        $tags .= $this->{"Get_IncTag_".$extension}($extSrcPath.$file);
+                    }
+                }
+                return $tags;
+            }
+        }
+
     }
     # 3 - A
     /**
@@ -108,15 +112,17 @@ class CsetModule extends CLcore
    #1
    public function Module_Set_incFilesHard($extension,$srcPath)
    {
-        $this->{"INC_".$extension} .= $this->{"Get_IncTag_".$extension}($srcPath);
+       if (method_exists($this,"Get_IncTag_".$extension)) {
+           $this->{"INC_".$extension} .= $this->{"Get_IncTag_".$extension}($srcPath);
+       }
    }
    #2
    public function Module_Set_incFilesAssets($mod)
    {
       # default assets   $mod->INC_assets[js / css]
       if (isset($mod->assetsInc)) {
-          foreach($mod->assetsInc AS $extension){
-              foreach($extension AS $srcPath) {
+          foreach($mod->assetsInc AS $extension => $paths){
+              foreach($paths AS $srcPath) {
                   $this->Module_Set_incFilesHard($extension, $srcPath);
               }
           }
@@ -258,9 +264,10 @@ class CsetModule extends CLcore
 
 
         # date ale modulului curent
-        $mod->idC    =  &$this->idC;
-        $mod->idT    =  &$this->idT;
+        $mod->idNode =  &$this->idNode;
+        $mod->idTree =  &$this->idTree;
         $mod->level  =  &$this->level;
+        // acelasi lucru cu modName
         $mod->type   =  &$this->type;
 
 
@@ -385,7 +392,6 @@ class CsetModule extends CLcore
         $className = $adminPrefix.$modName;
         #1
         if (!isset($this->$modName)
-            && !is_object($this->$modName)
             && file_exists(fw_incPath . $modType . "/$modName/" . $adminFolder . $className . '.php')
         ) {
             #2

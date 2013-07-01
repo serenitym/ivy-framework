@@ -44,7 +44,7 @@ function popUp_call(opt){
                                    ? opt.procesSCRIPT
                                    : procesSCRIPT_file;
 
-               this.dataSend     = opt.dataSend instanceof modect
+               this.dataSend     = opt.dataSend instanceof object
                                    ? opt.dataSend
                                    : {};
 

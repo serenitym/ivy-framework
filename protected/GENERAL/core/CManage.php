@@ -11,105 +11,98 @@
  */
 class CManage extends CmethDB
 {
-    function delete_contentRES($dir, $prefix='') {
+    function Fs_deleteContentRes($dir, $prefix='')
+    {
         foreach (glob("$dir/$prefix*.html") as $file) {
             #echo $file."<br>";
             unlink($file);
         }
     }
-    function solve_affectedMOD($affectedMOD,$typeMOD='PLUGINS') {
-        #var_dump($affectedMOD);
-        if(is_array($affectedMOD))
-            foreach($affectedMOD AS $modNAME)
+    function solveAffectedModules($affectedMods, $modType='PLUGINS')
+    {
+        #var_dump($affectedMods);
+        if (is_array($affectedMods)) {
+            foreach($affectedMods AS $modNAME)
             {
-
-                $RESpath = resPath.$typeMOD.'/'.$modNAME;
-                $this->delete_contentRES($RESpath);
+                $resPath = resPath.$modType.'/'.$modNAME;
+                $this->Fs_deleteContentRes($resPath);
+            }
+        }
+    }
+    function resetAffectedModules($affectedMods, $resetTreeMethod='')
+    {
+        if (isset($affectedMods)) {
+           foreach($affectedMods AS $modType =>$mods)
+            {
+                $this->solveAffectedModules($mods,$modType);
             }
         }
 
-    function reset_affected($affected_mods, $resetTree_method=''){
-
-            if( isset($affected_mods)){
-               foreach($affected_mods AS $modType =>$mods)
-                {
-                    $this->solve_affectedMOD($mods,$modType);
-                }
-            }
-
-            if($resetTree_method) $this->{$resetTree_method}();
-
+        if ($resetTreeMethod && method_exists($this, $resetTreeMethod)) {
+            $this->{$resetTreeMethod}();
         }
-
-    function regenerateALLtrees()    {
-
-        /**
-         * Regenereaza toate tree-urile deletate de create_masterTREE
-         */
+    }
+    /**
+    * Regenereaza toate tree-urile deletate de Build_masterTree
+    */
+    function regenerateAllTrees()
+    {
         $queryRES = $this->DB->query("SELECT Cid AS idT from TREE WHERE Pid='0' ");
-
-          while($row = $queryRES->fetch_assoc())
-          {
-
-              $this->SET_REStree(fw_resTree.'tree'.$row['idT'].'.txt',  $row['idT']);
-              unset($this->TMPtree);
-          }
-    }
-
-    function reset_tree($treeId){
-
-        unlink(fw_resTree."tree{$treeId}.txt");
-
-    }
-
-    function reset_currentTree(){
-
-           unlink(fw_resTree."tree{$this->idT}.txt");
-
-    }
-
-    function reset_allTrees(){
-
-        foreach(glob(fw_resTree.'*.txt') as $treeFile)
-             unlink($treeFile);
-    }
-
-    function create_masterTREE($unlinkTrees = true)     {
-
-        /**
-         *  - Creaza un master un array multidimensional cu toate tree-urile
-         *  - deleteaza in acelasi timp toate tree-urile
-         *  - urmand sa fie regenerate de metoda regenerateALLtrees()
-          */
-
-        $RES_TREE = fw_resTree ;
-
-        if(  is_dir($RES_TREE) )
+        while($row = $queryRES->fetch_assoc())
         {
-            $dir = dir($RES_TREE);
+            $this->Set_Fs_Tree(fw_resTree.'tree'.$row['idT'].'.txt',  $row['idT']);
+            unset($this->tempTree);
+        }
+    }
+    function resetTree($treeId)
+    {
+        unlink(fw_resTree."tree{$treeId}.txt");
+    }
+    function resetCurrentTree()
+    {
+           unlink(fw_resTree."tree{$this->idTree}.txt");
+    }
+    function resetAllTrees()
+    {
+        foreach(glob(fw_resTree.'*.txt') as $treeFile)
+        {
+            unlink($treeFile);
+        }
+    }
+    /**
+     * - Creaza un master un array multidimensional cu toate tree-urile
+     * - deleteaza in acelasi timp toate tree-urile
+     * - urmand sa fie regenerate de metoda regenerateAllTrees()
+     * @param bool $unlinkTrees
+     *
+     * @return array
+     */
+    function Build_masterTree($unlinkTrees = true)
+    {
+        $resTree = fw_resTree ;
+
+        if (is_dir($resTree)) {
+            $dir = dir($resTree);
             $masterTREE = array();
 
-            while(false!== ($file=$dir->read()) )
+            while(false !== ($file=$dir->read()))
             {
                 $arr_file = explode('.',$file);
-                if( end($arr_file) =='txt'  )
-                {
-                    $file_path = $RES_TREE.$file;
-                    $tree = unserialize(file_get_contents($file_path));
-
+                if(end($arr_file) == 'txt') {
+                    $file_path  = $resTree.$file;
+                    $tree       = unserialize(file_get_contents($file_path));
                     $masterTREE = $masterTREE + $tree;
-                    if($unlinkTrees)
-                        unlink($file_path);   //stergem toate TREE-urile;
+                    if ($unlinkTrees) {
+                        //stergem toate TREE-urile;
+                        unlink($file_path);
+                    }
                 }
             }
-
            /* if($this->masterTREE)
                 foreach($this->masterTREE AS $id=>$item)
                     echo 'id='.$id.' nameF='.$item->nameF.' type='.$item->type."<br/>";*/
             return $masterTREE;
         }
-
-      }
-
+    }
 
 }

@@ -62,7 +62,7 @@ function async(){
       options:
        - parsePOSTfile
        - asincrSCRIPT
-       - moduleName
+       - modName
        - methName
 
       * */
@@ -79,7 +79,7 @@ var bttConf = function()
               style : 'oric',
               class : '',
               status: '',
-              asynco : new async({moduleName: 'modulename', methName: 'methName'})
+              asynco : new async({modName: 'modName', methName: 'methName'})
               },
           delete:{},
           edit: {},

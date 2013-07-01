@@ -16,8 +16,8 @@ class CsampleModule{
 
 
     # date ale modu
-    $mod->idC    =             # id-ul categoriei curente
-    $mod->idT    =             # id-ul parintelui originar
+    $mod->idNode    =             # id-ul categoriei curente
+    $mod->idTree    =             # id-ul parintelui originar
     $mod->level  =             # levelul din tree la care se afla cat
     $mod->type   =             # tipul categoriei curente ex: MODELS / LOCALS
 

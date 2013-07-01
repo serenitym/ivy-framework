@@ -59,7 +59,7 @@ $.fn.minHeight = function(){
 /* Aici vor sta functiile modulelor */
 var ivyMods = {
     set_iEdit:{
-        //moduleName : function(){}
+        //modName : function(){}
     }
 };
 
@@ -157,7 +157,7 @@ var fmw = function(){
        }
 
     /**
-     * RET a confing modect for async actions
+     * RET a confing object for async actions
      *
      * @param options
      * @param callBack
@@ -167,7 +167,7 @@ var fmw = function(){
          /*
          options:
           - parsePOSTfile
-           - moduleName
+           - modName
           - methName
           callBack_fn :  callbackTest
          * */
@@ -340,7 +340,7 @@ fmw.popUp = {
                                     ? opt.procesSCRIPT
                                     : procesSCRIPT_file;
 
-                this.dataSend     = opt.dataSend instanceof modect
+                this.dataSend     = opt.dataSend instanceof object
                                     ? opt.dataSend
                                     : {};
 

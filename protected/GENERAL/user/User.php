@@ -71,7 +71,7 @@ class User{
         # daca nu va da return doar true sau false
 
         if($this->uclass=='webmaster'){
-            if($mod!='' && is_modect($mod))
+            if($mod!='' && is_object($mod))
                  $mod->editRecords_Permss = true;
             return true;
         }
@@ -130,8 +130,8 @@ class User{
         $detailsColumns .= " FROM $detailsTable WHERE uid = '$uid'";
         $statsColumns   .= " FROM $statsTable WHERE uid = '$uid'";
 
-        $this->details = $this->DB->query($detailsQuery)->fetch_modect();
-        $this->stats = $this->DB->query($statsQuery)->fetch_modect();
+        $this->details = $this->DB->query($detailsQuery)->fetch_object();
+        $this->stats = $this->DB->query($statsQuery)->fetch_object();
     }
 
     private function getUserGroups ($uid, $cid = 0) {
@@ -164,7 +164,7 @@ class User{
         //var_dump($this->DB);
 
         //trigger_error('Debug break!', E_USER_ERROR);
-        if(isset($_SESSION['auth']) && is_modect($_SESSION['auth'])) {
+        if(isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
             $auth         = &$_SESSION['auth'];
             $this->uid    = $auth->uid;
             $this->cid    = $auth->cid ?: 0;

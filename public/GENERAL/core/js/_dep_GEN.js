@@ -194,12 +194,12 @@ function popUp_ini(pathLoad, dataSend, completeFunc, header, width, height){
     //______________________________________[ set dataSend ]_________________________________________________
     //alert('In popUp_ini');
     // alert(typeof  dataSend);
-    if(dataSend instanceof modect) {
-        //alert('Este modect');
+    if(dataSend instanceof object) {
+        //alert('Este object');
         dataSend = jsonConcat(dataSend,{parsePOSTfile : pathLoad});
     }
     else {
-        //alert('nu este modect');
+        //alert('nu este object');
         dataSend = {parsePOSTfile : pathLoad};
     }
 
@@ -336,7 +336,7 @@ function popUp_call(opt){
                             ? opt.procesSCRIPT
                             : procesSCRIPT_file;
 
-        this.dataSend     = opt.dataSend instanceof modect
+        this.dataSend     = opt.dataSend instanceof object
                             ? opt.dataSend
                             : {};
 

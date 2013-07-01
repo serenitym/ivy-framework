@@ -16,32 +16,32 @@ Get_IncTag_css	Ccore.php	/^    public function Get_IncTag_css($SRC_path) {$/;"	f
 Get_IncTag_js	Ccore.php	/^    public function Get_IncTag_js($SRC_path)  {$/;"	f
 Module_Fs_configYamlProps	Ccore.php	/^    public function Module_Fs_configYamlProps(&$mod,$admin='',$template='')     {$/;"	f
 Module_config	Ccore.php	/^    public function Module_config(&$mod,$modType,$modName)   {$/;"	f
-GET_tree	Ccore.php	/^    public function GET_tree($idT)                {$/;"	f
-GET_tree_fromDB	Ccore.php	/^    public function GET_tree_fromDB($ch,$p_id='', $idT,$level=0) {$/;"	f
+Get_tree	Ccore.php	/^    public function Get_tree($idT)                {$/;"	f
+Build_Db_tree	Ccore.php	/^    public function Build_Db_tree($ch,$p_id='', $idT,$level=0) {$/;"	f
 Module_configYamlProps	Ccore.php	/^    static function Module_configYamlProps(&$mod,$file_yml, $modName='' ){$/;"	f
 OB_name	Ccore.php	/^        $OB_name = $adminPrefix.$modName;$/;"	v
-SET_ID_item	Ccore.php	/^    public function SET_ID_item()       {$/;"	f
+Set_currentNode	Ccore.php	/^    public function Set_currentNode()       {$/;"	f
 Module_Set_incFilesAssets	Ccore.php	/^   public function Module_Set_incFilesAssets($mod){$/;"	f
 Set_incFiles	Ccore.php	/^    public function Set_incFiles($modName,$modType,$extension,$folder,$template='',$adminFolder='') {$/;"	f
 SET_INC_extmod	Ccore.php	/^    public function SET_INC_extmod(&$mod, $extension,$folder,$adminFolder=''){$/;"	f
 Module_Set_incFilesJsCss	Ccore.php	/^   public function Module_Set_incFilesJsCss(&$mod,$adminFolder=''){$/;"	f
 Module_Set_incFilesHard	Ccore.php	/^   public function Module_Set_incFilesHard($extension,$srcPath){$/;"	f
 Module_Build	Ccore.php	/^    public function Module_Build($modName,$modType,$adminPrefix='C',$adminFolder='')      {$/;"	f
-SET_REStree	Ccore.php	/^    public function SET_REStree($pathTree, $idT)  {$/;"	f
-SET_current	Ccore.php	/^    public function SET_current()        {$/;"	f
-SET_default	Ccore.php	/^    public function SET_default()        {$/;"	f
+Set_Fs_tree	Ccore.php	/^    public function Set_Fs_tree($pathTree, $idT)  {$/;"	f
+Set_currentModule	Ccore.php	/^    public function Set_currentModule()        {$/;"	f
+Set_defaultModules	Ccore.php	/^    public function Set_defaultModules()        {$/;"	f
 SET_general_mod	Ccore.php	/^    public function SET_general_mod($modName,$modType,$adminFolder='',$adminPrefix='C')   {$/;"	f
-SET_idTC	Ccore.php	/^    public function SET_idTC()          {$/;"	f
+Set_currentTreeNode	Ccore.php	/^    public function Set_currentTreeNode()          {$/;"	f
 Module_configExternalPointers	Ccore.php	/^    public function Module_configExternalPointers(&$mod, $modREQ){$/;"	f
 Module_configCorePointers	Ccore.php	/^    public function Module_configCorePointers(&$mod,$modType,$modName){$/;"	f
-SET_tree	Ccore.php	/^    public function SET_tree()                    {$/;"	f
-SET_type	Ccore.php	/^    public function SET_type()          {$/;"	f
+Set_currentTree	Ccore.php	/^    public function Set_currentTree()                    {$/;"	f
+Set_currentModName	Ccore.php	/^    public function Set_currentModName()          {$/;"	f
 __clone	Ccore.php	/^    public function __clone  () { }$/;"	f
 __construct	Ccore.php	/^    function __construct($auth=NULL)                {$/;"	f
 __destruct	Ccore.php	/^    public function __destruct() {$/;"	f
 __wakeup	Ccore.php	/^    public function __wakeup(){$/;"	f
 arr_file	Ccore.php	/^                 $arr_file = explode('.',$file);$/;"	v
-children	Ccore.php	/^        $this->children  = &$this->tree[$this->idC]->children;$/;"	v
+children	Ccore.php	/^        $this->children  = &$this->tree[$this->idNode]->children;$/;"	v
 ctrl_postRequest	Ccore.php	/^    public function ctrl_postRequest(){$/;"	f
 debugMess	Ccore.php	/^    static function debugMess($mess){ return '';}$/;"	f
 dir	Ccore.php	/^             $dir = dir($ext_PATH);$/;"	v
@@ -50,23 +50,23 @@ ext_SRC_PATH	Ccore.php	/^            $ext_SRC_PATH     =   fw_pubURL.$modType.'\
 file_yml	Ccore.php	/^           $file_yml =  incPath.'etc\/'$/;"	v
 file_yml	Ccore.php	/^        $file_yml =  incPath.'etc\/'$/;"	v
 folder	Ccore.php	/^             $folder = $folder."\/"."{$folder}_".$mod->template_file;$/;"	v
-id	Ccore.php	/^        $this->id        = &$this->tree[$this->idC]->id;$/;"	v
-idC	Ccore.php	/^               $this->idC = ( $_GET['idC'] ?  $_GET['idC'] : $this->idT );$/;"	v
-idT	Ccore.php	/^               $this->idT =   $_GET['idT'];$/;"	v
+id	Ccore.php	/^        $this->id        = &$this->tree[$this->idNode]->id;$/;"	v
+idC	Ccore.php	/^               $this->idNode = ( $_GET['idC'] ?  $_GET['idC'] : $this->idTree );$/;"	v
+idT	Ccore.php	/^               $this->idTree =   $_GET['idT'];$/;"	v
 incFile_yml	Ccore.php	/^            $incFile_yml = 'incFisier';$/;"	v
-level	Ccore.php	/^        $this->level     = &$this->tree[$this->idC]->level;$/;"	v
+level	Ccore.php	/^        $this->level     = &$this->tree[$this->idNode]->level;$/;"	v
 methName	Ccore.php	/^            $methName   = $_POST['methName'];$/;"	v
 modName	Ccore.php	/^        $this->modName = 'core';$/;"	v
 modType	Ccore.php	/^        $this->modType = 'GENERAL';$/;"	v
 modName	Ccore.php	/^        $modName = $mod->modName;$/;"	v
-moduleName	Ccore.php	/^            $moduleName = $_POST['moduleName'];$/;"	v
-name	Ccore.php	/^        $this->name      = &$this->tree[$this->idC]->name;$/;"	v
-nameF	Ccore.php	/^        $this->nameF     = &$this->tree[$this->idC]->nameF;$/;"	v
-name_en	Ccore.php	/^        $this->name_en   = &$this->tree[$this->idC]->name_en;$/;"	v
-name_ro	Ccore.php	/^        $this->name_ro   = &$this->tree[$this->idC]->name_ro;$/;"	v
-mod	Ccore.php	/^                $mod = &$this->$moduleName;$/;"	v
-modectCreat_stat	Ccore.php	/^            $modectCreat_stat =  $this->Module_Build($modName,$modType,$adminPrefix,$adminFolder);$/;"	v
-p_id	Ccore.php	/^        $this->p_id      = &$this->tree[$this->idC]->p_id;$/;"	v
+modName	Ccore.php	/^            $modName = $_POST['modName'];$/;"	v
+name	Ccore.php	/^        $this->name      = &$this->tree[$this->idNode]->name;$/;"	v
+nameF	Ccore.php	/^        $this->nameF     = &$this->tree[$this->idNode]->nameF;$/;"	v
+name_en	Ccore.php	/^        $this->name_en   = &$this->tree[$this->idNode]->name_en;$/;"	v
+name_ro	Ccore.php	/^        $this->name_ro   = &$this->tree[$this->idNode]->name_ro;$/;"	v
+mod	Ccore.php	/^                $mod = &$this->$modName;$/;"	v
+objectCreat_stat	Ccore.php	/^            $objectCreat_stat =  $this->Module_Build($modName,$modType,$adminPrefix,$adminFolder);$/;"	v
+p_id	Ccore.php	/^        $this->p_id      = &$this->tree[$this->idNode]->p_id;$/;"	v
 pathTree	Ccore.php	/^          $pathTree = fw_resTree.'tree'.$idT.'.txt';$/;"	v
 profiler	Ccore.php	/^            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());$/;"	v
 q	Ccore.php	/^                $q = " SELECT Pid,Cid,poz FROM TREE where Pid='$id_ch' ORDER BY poz ASC ;";$/;"	v
@@ -80,10 +80,10 @@ template	Ccore.php	/^        $template = isset($mod->template) ? $mod->template 
 tmpl	Ccore.php	/^            $tmpl      =  $template ? 'tmpl_'.$template.'\/' : '';  #daca s-a trimis un template modelul are un template$/;"	v
 tmplFile_assets	Ccore.php	/^             $tmplFile_assets = &$mod->{'assetsInc_'.$mod->template_file};$/;"	v
 tree	Ccore.php	/^                $this->tree = array();$/;"	v
-tree	Ccore.php	/^              $tree =  $this->SET_REStree($pathTree, $idT);$/;"	v
-tree	Ccore.php	/^            $this->tree = $this->GET_tree($this->idT);$/;"	v
-tree_SER	Ccore.php	/^          $tree_SER = serialize($this->TMPtree);$/;"	v
-type	Ccore.php	/^        $this->type      =  $this->tree[$this->idC]->type;$/;"	v
+tree	Ccore.php	/^              $tree =  $this->Set_Fs_tree($pathTree, $idT);$/;"	v
+tree	Ccore.php	/^            $this->tree = $this->Get_tree($this->idTree);$/;"	v
+tree_SER	Ccore.php	/^          $tree_SER = serialize($this->tempTree);$/;"	v
+type	Ccore.php	/^        $this->type      =  $this->tree[$this->idNode]->type;$/;"	v
 modType	Ccore.php	/^        $modType = $mod->modType;$/;"	v
 user	Ccore.php	/^            $this->user = &$auth->user;$/;"	v
 validData	Ccore.php	/^                    $validData =$mod->{'_hook_'.$methName}();$/;"	v

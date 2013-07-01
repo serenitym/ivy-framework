@@ -21,8 +21,8 @@
             <?php
                 if(isset($core->admin) && $core->admin)
                     echo "fmw.admin = 1;";
-                 echo "fmw.idC = $core->idC;
-                       fmw.idT = $core->idT;";
+                 echo "fmw.idC = $core->idNode;
+                       fmw.idT = $core->idTree;";
             ?>
         });
 

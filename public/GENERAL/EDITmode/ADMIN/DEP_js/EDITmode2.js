@@ -57,7 +57,7 @@ var bttConf = function()
                  class : '',
                  status: 'false / true ',
                  async : new asyncConf({
-                                 moduleName: 'modulename',
+                                 modName: 'modName',
                                  methName: 'methName',
                                  parsePOSTfile : 'filePath.php' ,
                                  callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
@@ -112,7 +112,7 @@ var bttConf = function()
  *                class : '',
  *                status: '',
  *                async : new asyncConf({
- *                                moduleName: 'modulename',
+ *                                modName: 'modName',
  *                                methName: 'methName',
  *                                parsePOSTfile : 'filePath.php' ,
  *                                callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),

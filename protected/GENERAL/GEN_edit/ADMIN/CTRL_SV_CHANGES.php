@@ -94,16 +94,16 @@ class CTRL_SV_CHANGES extends CHANGES
        # $this->pathChanges = fw_pubPath.$this->pathChanges;
         parent::__construct();
 
-        $this->masterTREE = $this->C->create_masterTREE();
+        $this->masterTREE = $this->C->Build_masterTree();
         $this->parseCHANGES();
         $this->parseCHANGES_TREE();
 
-        $this->C->regenerateALLtrees();
+        $this->C->regenerateAllTrees();
        # var_dump($this->affected_MODELS);
 
-        $this->C->solve_affectedMOD($this->affected_GENERAL,'GENERAL');
-        $this->C->solve_affectedMOD($this->affected_PLUGINS,'PLUGINS');
-        $this->C->solve_affectedMOD($this->affected_MODELS,'MODELS');
+        $this->C->solveAffectedModules($this->affected_GENERAL,'GENERAL');
+        $this->C->solveAffectedModules($this->affected_PLUGINS,'PLUGINS');
+        $this->C->solveAffectedModules($this->affected_MODELS,'MODELS');
 
     }
 }

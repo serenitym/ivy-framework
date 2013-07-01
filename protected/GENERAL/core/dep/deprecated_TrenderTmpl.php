@@ -182,7 +182,7 @@ class renderData {
 
 
       # modName = core SET - Module_Fs_configYamlProps   <- Module_Build <-  Module_Build
-      # echo "<b>SET_rendermod </b>".(is_modect($mod) ? " by modect ": " by not modect").$modName."<br>";
+      # echo "<b>SET_rendermod </b>".(is_object($mod) ? " by object ": " by not object").$modName."<br>";
                         /*PENTRU A PUTEA revenii la defaulturi*/
 
        if(!isset($mod->$renderName))
@@ -282,7 +282,7 @@ trait deprecated_TrenderTmpl {
 
     # 1  - primary meth.s  #3  +  renderData #5
     /**
-     * display render from modect
+     * display render from object
      *
      *  # daca nu exista obiectul rendermod sau daca se cere un set de variabile pt randarea templateul
      *  # obiectul trebuie sa aiba definit un array de tipul sets[setName][template_vars]
@@ -342,7 +342,7 @@ trait deprecated_TrenderTmpl {
         ($modName, $templateFile, $setName='', $vars_setName='', $renderName='rendermod'){
 
 
-        if(is_modect($this->$modName))
+        if(is_object($this->$modName))
         {
              $mod = &$this->$modName;
 
@@ -378,9 +378,9 @@ trait deprecated_TrenderTmpl {
         ($modName, $setName='', $vars_setName='', $renderName='rendermod'){
 
 
-           if(isset($this->$modName) && is_modect($this->$modName))
+           if(isset($this->$modName) && is_object($this->$modName))
            {
-               #echo 'ctrlDISPLAY -info: Render '.$modect_name."<br>";
+               #echo 'ctrlDISPLAY -info: Render '.$object_name."<br>";
                $mod = &$this->$modName;
 
                if(method_exists($mod,"DISPLAY")) {
@@ -390,7 +390,7 @@ trait deprecated_TrenderTmpl {
                    return $mod->DISPLAY_page;
                }
                else                              {
-                                                      #echo 'ctrlDISPLAY -info: call- get_renderDISPLAY for '.$modect_name.' with '.$modect_name."<br>";
+                                                      #echo 'ctrlDISPLAY -info: call- get_renderDISPLAY for '.$object_name.' with '.$object_name."<br>";
                                                       return $this->get_renderDISPLAY($modName,  $setName, $vars_setName, $renderName);
                                                  }
 
@@ -438,7 +438,7 @@ trait deprecated_TrenderTmpl {
         $mod = &$this->$modelName;
 
 
-        if(is_modect($mod))
+        if(is_object($mod))
         {
 
             #daca nu exista nici un obiect de render pentru acest obiect atunci cream unul

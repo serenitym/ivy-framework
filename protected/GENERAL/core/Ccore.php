@@ -11,47 +11,43 @@
  * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
  */
 
-
-
-
 class Ccore extends CsetModule
 {
 
-
-# manage function - should be put in TgenTools respectiv create ATgenTools
-    static function debugMess($mess){ return '';}
-
-
-    # 3
-    /**
-    * Seteaza obiectul curent
-    *  - obiect curent = requested by type || idC=> type
-    */
-    public function SET_current()        {
-
-        $this->Module_Build($this->type,$this->modType) ;
+    # manage function - should be put in TgenTools respectiv create ATgenTools
+    static function debugMess($mess)
+    {
+        return '';
     }
 
     # 3
     /**
-     * Sets default modects (modules) declared in yml files of core AND tmpl_core
-     */
-    public function SET_default()        {
+    * Seteaza modulul curent
+    *  - modulul curent = requested by type/moduleName || idNode=> type
+    */
+    public function Set_currentModule()
+    {
+        //$this->Module_Build($this->type,$this->modType) ;
+        $this->Module_Build($this->modName,$this->modType) ;
+    }
 
+    # 3
+    /**
+     * Sets default objects (modules) declared in yml files of core AND tmpl_core
+     */
+    public function Set_defaultModules()
+    {
         foreach($this->mods AS $modType)
         {
             foreach($this->{'default_'.$modType} AS $modName)
             {
-                # error_log("SET_default ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
+                # error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
                 $this->Module_Build($modName,$modType);
             }
         }
     }
 
-
-
-
-#=============================================[ set - TREE ]============================================================
+#=============================================[ set - TREE ]====================
 
     # 1
     /**
@@ -83,51 +79,52 @@ class Ccore extends CsetModule
      *      name_en
      *      type        -
      *      id
-     *      p_id        - id-ul parintelui
+     *      parentId        - id-ul parintelui
      *      nameF       - numele fisierului de resursa
      *      children    = array( [poz] => [Cid],... );
      *
      *
-     * @param $ch
-     * @param string $p_id
+     * @param $children
+     * @param string $parentId
      */
-    public function GET_tree_fromDB($ch,$p_id='', $idT,$level=0) {
+    public function Build_Db_tree($children, $parentId='', $idTree, $level=0)
+    {
+         foreach($children AS $idCh)
+         {
+             $this->tempTree[$idCh] = new item();
+             //$node  = &$this->tempTree[$idCh];
 
-            foreach($ch AS $id_ch)
-            {
-                $this->TMPtree[$id_ch] = new item();
+             $query = "SELECT name_ro,name_en,type from ITEMS where id='$idCh' ;";
+             $qArr  = $this->DB->query($query)->fetch_assoc();
 
-                $q = "SELECT name_ro,name_en,type from ITEMS where id='$id_ch' ;";
-                $q_arr = $this->DB->query($q)->fetch_assoc();
+             $this->tempTree[$idCh]->name    = $qArr['name_'.$this->langs[0]];
+             $this->tempTree[$idCh]->name_ro = $qArr['name_ro'];
+             $this->tempTree[$idCh]->name_en = $qArr['name_en'];
+             // deprecated
+             $this->tempTree[$idCh]->type    = $qArr['type'];
+             $this->tempTree[$idCh]->modName = $qArr['type'];
+             $this->tempTree[$idCh]->id      = $idCh;
+             $this->tempTree[$idCh]->p_id    = $parentId;
+             $this->tempTree[$idCh]->idTree  = $idTree;
+             $this->tempTree[$idCh]->idT     = $idTree;
+             $this->tempTree[$idCh]->level   = $level;
+             $this->tempTree[$idCh]->nameF   = str_replace(' ','_',$this->tempTree[$idCh]->name) ;
 
+             // retine copii acestui nod
+             $query    = " SELECT Pid,Cid,poz FROM TREE where Pid='$idCh' ORDER BY poz ASC ;";
+             $queryRes = $this->DB->query($query);
 
-                $this->TMPtree[$id_ch]->name    = $q_arr['name_'.$this->langs[0]];
-                $this->TMPtree[$id_ch]->name_ro = $q_arr['name_ro'];
-                $this->TMPtree[$id_ch]->name_en = $q_arr['name_en'];
-                $this->TMPtree[$id_ch]->type    = $q_arr['type'];
-                $this->TMPtree[$id_ch]->id      = $id_ch;
-                $this->TMPtree[$id_ch]->p_id    = $p_id;
-                # idT si level 2 noi concepte
-                $this->TMPtree[$id_ch]->idT     = $idT;
-                $this->TMPtree[$id_ch]->level   = $level;
-                $this->TMPtree[$id_ch]->nameF   = str_replace(' ','_',$this->TMPtree[$id_ch]->name) ;
-                /*  $this->TMPtree[$id_ch]->new     = $q_arr['new'];*/
+             while ($ch_arr = $queryRes->fetch_assoc()) {
+                 $this->tempTree[$idCh]->children[ $ch_arr['poz'] ] = $ch_arr['Cid'];
+             }
+             var_dump($this->tempTree[$idCh]);
+             // pentru fiecare copil al acestui node reapeleaza functia
+             if ($queryRes->num_rows) {
+                 $this->Build_Db_tree($this->tempTree[$idCh]->children,$idCh, $idTree, $level+1);
+             }
 
-
-
-                $q = " SELECT Pid,Cid,poz FROM TREE where Pid='$id_ch' ORDER BY poz ASC ;";
-                $q_res = $this->DB->query($q);
-
-                while($ch_arr = $q_res->fetch_assoc() )
-                    $this->TMPtree[$id_ch]->children[ $ch_arr['poz'] ] = $ch_arr['Cid'];
-
-
-                if($q_res->num_rows)
-                    $this->GET_tree_fromDB($this->TMPtree[$id_ch]->children,$id_ch, $idT, $level+1);
-
-            }
-
-        }
+         }
+    }
 
     # 2
     /**
@@ -136,20 +133,19 @@ class Ccore extends CsetModule
      * @param $idT          - id-ul treeului
      * @return mixed
      */
-    public function SET_REStree($pathTree, $idT)  {
-
-          $this->GET_tree_fromDB(array($idT),'',$idT);
-
-        #  echo 'ACcore SETtree pt tree-ul '.$idT;  #var_dump($this->TMPtree);
-
-          $tree_SER = serialize($this->TMPtree);
+    public function Set_Fs_tree($pathTree, $idT)
+    {
+          //try si catch
+          # echo 'ACcore SETtree pt tree-ul '.$idTree;  #var_dump($this->tempTree);
+          $treeSer = serialize($this->tempTree);
           #umask(0777);
-          $succes  = file_put_contents($pathTree,$tree_SER);
+          $succes  = file_put_contents($pathTree,$treeSer);
 
           //if(defined('UMASK')) umask(UMASK);
-          if(!$succes)
-              echo "<b>SET_REStree -  Fail file_put_contents in </b> $pathTree <br>";
-          return $this->TMPtree;
+          if (!$succes) {
+              error_log( "<b>Set_Fs_tree -  Fail file_put_contents in </b> $pathTree <br>" );
+          }
+          return $this->tempTree;
 
       }
 
@@ -161,129 +157,133 @@ class Ccore extends CsetModule
      *  - daca se gaseste fisierul cu tree-ul serializat
      *  - daca nu se preia din BD(care creaza un vector temporar - deaceea trebuie unset)
      *
-     * @param $idT - id-ul treeului curent
+     * @param $idTree - id-ul treeului curent
      * @return mixed
      */
-    public function GET_tree($idT)                {
+    public function Get_tree($idTree)
+    {
+          $pathTree = fw_resTree.'tree'.$idTree.'.txt';
 
-          $pathTree = fw_resTree.'tree'.$idT.'.txt';
-
-          if(is_file($pathTree))
+          if (is_file($pathTree)) {
               return  unserialize(file_get_contents($pathTree));
-          else{
 
-	      // GET_tree_fromDB
-	      // scrie tree-ul in res SET_REStree
-              $tree =  $this->SET_REStree($pathTree, $idT);
-              unset($this->TMPtree);
+          } else {
+	          // Build_Db_tree
+	          // scrie tree-ul in res Set_Fs_tree
+              $this->Build_Db_tree(array($idTree), '', $idTree);
+              //var_dump($this->tempTree);
+              $tree =  $this->Set_Fs_tree($pathTree, $idTree);
+
+              unset($this->tempTree);
               return $tree;
-
           }
-
-      }
+    }
 
     # 4
     /**
-     * Seteaza tree-ul curent bazat pe idT - requested
+     * Seteaza tree-ul curent bazat pe idTree - requested
      * @return bool - daca a reusit sau nu sa returneze tree-ul
      */
-    public function SET_tree()                    {
+    public function Set_currentTree()
+    {
+        if ($this->idTree) {
+            $this->tree = $this->Get_tree($this->idTree);
 
-        if($this->idT)
-        {
-            $this->tree = $this->GET_tree($this->idT);
-            if(is_array($this->tree)){
+            if (is_array($this->tree)) {
                 return true;
-            }
-            else{
+
+            } else {
                 $this->tree = array();
+                error_log('core->Set_currentTree : Nu am reusit sa creez treeul');
                 return false;
             }
-        }
-        else
+        } else {
+            error_log('core->Set_currentTree : Nu am nici un idTree');
             return false;
+        }
 
     }
 
-
-#=============================================[ ESETIALS ]==============================================================
+#=============================================[ ESETIALS ]======================
 
     # 1
-    public function SET_type()          {
-
-
-           if($_REQUEST['type'])$this->type = $_REQUEST['type'];
-
-       }
-
-    # 1 --> EXCEPTIE!!! ???
+    public function Set_currentModName()
+    {
+        // deprecated "modName" should be used instead
+        if(isset($_REQUEST['type']))$this->type = $_REQUEST['type'];
+        // pentru a nu se confunda cu modName trimis asincron de JS
+        if(isset($_REQUEST['moduleName']))$this->modName = $_REQUEST['moduleName'];
+    }
+    # 1
     /**
-     * SET: idT = primary parent, idC = id ITEMS / page
+     * SET: idTree = primary parent, idNode = id ITEMS / page
      * @return bool
      */
-    public function SET_idTC()          {
+    public function Set_currentTreeNode()
+    {
+        if (isset($_GET['idT'])) {
+               $this->idTree =   $_GET['idT'];
+               $this->idNode = ( $_GET['idC'] ?  $_GET['idC'] : $this->idTree );
 
-
-        if(isset($_GET['idT']))
-        {
-               $this->idT =   $_GET['idT'];
-               $this->idC = ( $_GET['idC'] ?  $_GET['idC'] : $this->idT );
-
-                #======== ATENTIE !!! - EXCEPTIE???  ================================================
-                //    if($this->idT == 1 && $this->idC!=1) $this->GET_idT_from_idC($this->idC);
-                #======== ATENTIE !!! - EXCEPTIE  ================================================
                return true;
+
+        } elseif ($this->idNode) {
+            return true;
+
+        } else {
+            error_log('core-> Set_currentTreeNode : Nu am reusit sa identific
+                un node pentru tree');
+            return false;
         }
 
-        elseif($this->idC)  return true;
-
-        else {return false; echo 'Nu am reusit sa iau treeul';}
     }
-
     # 1
-    # ma gandesc ca toate aceste proprietati poate ar trebui sa stea intr-un obiect gen $this->current
     /**
-     * Seteaza itemul curent
+     * Seteaza nodul curent
+     *
+     * @todo: ma gandesc ca toate aceste proprietati poate ar trebui sa
+     * stea intr-un obiect gen $this->current
      */
-    public function SET_ID_item()       {
+    public function Set_currentNode()
+    {
+        $curentNode      = &$this->tree[$this->idNode];
+        $this->name_ro   = &$curentNode->name_ro;
+        $this->name_en   = &$curentNode->name_en;
 
+        $this->nameF     = &$curentNode->nameF;
+        $this->name      = &$curentNode->name;
 
-        $this->name_ro   = &$this->tree[$this->idC]->name_ro;
-        $this->name_en   = &$this->tree[$this->idC]->name_en;
-
-        $this->nameF     = &$this->tree[$this->idC]->nameF;
-        $this->name      = &$this->tree[$this->idC]->name;
-
-        $this->type      =  $this->tree[$this->idC]->type;
-        $this->children  = &$this->tree[$this->idC]->children;
-       /* $this->new       = &$this->tree[$this->idC]->new;*/
-        $this->id        = &$this->tree[$this->idC]->id;
-        $this->p_id      = &$this->tree[$this->idC]->p_id;
-        $this->level     = &$this->tree[$this->idC]->level;
+        // deprecated use modName instead
+        $this->type      = &$curentNode->type;
+        $this->modName   = &$curentNode->modName;
+        $this->children  = &$curentNode->children;
+       /* $this->new       = &$this->tree[$this->idNode]->new;*/
+        $this->id        = &$curentNode->id;
+        $this->p_id      = &$curentNode->p_id;
+        $this->level     = &$curentNode->level;
 
          if(    in_array($this->type,$this->models )) $this->modType = 'MODELS';
          elseif(in_array($this->type,$this->plugins)) $this->modType = 'PLUGINS';
-         elseif(in_array($this->type,$this->locals)) $this->modType = 'LOCALS';
+         elseif(in_array($this->type,$this->locals))  $this->modType = 'LOCALS';
 
     }
 
-#=======================================================================================================================
+#===============================================================================
 
-
-    public function ctrl_postRequest(){
-
+    public function _handle_postRequest()
+    {
 
        // var_dump($_POST);
-        if(isset($_POST['moduleName']) && isset($_POST['methName']))
+        if(isset($_POST['modName']) && isset($_POST['methName']))
         {
 
-            $moduleName = $_POST['moduleName'];
+            $modName    = $_POST['modName'];
             $methName   = $_POST['methName'];
             $relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : true ;
 
-            if(is_modect($this->$moduleName) && method_exists($this->$moduleName,$methName))
+            if(is_object($this->$modName) && method_exists($this->$modName,$methName))
             {
-                $mod = &$this->$moduleName;
+                $mod = &$this->$modName;
                 //===============[solve request Modules ]==========================
 
                 /**
@@ -326,19 +326,19 @@ class Ccore extends CsetModule
             }
             else{
 
-             /*   if(!is_modect($this->$moduleName))
-                    echo "There is no modect ".$moduleName;
-                if(! method_exists($this->$moduleName,$methName))
+             /*   if(!is_object($this->$modName))
+                    echo "There is no object ".$modName;
+                if(! method_exists($this->$modName,$methName))
                     echo " with method ".$methName;*/
 
             }
 
         }
         else {
-         //   echo "No post moduleName or methName";
+         //   echo "No post modName or methName";
         }
 
-       // echo "<b>moduleName</b> ".$_POST['moduleName']." <b>methName</b> ".$_POST['methName'];
+       // echo "<b>modName</b> ".$_POST['modName']." <b>methName</b> ".$_POST['methName'];
     }
 
     #1  - A | use:
@@ -347,42 +347,43 @@ class Ccore extends CsetModule
      *
        *
        *  - try to set the type property
-       *  - if idT & idC exists => a tree[idT].txt should exist in /public/GENERAL/core/RES_TREE
+       *  - if idTree & idC exists => a tree[idTree].txt should exist in /public/GENERAL/core/RES_TREE
        *  - from that tree we should be albe to determine the current item with all of its properties
        *
        *  - if a type is set - set requested module
        *
        *  - sets the default mod.'s     => le instantiaza obiectele si seteaza tagurile  js/css aferente ;
       */
-    public function _init_modules()     {
+    public function _init_modules()
+    {
+        #================[ set current tree & module ]==========================
 
-       #================[ set current tree & module ]==================================
-
-        if( $this->SET_idTC() &&  $this->SET_tree())
-            $this->SET_ID_item();
-
-       # astfel putem avea bizara situatie de a trimite un idC & idT => type dar totusi sa avem un alt type...
-       if(isset($_REQUEST['type']))
-            $this->SET_type();
-
-
-       #================[ ini All ]===================================================
-
-        $this->SET_default();
-        $this->SET_HISTORY($this->idC);                #pus aici pentru ca intai trebuie initializata limba
-        if($this->type)  $this->SET_current();
+        if ($this->Set_currentTreeNode() &&  $this->Set_currentTree()) {
+            $this->Set_currentNode();
+        }
+        // pentru a initia un modul putem trimite "modName" nu neapara idC || idTree
+        $this->Set_currentModName();
 
 
-        $this->ctrl_postRequest();
+        #================[ ini All ]============================================
 
-      }
+        $this->Set_defaultModules();
+        #pus aici pentru ca intai trebuie initializata limba
+        $this->SET_HISTORY($this->idNode);
+        //if($this->type)  $this->Set_currentModule();
+        if ($this->modName) {
+            $this->Set_currentModule();
+        }
 
-#=======================================================================================================================
+        $this->_handle_postRequest();
 
+    }
+
+#===============================================================================
 
     # COMMENT THIS!!!
-    function __construct($auth=NULL)                {
-
+    function __construct($auth=NULL)
+    {
         if(PROFILER == 1)
             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
 
@@ -396,7 +397,6 @@ class Ccore extends CsetModule
        $this->DB->set_charset("utf8");
 
 
-
         /**
          * GENERAL settings
         */
@@ -406,79 +406,69 @@ class Ccore extends CsetModule
         $this->Module_Fs_configYamlProps($this);          #seteaza variabilele personalizate
         $this->Module_Set_incFilesJsCss($this);
 
-
         /**
          * Set modul user
          * pentru ca obiectul nu este instantiat de core deci
          * nu are proprietatile necesare pentru templatind
          * modName, modType
         */
-        if($auth)
-        {
+        if ($auth) {
             $this->user = &$auth->user;
             $this->user->modName = 'user';
             $this->user->modType = 'GENERAL';
         }
 
-
         /**
          * Local project settings
          */
-        if(isset($this->mainModel) && isset($this->mainTemplate))
-        {
+        if (isset($this->mainModel) && isset($this->mainTemplate)) {
             #  Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
             $this->Set_incFiles($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
             $this->Set_incFiles($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
         }
 
-
-
-
         $this->_init_modules();
-
         #echo 'Ccore: __construct';
         #var_dump($this);
     }
 
-    public function __destruct() {
-        if(PROFILER == 1)
-            $this->profiler->display($this->DB);
-    }
+
     /**
      * ATENTIE
      *  - aceasta functie este apelata din interiorul __wakeup-ului altor module
      * de ce nu se creaza o metoda de wakeup a core-ului care sa apeleze aceasta metoda??
      *
     */
-    public function DB_reConnect () {
+    public function DB_reConnect ()
+    {
         /**
          * DE ce nu unset($this->DB) - explicatie
          * nu am dat unset pentru ca se va pierde locatia din memorie a lui DB
          * => obiectele care au pointer la $this->DB vor da in gol
          * deci degeaba recreez eu conexiunea pentru ca aceasta ar fii
          * valabila doar pentru core*/
-
         $DBstat = $this->DB->ping();
-        if($DBstat == FALSE)
-        {
+        if ($DBstat == FALSE) {
             $this->DB = '';
             $this->DB = new mysqli(dbHost,dbUser,dbPass,dbName);
             #echo "A fost apelat core wakeup si DB NU este connectat <br>";
-        }
-        else
-        {
-            echo "A fost apelat  este connectat <br>";
 
+        } else {
+            echo "A fost apelat  este connectat <br>";
         }
 
 
     }
-
-    public function __wakeup(){
+    public function __wakeup()
+    {
         $this->DB_reConnect();
         $this->ctrl_postRequest(false);
     }
-
-
-    public function __clone  () { }
+    public function __destruct()
+    {
+        if(PROFILER == 1)
+            $this->profiler->display($this->DB);
+    }
+    public function __clone  ()
+    { }
 }

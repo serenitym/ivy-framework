@@ -310,8 +310,8 @@ class TCcore
 
 
         # date ale modulului curent
-        $obj->idC    =  &$this->idC;
-        $obj->idT    =  &$this->idT;
+        $obj->idNode    =  &$this->idNode;
+        $obj->idTree    =  &$this->idTree;
         $obj->level  =  &$this->level;
         $obj->type   =  &$this->type;
 
@@ -503,7 +503,7 @@ class TCcore
         foreach($this->mods AS $modType)
             foreach($this->{'default_'.$modType} AS $modName)
             {
-                # error_log("SET_default ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
+                # error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
                 $this->SET_general_mod($modName,$modType);
             }
     }
@@ -555,23 +555,23 @@ class TCcore
 
             foreach($ch AS $id_ch)
             {
-                $this->TMPtree[$id_ch] = new item();
+                $this->tempTree[$id_ch] = new item();
 
                 $q = "SELECT name_ro,name_en,type from ITEMS where id='$id_ch' ;";
                 $q_arr = $this->DB->query($q)->fetch_assoc();
 
 
-                $this->TMPtree[$id_ch]->name    = $q_arr['name_'.$this->langs[0]];
-                $this->TMPtree[$id_ch]->name_ro = $q_arr['name_ro'];
-                $this->TMPtree[$id_ch]->name_en = $q_arr['name_en'];
-                $this->TMPtree[$id_ch]->type    = $q_arr['type'];
-                $this->TMPtree[$id_ch]->id      = $id_ch;
-                $this->TMPtree[$id_ch]->p_id    = $p_id;
+                $this->tempTree[$id_ch]->name    = $q_arr['name_'.$this->langs[0]];
+                $this->tempTree[$id_ch]->name_ro = $q_arr['name_ro'];
+                $this->tempTree[$id_ch]->name_en = $q_arr['name_en'];
+                $this->tempTree[$id_ch]->type    = $q_arr['type'];
+                $this->tempTree[$id_ch]->id      = $id_ch;
+                $this->tempTree[$id_ch]->p_id    = $p_id;
                 # idT si level 2 noi concepte
-                $this->TMPtree[$id_ch]->idT     = $idT;
-                $this->TMPtree[$id_ch]->level   = $level;
-                $this->TMPtree[$id_ch]->nameF   = str_replace(' ','_',$this->TMPtree[$id_ch]->name) ;
-                /*  $this->TMPtree[$id_ch]->new     = $q_arr['new'];*/
+                $this->tempTree[$id_ch]->idTree     = $idT;
+                $this->tempTree[$id_ch]->level   = $level;
+                $this->tempTree[$id_ch]->nameF   = str_replace(' ','_',$this->tempTree[$id_ch]->name) ;
+                /*  $this->tempTree[$id_ch]->new     = $q_arr['new'];*/
 
 
 
@@ -579,11 +579,11 @@ class TCcore
                 $q_res = $this->DB->query($q);
 
                 while($ch_arr = $q_res->fetch_assoc() )
-                    $this->TMPtree[$id_ch]->children[ $ch_arr['poz'] ] = $ch_arr['Cid'];
+                    $this->tempTree[$id_ch]->children[ $ch_arr['poz'] ] = $ch_arr['Cid'];
 
 
                 if($q_res->num_rows)
-                    $this->GET_tree_fromDB($this->TMPtree[$id_ch]->children,$id_ch, $idT, $level+1);
+                    $this->GET_tree_fromDB($this->tempTree[$id_ch]->children,$id_ch, $idT, $level+1);
 
             }
 
@@ -596,20 +596,20 @@ class TCcore
      * @param $idT          - id-ul treeului
      * @return mixed
      */
-    public function SET_REStree($pathTree, $idT)  {
+    public function Set_Fs_Tree($pathTree, $idT)  {
 
           $this->GET_tree_fromDB(array($idT),'',$idT);
 
-        #  echo 'ACcore SETtree pt tree-ul '.$idT;  #var_dump($this->TMPtree);
+        #  echo 'ACcore SETtree pt tree-ul '.$idT;  #var_dump($this->tempTree);
 
-          $tree_SER = serialize($this->TMPtree);
+          $tree_SER = serialize($this->tempTree);
           #umask(0777);
           $succes  = file_put_contents($pathTree,$tree_SER);
 
           //if(defined('UMASK')) umask(UMASK);
           if(!$succes)
-              echo "<b>SET_REStree -  Fail file_put_contents in </b> $pathTree <br>";
-          return $this->TMPtree;
+              echo "<b>Set_Fs_tree -  Fail file_put_contents in </b> $pathTree <br>";
+          return $this->tempTree;
 
       }
 
@@ -632,8 +632,8 @@ class TCcore
               return  unserialize(file_get_contents($pathTree));
           else{
 
-              $tree =  $this->SET_REStree($pathTree, $idT);
-              unset($this->TMPtree);
+              $tree =  $this->Set_Fs_Tree($pathTree, $idT);
+              unset($this->tempTree);
               return $tree;
 
           }
@@ -647,9 +647,9 @@ class TCcore
      */
     public function SET_tree()                    {
 
-        if($this->idT)
+        if($this->idTree)
         {
-            $this->tree = $this->GET_tree($this->idT);
+            $this->tree = $this->GET_tree($this->idTree);
             if(is_array($this->tree)){
                 return true;
             }
@@ -684,16 +684,16 @@ class TCcore
 
         if(isset($_GET['idT']))
         {
-               $this->idT =   $_GET['idT'];
-               $this->idC = ( $_GET['idC'] ?  $_GET['idC'] : $this->idT );
+               $this->idTree =   $_GET['idT'];
+               $this->idNode = ( $_GET['idC'] ?  $_GET['idC'] : $this->idTree );
 
                 #======== ATENTIE !!! - EXCEPTIE???  ================================================
-                //    if($this->idT == 1 && $this->idC!=1) $this->GET_idT_from_idC($this->idC);
+                //    if($this->idTree == 1 && $this->idNode!=1) $this->GET_idT_from_idC($this->idNode);
                 #======== ATENTIE !!! - EXCEPTIE  ================================================
                return true;
         }
 
-        elseif($this->idC)  return true;
+        elseif($this->idNode)  return true;
 
         else {return false; echo 'Nu am reusit sa iau treeul';}
     }
@@ -706,18 +706,18 @@ class TCcore
     public function SET_ID_item()       {
 
 
-        $this->name_ro   = &$this->tree[$this->idC]->name_ro;
-        $this->name_en   = &$this->tree[$this->idC]->name_en;
+        $this->name_ro   = &$this->tree[$this->idNode]->name_ro;
+        $this->name_en   = &$this->tree[$this->idNode]->name_en;
 
-        $this->nameF     = &$this->tree[$this->idC]->nameF;
-        $this->name      = &$this->tree[$this->idC]->name;
+        $this->nameF     = &$this->tree[$this->idNode]->nameF;
+        $this->name      = &$this->tree[$this->idNode]->name;
 
-        $this->type      =  $this->tree[$this->idC]->type;
-        $this->children  = &$this->tree[$this->idC]->children;
-       /* $this->new       = &$this->tree[$this->idC]->new;*/
-        $this->id        = &$this->tree[$this->idC]->id;
-        $this->p_id      = &$this->tree[$this->idC]->p_id;
-        $this->level     = &$this->tree[$this->idC]->level;
+        $this->type      =  $this->tree[$this->idNode]->type;
+        $this->children  = &$this->tree[$this->idNode]->children;
+       /* $this->new       = &$this->tree[$this->idNode]->new;*/
+        $this->id        = &$this->tree[$this->idNode]->id;
+        $this->p_id      = &$this->tree[$this->idNode]->p_id;
+        $this->level     = &$this->tree[$this->idNode]->level;
 
          if(    in_array($this->type,$this->models )) $this->modType = 'MODELS';
          elseif(in_array($this->type,$this->plugins)) $this->modType = 'PLUGINS';
@@ -732,15 +732,15 @@ class TCcore
 
 
        // var_dump($_POST);
-        if(isset($_POST['moduleName']) && isset($_POST['methName']))
+        if(isset($_POST['modName']) && isset($_POST['methName']))
         {
 
-            $moduleName = $_POST['moduleName'];
+            $modName = $_POST['modName'];
             $methName   = $_POST['methName'];
 
-            if(is_object($this->$moduleName) && method_exists($this->$moduleName,$methName))
+            if(is_object($this->$modName) && method_exists($this->$modName,$methName))
             {
-                $obj = &$this->$moduleName;
+                $obj = &$this->$modName;
                 //===============[solve request Modules ]==========================
 
                 /**
@@ -778,19 +778,19 @@ class TCcore
             }
             else{
 
-             /*   if(!is_object($this->$moduleName))
-                    echo "There is no object ".$moduleName;
-                if(! method_exists($this->$moduleName,$methName))
+             /*   if(!is_object($this->$modName))
+                    echo "There is no object ".$modName;
+                if(! method_exists($this->$modName,$methName))
                     echo " with method ".$methName;*/
 
             }
 
         }
         else {
-         //   echo "No post moduleName or methName";
+         //   echo "No post modName or methName";
         }
 
-       // echo "<b>moduleName</b> ".$_POST['moduleName']." <b>methName</b> ".$_POST['methName'];
+       // echo "<b>modName</b> ".$_POST['modName']." <b>methName</b> ".$_POST['methName'];
     }
 
     #1  - A | use:
@@ -821,7 +821,7 @@ class TCcore
        #================[ ini All ]===================================================
 
         $this->SET_default();
-        $this->SET_HISTORY($this->idC);                #pus aici pentru ca intai trebuie initializata limba
+        $this->SET_HISTORY($this->idNode);                #pus aici pentru ca intai trebuie initializata limba
         if($this->type)  $this->SET_current();
 
 

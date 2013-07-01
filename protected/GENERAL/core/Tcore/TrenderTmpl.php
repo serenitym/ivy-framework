@@ -55,7 +55,7 @@ trait TrenderTmpl {
             {
                 # nu stiu daca asta este o varianta prea profitabila
                 # use $ao in templates for easy edit end reading
-                $ao = (modect) $aR;
+                $ao = (object) $aR;
                 # pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
                 $o  = &$mod;
                 $display = '';
@@ -181,7 +181,7 @@ trait TrenderTmpl {
     renderDisplay_frommod(&$mod, $tmplStr='', $tmplPath=''){
 
         // use in template $mod->varName or $o->varName
-        if(is_modect($mod))
+        if(is_object($mod))
         {
             /*if(isset($renderFun))unset($renderFun);
             $content   = str_replace('$this','$core',$content);
@@ -213,7 +213,7 @@ trait TrenderTmpl {
         /**
          * Se poate seta un template si cere un anumit fisier de tmpl
          * */
-      if(is_modect($mod))
+      if(is_object($mod))
       {
 
           $o = &$mod;
@@ -314,7 +314,7 @@ trait TrenderTmpl {
 
          } else {
 
-             if(is_modect($mod) && method_exists($mod, '_setRes'))
+             if(is_object($mod) && method_exists($mod, '_setRes'))
              {
                 $mod->resPath = $resPath;
                 $mod->_setRes($resPath);
@@ -361,7 +361,7 @@ trait TrenderTmpl {
     ctrlDisplay(&$mod){
 
 
-           if(is_modect($mod))
+           if(is_object($mod))
            {
                if(method_exists($mod,"DISPLAY")) {
                    return $mod->DISPLAY();
