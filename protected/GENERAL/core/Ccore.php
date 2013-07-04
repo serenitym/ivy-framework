@@ -139,7 +139,8 @@ class Ccore extends CsetModule
           # echo 'ACcore SETtree pt tree-ul '.$idTree;  #var_dump($this->tempTree);
           $treeSer = serialize($this->tempTree);
           #umask(0777);
-          $succes  = file_put_contents($pathTree,$treeSer);
+          //$succes  = file_put_contents($pathTree,$treeSer);
+          $succes  = Toolbox::Fs_writeTo($pathTree, $idT);
 
           //if(defined('UMASK')) umask(UMASK);
           if (!$succes) {

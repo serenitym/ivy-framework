@@ -1,6 +1,6 @@
 <?php
 
-class Toolbox
+class Toolbox extends LibToolbox
 {
 
 
@@ -91,6 +91,68 @@ class Toolbox
         'header' => $header,
         'content' => $content
     );
+    }/*}}}*/
+
+    /* Filesystem tools */
+
+    static function pathExists($file)
+    {/*{{{*/
+        if (file_exists($file)) {
+            return pathinfo($file);
+        } else {
+            throw new Exception(
+                'File or directory does not exist ['. $file .']'
+            );
+        }
+    }/*}}}*/
+
+    static function Fs_writeTo($file, $mode='w')
+    {
+        try {
+            self::pathExists($file);
+        } catch (Exception $e) {
+            error_log($e->getMessage() . '[trying to create]', E_USER_WARNING);
+
+            // Cut the last path segment, based on forward slashes occurence
+            $basedir = preg_replace("/^(.*)\/[^\/]+$/", "$1", $file);
+
+            try {
+                self::pathExists($basedir);
+            } catch (Exception $e) {
+
+                // Recursive mkdir() will try to create the eventually nested
+                // directory structure
+                if (!mkdir($basedir, 0777, true)) {
+                    error_log(
+                        "Error: mkdir() failed to create directory",
+                        E_USER_WARNING
+                    );
+                }
+            }
+
+            // Create the file
+            self::createFile($file);
+
+            // Open handle with requested mode, then let the data
+        }
+    }
+
+    static function createFile($file)
+    {/*{{{*/
+        if (!touch($file)) {
+            throw new Exception('Cannot create file ' . basename($file) . '!');
+        } else {
+            return true;
+        }
+    }/*}}}*/
+
+    static function createDir($dir)
+    {/*{{{*/
+        if (!mkdir($dir)) {
+            throw new Exception('Cannot create directory ' . $dir . '!');
+        } else {
+            return true;
+        }
     }/*}}}*/
 
     /* Traits import below */
@@ -397,3 +459,4 @@ class Toolbox
     }/*}}}*/
 
 }
+/* vim: set ft=php: set fdm=marker: */
