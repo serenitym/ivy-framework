@@ -106,7 +106,7 @@ class Toolbox extends LibToolbox
         }
     }/*}}}*/
 
-    static function Fs_writeTo($file, $mode='w')
+    static function Fs_writeTo($file, $data, $mode='w')
     {
         try {
             self::pathExists($file);
@@ -123,18 +123,49 @@ class Toolbox extends LibToolbox
                 // Recursive mkdir() will try to create the eventually nested
                 // directory structure
                 if (!mkdir($basedir, 0777, true)) {
+                //if (!self::rmkdir($basedir)) {
                     error_log(
                         "Error: mkdir() failed to create directory",
                         E_USER_WARNING
                     );
                 }
+                `chmod 777 -R $basedir`;
             }
 
             // Create the file
-            self::createFile($file);
+            try {
+                self::createFile($file);
+                switch ($mode) {
+                default:
+                case 'w':
+                        file_put_contents($file, $data);
+                        break;
+                case 'w+':
+                        file_put_contents($file, $data, FILE_APPEND);
+                        break;
+                }
+            } catch (Exception $e) {
+                error_log(
+                    "[Ivy] Error: failed to create file " . basename($file) . '!'
+                    , E_USER_WARNING
+                );
+            }
 
             // Open handle with requested mode, then let the data
         }
+    }
+
+    static function rmkdir($path, $mode = 0777) {
+        $dirs = explode(DIRECTORY_SEPARATOR, $path);
+        $count = count($dirs);
+        $path = '.';
+        for ($i = 0; $i < $count; ++$i) {
+            $path .= DIRECTORY_SEPARATOR . $dirs[$i];
+            if (!is_dir($path) && !mkdir($path, $mode)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static function createFile($file)
@@ -179,7 +210,8 @@ class Toolbox extends LibToolbox
         $str = preg_replace_callback(
             '[(\?|\!|\.)(\s)*(\w*)]', 'self::capitalize', $str
         );
-        // regex doesn't make the first letter uppercase, doing it "manually"
+
+        // regex doesn't make the first letter uppercase, doing it 'manually'
         return ucfirst($str);
     }/*}}}*/
 
@@ -454,7 +486,9 @@ class Toolbox extends LibToolbox
 
     static function curURL()
     {/*{{{*/
-        $https = $_SERVER['HTTPS'] == '' ? 'http://' : 'https://';
+        $https = strlen(strval($_SERVER['HTTPS'])) == 0
+                ? 'http://'
+                : 'https://';
         return $https.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
     }/*}}}*/
 
