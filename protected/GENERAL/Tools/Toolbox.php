@@ -1,5 +1,18 @@
 <?php
+/**
+ *  PHPDoc comment...
+ */
 
+/**
+  Toolbox
+
+  @uses LibToolbox
+  @package Webdav
+  @version //autogen//
+  @copyright Copyright (c) 2010 All rights reserved.
+  @author
+  @license PHP Version 3.0 {@link http://www.php.net/license/3_0.txt}
+ */
 class Toolbox extends LibToolbox
 {
 
@@ -257,3 +270,6 @@ class Toolbox extends LibToolbox
 
 }
 /* vim: set ft=php: set fdm=marker: */
+/**
+ *
+ */
