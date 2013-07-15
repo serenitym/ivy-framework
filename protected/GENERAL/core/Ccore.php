@@ -842,17 +842,17 @@ class Ccore extends CLcore
     # COMMENT THIS!!!
     function __construct($auth=NULL)                {
 
-        if(PROFILER == 1)
-            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
+         if(PROFILER == 1)
+             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
 
-       /**
-         * DataBase connection
-        */
-       $this->DB = new mysqli('p:'.dbHost,dbUser,dbPass,dbName);
-       //$this->DB = new PDO('mysql:host=' . dbHost . ';dbname=' . dbName . ';charset=utf8',
-                            //dbUser, dbPass);
-       echo  $this->DB->error;
-       $this->DB->set_charset("utf8");
+        /**
+          * DataBase connection
+         */
+        $this->DB = new mysqli(dbHost, dbUser, dbPass, dbName);
+        //$this->DB = new PDO('mysql:host=' . dbHost . ';dbname=' . dbName . ';charset=utf8',
+                             //dbUser, dbPass);
+        echo  $this->DB->error;
+        $this->DB->set_charset("utf8");
 
 
 
