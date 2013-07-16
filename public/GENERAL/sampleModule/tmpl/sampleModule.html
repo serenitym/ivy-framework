@@ -25,16 +25,15 @@
     ex: $o->news = recordurile news-urilor
                  = array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
 
-    » preluate cu GET_modProperties
+    » preluate cu Handle_Db_fetch
     =====================================================================
-     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$mod='')
+     Render_items ($items, &$mod=', $tmplType='', $tmpl)
 
      $items = arra
 -->
 
 <div>
-    ".$this->renderDisplay_Items(
-        $o->news,
+    ".$this->Render_items($o->news, $o, ''
         "
             <div>
                 <p>Title : {~ao->title}</p>
@@ -48,23 +47,21 @@
 
             </div>
         "
-        ,'',$o
     )."
 
 </div>
 
 <!-- Iterarea prin array-uri unidensionale
 
-     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$mod='')
+     Render_array($items, &$mod='', $tmplType='', $tmpl='')
 
         - logica este idem cu cea a arra-urile muldimensionale doar
         ca ne referim la itemul curent cu ~i sau $i pentru tmplStr / tmplPath
 
  -->
 <div>
-    ".$this-> renderDisplay_Items_uniDimens(
-        $this->someItems,
-        <p>{~i}</p>
+    ".$this-> Render_array( $this->someItems, '', 'str',
+        "<p>{~i}</p>"
     )."
 </div>
 
@@ -112,8 +109,7 @@
  <!--==========================[ FOLOSIREA EDITmode]=====================================-->
  <!--ENTS-->
 <div class='allENTS allNews' id='allNews_{$o->LG}'>
-    ".$this->renderDisplay_Items(
-        $o->news,
+    ".$this->Render_items($o->news, $o ,''
         "
             <div class='ENT news' id='news_{~ao->idNews}_{~o->lang}'>
                 <p>Title :
@@ -135,8 +131,6 @@
 
             </div>
         "
-        ,'',$o
-
     )."
 
 </div>

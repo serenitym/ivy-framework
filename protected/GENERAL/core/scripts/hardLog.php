@@ -2,8 +2,8 @@
 
 //session_start();
 // ------[ get the class loader ]-------
-require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
-require incPath.'etc/hardLogKey.php';
+require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
+require INC_PATH.'etc/hardLogKey.php';
 
 //$psw = 'adminPro';
 #=======================================
@@ -26,10 +26,10 @@ require incPath.'etc/hardLogKey.php';
     if (isset($_SESSION['admin'])
         || $_POST['password'] === $psw
     ) {
-        $core = new ACcore();
+        $core = new ACLcore();
     }
     else {
-        $core = new Ccore();
+        $core = new CLcore();
     }
 
     /*
@@ -39,4 +39,4 @@ require incPath.'etc/hardLogKey.php';
     $sercore     = serialize($core);
     //$serSESSION = session_encode();
 
-    file_put_contents(varPath.'tmp/sercore.txt', $sercore);
+    file_put_contents(VAR_PATH.'tmp/sercore.txt', $sercore);

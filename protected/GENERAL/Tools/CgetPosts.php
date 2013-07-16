@@ -1,5 +1,6 @@
 <?php
-class CgetPosts{
+class CgetPosts
+{
 
     var
     $expectedPosts,

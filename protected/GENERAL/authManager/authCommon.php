@@ -29,7 +29,7 @@ class authCommon {
     /* }}} */
 
     private function dbConnect() {
-        $this->rodb = new mysqli(dbHost,dbroUser,dbroPass,dbName);
+        $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
         $this->rodb->set_charset("utf8");
     }
 

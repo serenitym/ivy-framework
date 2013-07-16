@@ -30,7 +30,7 @@
     </script>
 
  <?php
-   echo $core->INC_js;
+   echo $core->jsInc;
    $footer_TMPL = tmpl_inc.'footer.php';
    if(is_file($footer_TMPL)) require_once($footer_TMPL);
  ?>

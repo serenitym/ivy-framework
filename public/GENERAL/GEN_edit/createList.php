@@ -1,10 +1,10 @@
 <?php
-//define('dbHost', '192.168.5.150'); // zero
-define('dbHost', '192.168.5.1'); // phobos
-//define('dbHost', 'localhost');
-define('dbName', 'ACE');
-define('dbUser', 'ace');
-define('dbPass', 'ace');
+//define('DB_HOST', '192.168.5.150'); // zero
+define('DB_HOST', '192.168.5.1'); // phobos
+//define('DB_HOST', 'localhost');
+define('DB_NAME', 'ACE');
+define('DB_USER', 'ace');
+define('DB_PASS', 'ace');
 
 function getSiteMap($DB, $Pid=0)
 {
@@ -133,7 +133,7 @@ function getMenus(&$DB,$menus)
 }
 
 
-$DB = new mysqli(dbHost,dbUser,dbPass,dbName);
+$DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
 $menus[1] = 'ivyMenu';
 
 echo getMenus($DB,$menus);

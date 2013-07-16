@@ -2,7 +2,7 @@
 class ACheaders{
 
    /* private function tmpSave($res,$name) {
-        $targetPath = publicPath.'GENERAL/css/img/'.$name;
+        $targetPath = PUBLIC_PATH.'GENERAL/css/img/'.$name;
         try {
             if(move_uploaded_file($res, $targetPath) != TRUE)
                 throw new Exception("There was an error uploading the file, please try again!");
@@ -24,7 +24,7 @@ class ACheaders{
         if(isset($_POST['save_pictures']))
         {
            //($sPhotoFileName, $width, $height, $path='.', $prefix='', $suffix='',$extension='jpg')
-            $base_img=fw_pubPath.'GENERAL/css/img/';
+            $base_img=FW_PUB_PATH.'GENERAL/css/img/';
 
 
             if($_FILES['filename_promo1_ro']['name']!='')

@@ -21,14 +21,14 @@ class CauthManager extends authCommon implements Serializable {
     protected $password;
 
 
-    /* {{{ public DISPLAY() */
+    /* {{{ public _render_() */
     /**
-     * DISPLAY
+     * _render_
      *
      * @access public
      * @return void
      */
-    public function DISPLAY() {
+    public function _render_() {
         $display = '
           <form class="form-horizontal pull-right" action="" method="post">
             <div class="control-group">
@@ -54,7 +54,7 @@ class CauthManager extends authCommon implements Serializable {
      * @return void
      */
     protected function init () {
-        $this->rodb = new mysqli(dbHost,dbroUser,dbroPass,dbName);
+        $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
         $this->rodb->set_charset("utf8");
 
         if(isset($_POST['login']) && $_POST['login'] == __CLASS__) {
@@ -107,7 +107,7 @@ class CauthManager extends authCommon implements Serializable {
             if($password === $this->userData->password) {
                 // This is where Cuser should be instantiated WITH uid as param.
                 //die('Password match!');
-                //xdebug_start_trace(basePath.'trace.txt');
+                //xdebug_start_trace(BASE_PATH.'trace.txt');
                 $this->user = User::getInstance($this->userData->uid);
                 $_SESSION['auth']=$this->userData;
                 //xdebug_stop_trace();

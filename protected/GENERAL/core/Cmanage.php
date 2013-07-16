@@ -9,7 +9,7 @@
  * @author  Ioana Cristea
  * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
  */
-class CManage extends CmethDB
+class Cmanage extends CmethDB
 {
     function Fs_deleteContentRes($dir, $prefix='')
     {
@@ -24,7 +24,7 @@ class CManage extends CmethDB
         if (is_array($affectedMods)) {
             foreach($affectedMods AS $modNAME)
             {
-                $resPath = resPath.$modType.'/'.$modNAME;
+                $resPath = RES_PATH.$modType.'/'.$modNAME;
                 $this->Fs_deleteContentRes($resPath);
             }
         }
@@ -50,21 +50,22 @@ class CManage extends CmethDB
         $queryRES = $this->DB->query("SELECT Cid AS idT from TREE WHERE Pid='0' ");
         while($row = $queryRES->fetch_assoc())
         {
-            $this->Set_Fs_Tree(fw_resTree.'tree'.$row['idT'].'.txt',  $row['idT']);
+            $this->Build_Db_tree(array($row['idT']), $row['idT']);
+            $this->Set_Fs_Tree(FW_RES_TREE.'tree'.$row['idT'].'.txt',  $row['idT']);
             unset($this->tempTree);
         }
     }
     function resetTree($treeId)
     {
-        unlink(fw_resTree."tree{$treeId}.txt");
+        unlink(FW_RES_TREE."tree{$treeId}.txt");
     }
     function resetCurrentTree()
     {
-           unlink(fw_resTree."tree{$this->idTree}.txt");
+           unlink(FW_RES_TREE."tree{$this->idTree}.txt");
     }
     function resetAllTrees()
     {
-        foreach(glob(fw_resTree.'*.txt') as $treeFile)
+        foreach(glob(FW_RES_TREE.'*.txt') as $treeFile)
         {
             unlink($treeFile);
         }
@@ -79,16 +80,15 @@ class CManage extends CmethDB
      */
     function Build_masterTree($unlinkTrees = true)
     {
-        $resTree = fw_resTree ;
+        $resTree = FW_RES_TREE ;
 
         if (is_dir($resTree)) {
             $dir = dir($resTree);
             $masterTREE = array();
 
-            while(false !== ($file=$dir->read()))
-            {
-                $arr_file = explode('.',$file);
-                if(end($arr_file) == 'txt') {
+            while (false !== ($file=$dir->read())) {
+                $arr_file = explode('.', $file);
+                if (end($arr_file) == 'txt') {
                     $file_path  = $resTree.$file;
                     $tree       = unserialize(file_get_contents($file_path));
                     $masterTREE = $masterTREE + $tree;
@@ -100,7 +100,7 @@ class CManage extends CmethDB
             }
            /* if($this->masterTREE)
                 foreach($this->masterTREE AS $id=>$item)
-                    echo 'id='.$id.' nameF='.$item->nameF.' type='.$item->type."<br/>";*/
+                    echo 'id='.$id.' nameF='.$item->resFile.' type='.$item->mgrName."<br/>";*/
             return $masterTREE;
         }
     }

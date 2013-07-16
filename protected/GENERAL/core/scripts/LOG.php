@@ -2,7 +2,7 @@
 
 
 // ------[ get the class loader ]-------
-require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
+require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 #=======================================
 
 // ----[ look for the login cookie ] ---
@@ -22,15 +22,9 @@ require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
 
 
     // ------[ load environment vars ]------
-   // require_once(fw_incPath.'GENERAL/core/Cvars.php');
+   // require_once(FW_INC_PATH.'GENERAL/core/Cvars.php');
     #=======================================
 
-    // ---------[ admin.php login ]---------
-    # /!\ DEPRECATED
-    if(isset($_POST['password'])) {
-        if($_POST['password']=='adminNOVA') $_SESSION['admin']=1;
-    }
-    #=======================================
 
     // ----------[ destroy session ]----------
     if(isset($_GET['logOUT'])) {
@@ -50,10 +44,10 @@ require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
 
     // ---------[ load the base class ]---------
     if(isset($_SESSION['auth'])) {
-        $core = new ACcore($auth);
+        $core = new ACLcore($auth);
     }
     else {
-        $core = new Ccore($auth);
+        $core = new CLcore($auth);
     }
 //    $_SESSION['core'] = &$core;
     #=======================================
@@ -65,13 +59,18 @@ require fw_incPath.'GENERAL/core/scripts/classLoader.inc';
     $sercore     = serialize($core);
     //$serSESSION = session_encode();
 
-    file_put_contents(varPath.'tmp/sercore.txt', $sercore);
-    //file_put_contents(fw_pubPath.'GENERAL/core/RES/serSESSION.txt', $serSESSION);
+    file_put_contents(VAR_PATH.'tmp/sercore.txt', $sercore);
+    //file_put_contents(FW_PUB_PATH.'GENERAL/core/RES/serSESSION.txt', $serSESSION);
 
     //var_dump(Toolbox::http_response_code('http://google.ro'));
     //var_dump($_SESSION['auth']->user);
 
-    $p = new Permissions($_SESSION['auth']->uid);
+
+
+    //???
+    //$p = new Permissions($_SESSION['auth']->uid);
+
+
 
 //    Console::logMemory($core,'core');
 //    Console::logMemory($auth,'auth');

@@ -15,37 +15,37 @@
 define('UMASK', '0755');
 //define('AVATAR',FALSE);
 
-define('baseURL','http://'.$_SERVER['HTTP_HOST'].'/');
-define('basePath',dirname($_SERVER['DOCUMENT_ROOT']).'/');
+define('BASE_URL','http://'.$_SERVER['HTTP_HOST'].'/');
+define('BASE_PATH',dirname($_SERVER['DOCUMENT_ROOT']).'/');
 
-define('publicURL',baseURL.'');
-define('publicPath',basePath.'public/');
-define('incPath',basePath.'protected/');
+define('PUBLIC_URL',BASE_URL.'');
+define('PUBLIC_PATH',BASE_PATH.'public/');
+define('INC_PATH',BASE_PATH.'protected/');
 
 
-define('fw_pubPath',publicPath.'fw/');
-define('fw_pubURL', publicURL.'fw/');
-define('fw_incPath',incPath.'fw/');
+define('FW_PUB_PATH',PUBLIC_PATH.'fw/');
+define('FW_PUB_URL', PUBLIC_URL.'fw/');
+define('FW_INC_PATH',INC_PATH.'fw/');
 
-define('varPath',incPath.'var/');
-define('resPath',publicPath.'RES/');
-define('resURL',publicURL.'RES/');
+define('VAR_PATH',INC_PATH.'var/');
+define('RES_PATH',PUBLIC_PATH.'RES/');
+define('RES_URL',PUBLIC_URL.'RES/');
 
-define('fw_resTree',varPath.'trees/');
+define('FW_RES_TREE',VAR_PATH.'trees/');
 
-set_include_path(basePath.'protected/');
+set_include_path(BASE_PATH.'protected/');
 
-define('dbHost', '');
-define('dbName', '');
-define('dbUser', '');
-define('dbPass', '');
+define('DB_HOST', '');
+define('DB_NAME', '');
+define('DB_USER', '');
+define('DB_PASS', '');
 
-define('dbroUser', '');
-define('dbroPass', '');
+define('DB_RO_USER', '');
+define('DB_RO_PASS', '');
 
 # pt mail
-define('smtpServer','');
-define('smtpUser','');
-define('smtpPass','');
+define('SMTP_SERVER','');
+define('SMTP_USER','');
+define('SMTP_PASS','');
 
 

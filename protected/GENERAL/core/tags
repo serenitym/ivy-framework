@@ -7,8 +7,8 @@
 _init_modules	Ccore.php	/^    public function _init_modules()     {$/;"	f
 Ccore	Ccore.php	/^class Ccore extends CLcore$/;"	c
 DB	Ccore.php	/^            $this->DB = '';$/;"	v
-DB	Ccore.php	/^            $this->DB = new mysqli(dbHost,dbUser,dbPass,dbName);$/;"	v
-DB	Ccore.php	/^       $this->DB = new mysqli('p:'.dbHost,dbUser,dbPass,dbName);$/;"	v
+DB	Ccore.php	/^            $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);$/;"	v
+DB	Ccore.php	/^       $this->DB = new mysqli('p:'.DB_HOST,DB_USER,DB_PASS,DB_NAME);$/;"	v
 DB_reConnect	Ccore.php	/^    public function DB_reConnect () {$/;"	f
 DBstat	Ccore.php	/^        $DBstat = $this->DB->ping();$/;"	v
 Get_incHtmlTags	Ccore.php	/^    public function Get_incHtmlTags($extension, $ext_PATH, $ext_SRC_PATH){$/;"	f
@@ -17,10 +17,10 @@ Get_IncTag_js	Ccore.php	/^    public function Get_IncTag_js($SRC_path)  {$/;"	f
 Module_Fs_configYamlProps	Ccore.php	/^    public function Module_Fs_configYamlProps(&$mod,$admin='',$template='')     {$/;"	f
 Module_config	Ccore.php	/^    public function Module_config(&$mod,$modType,$modName)   {$/;"	f
 Get_tree	Ccore.php	/^    public function Get_tree($idT)                {$/;"	f
-Build_Db_tree	Ccore.php	/^    public function Build_Db_tree($ch,$p_id='', $idT,$level=0) {$/;"	f
+Build_Db_tree	Ccore.php	/^    public function Build_Db_tree($ch,$idParent='', $idT,$level=0) {$/;"	f
 Module_configYamlProps	Ccore.php	/^    static function Module_configYamlProps(&$mod,$file_yml, $modName='' ){$/;"	f
 OB_name	Ccore.php	/^        $OB_name = $adminPrefix.$modName;$/;"	v
-Set_currentNode	Ccore.php	/^    public function Set_currentNode()       {$/;"	f
+_Set_currentNode	Ccore.php	/^    public function _Set_currentNode()       {$/;"	f
 Module_Set_incFilesAssets	Ccore.php	/^   public function Module_Set_incFilesAssets($mod){$/;"	f
 Set_incFiles	Ccore.php	/^    public function Set_incFiles($modName,$modType,$extension,$folder,$template='',$adminFolder='') {$/;"	f
 SET_INC_extmod	Ccore.php	/^    public function SET_INC_extmod(&$mod, $extension,$folder,$adminFolder=''){$/;"	f
@@ -31,11 +31,11 @@ Set_Fs_tree	Ccore.php	/^    public function Set_Fs_tree($pathTree, $idT)  {$/;"	
 Set_currentModule	Ccore.php	/^    public function Set_currentModule()        {$/;"	f
 Set_defaultModules	Ccore.php	/^    public function Set_defaultModules()        {$/;"	f
 SET_general_mod	Ccore.php	/^    public function SET_general_mod($modName,$modType,$adminFolder='',$adminPrefix='C')   {$/;"	f
-Set_currentTreeNode	Ccore.php	/^    public function Set_currentTreeNode()          {$/;"	f
+_Set_currentTreeNode	Ccore.php	/^    public function _Set_currentTreeNode()          {$/;"	f
 Module_configExternalPointers	Ccore.php	/^    public function Module_configExternalPointers(&$mod, $modREQ){$/;"	f
 Module_configCorePointers	Ccore.php	/^    public function Module_configCorePointers(&$mod,$modType,$modName){$/;"	f
 Set_currentTree	Ccore.php	/^    public function Set_currentTree()                    {$/;"	f
-Set_currentModName	Ccore.php	/^    public function Set_currentModName()          {$/;"	f
+_Set_currentModName	Ccore.php	/^    public function _Set_currentModName()          {$/;"	f
 __clone	Ccore.php	/^    public function __clone  () { }$/;"	f
 __construct	Ccore.php	/^    function __construct($auth=NULL)                {$/;"	f
 __destruct	Ccore.php	/^    public function __destruct() {$/;"	f
@@ -45,10 +45,10 @@ children	Ccore.php	/^        $this->children  = &$this->tree[$this->idNode]->chi
 ctrl_postRequest	Ccore.php	/^    public function ctrl_postRequest(){$/;"	f
 debugMess	Ccore.php	/^    static function debugMess($mess){ return '';}$/;"	f
 dir	Ccore.php	/^             $dir = dir($ext_PATH);$/;"	v
-ext_PATH	Ccore.php	/^            $ext_PATH         =  fw_pubPath.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
-ext_SRC_PATH	Ccore.php	/^            $ext_SRC_PATH     =   fw_pubURL.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
-file_yml	Ccore.php	/^           $file_yml =  incPath.'etc\/'$/;"	v
-file_yml	Ccore.php	/^        $file_yml =  incPath.'etc\/'$/;"	v
+ext_PATH	Ccore.php	/^            $ext_PATH         =  FW_PUB_PATH.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
+ext_SRC_PATH	Ccore.php	/^            $ext_SRC_PATH     =   FW_PUB_URL.$modType.'\/'.$modName.'\/'.$tmpl.$adminFolder."$folder\/";$/;"	v
+file_yml	Ccore.php	/^           $file_yml =  INC_PATH.'etc\/'$/;"	v
+file_yml	Ccore.php	/^        $file_yml =  INC_PATH.'etc\/'$/;"	v
 folder	Ccore.php	/^             $folder = $folder."\/"."{$folder}_".$mod->template_file;$/;"	v
 id	Ccore.php	/^        $this->id        = &$this->tree[$this->idNode]->id;$/;"	v
 idC	Ccore.php	/^               $this->idNode = ( $_GET['idC'] ?  $_GET['idC'] : $this->idTree );$/;"	v
@@ -61,13 +61,13 @@ modType	Ccore.php	/^        $this->modType = 'GENERAL';$/;"	v
 modName	Ccore.php	/^        $modName = $mod->modName;$/;"	v
 modName	Ccore.php	/^            $modName = $_POST['modName'];$/;"	v
 name	Ccore.php	/^        $this->name      = &$this->tree[$this->idNode]->name;$/;"	v
-nameF	Ccore.php	/^        $this->nameF     = &$this->tree[$this->idNode]->nameF;$/;"	v
+nodeResFile	Ccore.php	/^        $this->nodeResFile     = &$this->tree[$this->idNode]->nodeResFile;$/;"	v
 name_en	Ccore.php	/^        $this->name_en   = &$this->tree[$this->idNode]->name_en;$/;"	v
 name_ro	Ccore.php	/^        $this->name_ro   = &$this->tree[$this->idNode]->name_ro;$/;"	v
 mod	Ccore.php	/^                $mod = &$this->$modName;$/;"	v
 objectCreat_stat	Ccore.php	/^            $objectCreat_stat =  $this->Module_Build($modName,$modType,$adminPrefix,$adminFolder);$/;"	v
-p_id	Ccore.php	/^        $this->p_id      = &$this->tree[$this->idNode]->p_id;$/;"	v
-pathTree	Ccore.php	/^          $pathTree = fw_resTree.'tree'.$idT.'.txt';$/;"	v
+idParent	Ccore.php	/^        $this->idParent      = &$this->tree[$this->idNode]->idParent;$/;"	v
+pathTree	Ccore.php	/^          $pathTree = FW_RES_TREE.'tree'.$idT.'.txt';$/;"	v
 profiler	Ccore.php	/^            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());$/;"	v
 q	Ccore.php	/^                $q = " SELECT Pid,Cid,poz FROM TREE where Pid='$id_ch' ORDER BY poz ASC ;";$/;"	v
 q	Ccore.php	/^                $q = "SELECT name_ro,name_en,type from ITEMS where id='$id_ch' ;";$/;"	v
@@ -83,7 +83,7 @@ tree	Ccore.php	/^                $this->tree = array();$/;"	v
 tree	Ccore.php	/^              $tree =  $this->Set_Fs_tree($pathTree, $idT);$/;"	v
 tree	Ccore.php	/^            $this->tree = $this->Get_tree($this->idTree);$/;"	v
 tree_SER	Ccore.php	/^          $tree_SER = serialize($this->tempTree);$/;"	v
-type	Ccore.php	/^        $this->type      =  $this->tree[$this->idNode]->type;$/;"	v
+type	Ccore.php	/^        $this->mgrName      =  $this->tree[$this->idNode]->mgrName;$/;"	v
 modType	Ccore.php	/^        $modType = $mod->modType;$/;"	v
 user	Ccore.php	/^            $this->user = &$auth->user;$/;"	v
 validData	Ccore.php	/^                    $validData =$mod->{'_hook_'.$methName}();$/;"	v

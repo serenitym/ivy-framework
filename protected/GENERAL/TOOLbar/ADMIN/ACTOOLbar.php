@@ -13,7 +13,7 @@ class ACTOOLbar
         array_push($this->buttons,$buttonSTR);
     }
 
-    function DISPLAY()
+    function _render_()
     {
         //_____________________________________[Setting buttons]__________________
         //$disp = "<div id='admin_TOOLbar'>";
@@ -61,7 +61,7 @@ class ACTOOLbar
 
 
 
-       /* $this->dispPATH = publicPath.'PLUGINS/TOOLbar/RES/TOOLbar.html';
-        if(!file_exists($this->dispPATH)) $this->getDISPLAY();*/
+       /* $this->dispPATH = PUBLIC_PATH.'PLUGINS/TOOLbar/RES/TOOLbar.html';
+        if(!file_exists($this->dispPATH)) $this->get_render_();*/
     }
 }

@@ -72,7 +72,7 @@ class sessionManager extends authCommon {
     }
 
     static function sessionToSQL($expires=3600) {
-        $DB = new mysqli(dbHost,dbUser,dbPass,dbName);
+        $DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
         $sid = $_COOKIE['PHPSESSID'];
         $uid = base64_decode($_COOKIE['auth']['uid']);
         $address = $_SERVER['REMOTE_ADDR'];
@@ -101,7 +101,7 @@ class sessionManager extends authCommon {
         $address = $_SERVER['REMOTE_ADDR'];
         $agent = $_SERVER['HTTP_USER_AGENT'];
 
-        $rodb = new mysqli(dbHost,rodbUser,rodbPass,dbName);
+        $rodb = new mysqli(DB_HOST,roDB_USER,roDB_PASS,DB_NAME);
         $query = "SELECT uid,address,agent,time,expires
                     FROM auth_sessions
                     WHERE sid = '$sid';";

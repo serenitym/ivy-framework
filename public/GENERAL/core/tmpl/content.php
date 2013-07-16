@@ -1,5 +1,5 @@
 
-    <?php  if($core->admin) echo $core->TOOLbar->DISPLAY(); ?>
+    <?php  if($core->admin) echo $core->TOOLbar->_render_(); ?>
     <form action="" method="post" style="position: absolute;">
        <input type='hidden' name='current_idT' value='<?php echo $core->idTree; ?>'  />
        <input type='hidden' name='current_idC' value='<?php echo $core->idNode; ?>'  />

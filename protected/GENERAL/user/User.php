@@ -156,12 +156,10 @@ class User{
     }
 
 
-    public function init ($uid = NULL) {
+    public function _init_ ($uid = NULL) {
         $this->readOnlyConnect();
 
         $params = print_r($uid, TRUE);
-        var_dump($uid);
-        //var_dump($this->DB);
 
         //trigger_error('Debug break!', E_USER_ERROR);
         if(isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {

@@ -11,7 +11,7 @@ objREQ:
   0: propName
   user: propName
 
-# calea catre fisierul yaml care trebuie inclus la acesta se va adauga constanta incPath
+# calea catre fisierul yaml care trebuie inclus la acesta se va adauga constanta INC_PATH
 include:
   - 'path/modelName.yml'
 

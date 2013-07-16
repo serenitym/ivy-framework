@@ -1,16 +1,67 @@
 <?php
-class CsetModule extends CLcore
+/**
+ * Usage:
+ * **Create object Module**
+ *
+ * **proprietati magice**
+ *  + resPath
+ *  + displayPage
+ *  + displayPathRes
+ *
+ * **metode magice**
+ *  + _init_
+ *  + _setRes_
+ *  + _render_()
+ *
+ * **Setting properties for Module**
+ *  - configCorePointers
+ *      + DB
+ *      + admin
+ *      + LG
+ *      + lang
+ *      + nodeResFile
+ *      + idTree
+ *      + mgrName
+ *
+ *  - configAttributes
+ *      + modName
+ *      + modType
+ *      + modDir  = modType / modName
+ *
+ *  - FS_configYamlProps
+ *      + objREQ  = daca se doresc proprietati ale altor module
+ *      + include = daca se doreste citirea unui alt yaml
+ *      + template
+ *      + template_file
+ *
+ *      + assetsInc['js'] = array ('paths to other js like: /assets/...js');
+ *      + assetsInc['css']
+ *          - alte js-uri , css-uri de inclus
+ *
+ *      + assetsInc_{tmplFileName}['js', 'css']
+ *       - alte js-uri , css-uri de inclus in functie de un template_file
+ *
+ * automatizari speciale:
+ *   - module->_init_()
+ *      - apelarea unei metode "magice" daca exista , dupa ce modulul a fost setat
+ *   -_setRes_($resPath)
+ *        - care ar trebui sa seteze o variabila resPath
+ *
+ */
+class CsetModule extends CgenTools
 {
 
     #=============================================[ incHtmlTags ]===============
     # 1
     public function Get_IncTag_js($SrcPath)
     {
+        //echo "Get_IncTag_js = $SrcPath <br>";
         return "<script type='text/javascript'  src='".$SrcPath."'></script>"."\n";
     }
     # 1
     public function Get_IncTag_css($SrcPath)
     {
+        //echo "Get_IncTag_css = $SrcPath <br>";
         return "<link rel='stylesheet' href= '".$SrcPath."'  />"."\n";
     }
     # 2
@@ -18,18 +69,27 @@ class CsetModule extends CLcore
     {
 
         //if(method_exists($this,"GET_INCtag_".$extension))
+        // echo "Get_incHtmlTags tring to get  =  $extSrcPath".'<br>';
+
         if (!method_exists($this,"Get_IncTag_".$extension)) {
+
+           // echo 'Get_incHtmlTags no method = '."Get_IncTag_".$extension.'<br>';
             return '';
 
         } else {
+            //echo "<br> Get_incHtmlTags cu extPath = $extPath <br>";
             $tags = '';
             if (is_dir($extPath)) {
                 $dir = dir($extPath);
                 while(false!== ($file=$dir->read()) )
                 {
                     $arr_file = explode('.',$file);
-                    if (end($arr_file) ==$extension) {
+                    //echo "file found in $file <br>";
+
+                    if (end($arr_file) == $extension) {
                         $tags .= $this->{"Get_IncTag_".$extension}($extSrcPath.$file);
+                       /* echo "$tags <br> <b>good tag </b> in ".$extSrcPath.$file
+                            ." <br> <b>functie aplicata</b> =  "."Get_IncTag_".$extension.'<br>';*/
                     }
                 }
                 return $tags;
@@ -52,19 +112,19 @@ class CsetModule extends CLcore
      */
     public function Set_incFiles($modName,$modType,$extension,$folder,$template='',$adminFolder='')
     {
-            if ($folder=='') {
-                $folder = $extension;
-            }
-            # $tmpl =/ [tmpl_name] /
-            $tmpl      =  $template ? 'tmpl_'.$template.'/' : '';  #daca s-a trimis un template modelul are un template
-           // $adminFolder .=  $adminFolder ? '/' : '';
+         if ($folder=='') {
+            $folder = $extension;
+         }
+         # $tmpl =/ [tmpl_name] /
+         $tmpl      =  $template ? 'tmpl_'.$template.'/' : '';  #daca s-a trimis un template modelul are un template
+         // $adminFolder .=  $adminFolder ? '/' : '';
 
-            $ext_PATH         =   fw_pubPath.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
-            $ext_SRC_PATH     =   fw_pubURL.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
+         $ext_PATH         =   FW_PUB_PATH.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
+         $ext_SRC_PATH     =   FW_PUB_URL.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
 
-            #echo $extSrcPath.'<br>';
-            $this->{"INC_".$extension} .= $this->Get_incHtmlTags($extension,$ext_PATH,$ext_SRC_PATH);
-
+         $htmlTag = $this->Get_incHtmlTags($extension,$ext_PATH,$ext_SRC_PATH);
+         $this->{$extension."Inc"} .= $htmlTag;
+        //  echo "Set_incFiles - modName =  $modName  && htmltag = ".$htmlTag.'<br>';
 
 
     }
@@ -113,7 +173,7 @@ class CsetModule extends CLcore
    public function Module_Set_incFilesHard($extension,$srcPath)
    {
        if (method_exists($this,"Get_IncTag_".$extension)) {
-           $this->{"INC_".$extension} .= $this->{"Get_IncTag_".$extension}($srcPath);
+           $this->{$extension."Inc"} .= $this->{"Get_IncTag_".$extension}($srcPath);
        }
    }
    #2
@@ -154,7 +214,7 @@ class CsetModule extends CLcore
      * daca nu va adauga ca proprietate noua
      *
      * **2.include yaml IN yaml**
-     * daca fisierul yaml contine un vector "include" cu path-uri atunci la el se adauga incPath si se reapeleaza aceasta fct
+     * daca fisierul yaml contine un vector "include" cu path-uri atunci la el se adauga INC_PATH si se reapeleaza aceasta fct
      * configurile acelui yaml vor fii atribuite obiectului curent
      *
      * @param $mod obiectul modul
@@ -185,21 +245,21 @@ class CsetModule extends CLcore
                 foreach($yml_array['include'] AS $incFile_yml)
                 {
                     # echo 'inluded file '.$incFile_yml."<br>";
-                    self::Module_configYamlProps($mod,incPath.$incFile_yml);
+                    self::Module_configYamlProps($mod,INC_PATH.$incFile_yml);
                 }
             }
 
             #===================================================================
 
             if (defined('DEBUG') && DEBUG == 1) {
-                error_log('File is present: '.$filePathYml);
+                error_log("[ ivy ] ".'File is present: '.$filePathYml);
             }
 
             return true;
 
         } else {
             if (defined('DEBUG') && DEBUG == 1) {
-                error_log('File is not present: '.$filePathYml);
+                error_log("[ ivy ] ".'File is not present: '.$filePathYml);
             }
             return false;
         }
@@ -218,17 +278,17 @@ class CsetModule extends CLcore
      * @param string $adminFolder      [A / '']
      * @param string $template  - numele templateului
      */
-    public function Module_Fs_configYamlProps(&$mod,$adminFolder='',$template='')
+    public function Module_Fs_configYamlProps(&$mod, $adminPrefix='', $template='')
     {
         $modType = $mod->modType;
         $modName = $mod->modName;
 
-        $filePathYml = incPath . 'etc/'
+        $filePathYml = INC_PATH . 'etc/'
                      . $modType . '/'
                      . $modName . '/'
                      . ($template == ''
-                        ? $adminFolder . $modName . '.yml'
-                        : 'tmpl_' . $adminFolder . $template . '.yml');
+                        ? $adminPrefix . $modName . '.yml'
+                        : 'tmpl_' . $adminPrefix . $template . '.yml');
 
         $this->Module_configYamlProps($mod, $filePathYml);
 
@@ -238,7 +298,7 @@ class CsetModule extends CLcore
                           && $template == '' );
 
         if ($templateExists) {
-            self::Module_Fs_configYamlProps($mod,$adminFolder,$mod->template);
+            self::Module_Fs_configYamlProps($mod,$adminPrefix,$mod->template);
         }
 
     }
@@ -251,33 +311,43 @@ class CsetModule extends CLcore
      * @param $modType
      * @param $modName
      */
-    public function Module_configCorePointers(&$mod,$modType,$modName)
+    public function Module_configCorePointers(&$mod)
     {
 
         $mod->C      =  &$this;
         # situatie core
         $mod->DB     =  &$this->DB;
         $mod->admin  =  &$this->admin;
-        $mod->LG     =  &$this->lang;
+        //$mod->LG     =  &$this->lang;
         $mod->lang   =  &$this->lang;
-        $mod->nameF  =  &$this->nameF;
+        $mod->tree   =  &$this->tree;
 
 
         # date ale modulului curent
-        $mod->idNode =  &$this->idNode;
-        $mod->idTree =  &$this->idTree;
-        $mod->level  =  &$this->level;
+        $mod->idNode      =  &$this->idNode;
+        $mod->idTree      =  &$this->idTree;
+
+        $mod->nodeLevel   =  &$this->nodeLevel;
+        $mod->nodeResFile =  &$this->nodeResFile;
         // acelasi lucru cu modName
-        $mod->type   =  &$this->type;
+        $mod->mgrName =  &$this->mgrName;
+        $mod->mgrType =  &$this->mgrType;
 
 
+    }
+
+    public function Module_configAttributes(&$mod,$modType,$modName)
+    {
         #date despre acest modul
         $mod->modName = $modName;
         $mod->modType = $modType;
+        $mod->modDir  = $modType.'/'.$modName.'/';
 
 
-        #error_log('modName '.$modName."\n\n");
+        #error_log("[ ivy ] ".'modName '.$modName."\n\n");
+
     }
+
     /**
      * Setarea proprietatilor in plus din core sau din alte module
      * @param $mod
@@ -310,7 +380,7 @@ class CsetModule extends CLcore
     }
     # 2 + #2 - objConf
     /**
-     * standard confing of a model REQ, CONF, mod-> [ objREQ, _setINI() ]
+     * standard confing of a model REQ, CONF, mod-> [ objREQ, _init_() ]
      *
      * STEPS:
      *  - setarea proprietatilor standard ( pointeri la prop ale modulului principal ( core )
@@ -326,11 +396,12 @@ class CsetModule extends CLcore
         # i dont know if this is really necessary
         /*if($res) $mod->RESpath = $this->GET_resPath($this->modType,
                                                     '',
-                                                    $this->type,
-                                                    $this->nameF,
+                                                    $this->mgrName,
+                                                    $this->nodeResFile,
                                                     $this->lang);*/
 
-        $this->Module_configCorePointers($mod,$modType,$modName);  //MARKER
+        $this->Module_configCorePointers($mod);
+        $this->Module_configAttributes($mod,$modType,$modName);
         $this->Module_Fs_configYamlProps($mod);
 
         if (isset($mod->objREQ)) {
@@ -356,7 +427,7 @@ class CsetModule extends CLcore
     {
         $this->Module_config($this->$modName,$modType,$modName);
         # preia si seteaza toate cele necesare pentru respectivul model
-        # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nameF
+        # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nodeResFile
         # si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
         $this->Module_Set_incFilesJsCss($this->$modName,$adminFolder);
         $this->Module_Set_incFilesAssets($this->$modName);
@@ -388,29 +459,36 @@ class CsetModule extends CLcore
      */
     public function Module_Build($modName, $modType, $adminFolder='', $adminPrefix='C')
     {
-        // daca obiectul nu a fost setat
-        $className = $adminPrefix.$modName;
-        #1
-        if (!isset($this->$modName)
-            && file_exists(fw_incPath . $modType . "/$modName/" . $adminFolder . $className . '.php')
-        ) {
-            #2
-            //@todo: scos $this
-            $this->$modName = new $className($this);
-            #3
-            $this->Module_Set($modName,$modType,$adminPrefix,$adminFolder);
-            #4
-            if (method_exists($this->$modName,"_setINI")) {
-                $this->$modName->_setINI();
 
-            } elseif (method_exists($this->$modName,"_init")) {
-                $this->$modName->_init();
-            }
-            #5
-            return $this->$modName;
+        #1
+        if (isset($this->$modName) && is_object($this->$modName) ) {
+            //echo "Obiectul care exista deja $modName <br>";
+            //var_dump($this->$modName);
+            error_log("[ ivy ] "."CsetModule - Module_Build : Obiectul $modName este deja instantiat ");
 
         } else {
-            return false;
+
+            $className        = $adminPrefix.$modName;
+            $classPath = FW_INC_PATH . $modType . "/$modName/" . $adminFolder . $className . '.php';
+
+            if (file_exists($classPath)) {
+
+                #2
+                //@todo: scos $this
+                error_log("[ ivy ] "."CsetModule - Module_Build : Modul instantiat = $className");
+                $this->$modName = new $className($this);
+                #3
+                $this->Module_Set($modName, $modType, $adminFolder);
+                #4
+                if (method_exists($this->$modName,"_init_")) {
+                    $this->$modName->_init_();
+                }
+                #5
+                return $this->$modName;
+            } else {
+                error_log("[ ivy ] "."CsetModule - Module_Build : Nu  exista fisierul: $classPath ");
+                return false;
+            }
         }
 
     }

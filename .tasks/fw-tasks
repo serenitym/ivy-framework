@@ -2,33 +2,11 @@
 Framework stuff
 
 =====================[ DONE - staging]===============================================================
-DONE » trebuie pus si tasks ca link in framework...but keep it out of deploiment
-DONE » proces Script trebuie sa faca cumva parte din framework sau sa se numeasca cumva
-like ajaxProxy care sa includa procesSCRIPT.php
-» trebuie refacut sample project
-DONE » CAD ->core
-DONE » creare scheletModul
 
-DONE » trecere etc-uri in framework
-
-DONE » si bineinteles mutat tot frameworkul pe
-modelul de templating curent
-
-DONE » creare doc pentru DB - aferent unui modul
-
-DONE » problema generaledit si fisierele lui temporare
-
-
-DONE »[] - creat un mainModel
-
-    - scos templateurile din core + css-uri + js-uri
-    - si creat acest mainModel in MODELS
-
-[] - hardLog.php nu este pozitionat corect in framework
 
 =====================[ PRIORITIES ]=========================================================
 STAGING
-
+    - document
     - tools - CgetPosts (evaluate)
 
 IDEE
@@ -39,12 +17,6 @@ IDEE
 
 PROBLEMS
 
-- problema lucrurilor deprecated
-    * eventual o clasa locala care sa fie extinsa de / prin "core" unde sa stea
-    aceste lucruri deprecated
-
-    * de exemplu functiile de validare vreau sa le trec in deprecated,
-    mi se pare ca le-am folosit la prographic...sa vedem....
 
 ** cred ca e rezolvata - check
 GEN_edit
@@ -57,6 +29,7 @@ GEN.js - trebuie spart in deprecGEN
     suprapun de multe ori cu alte clase in pagina
 
 as vrea sa creez in var / trees un master tree care sa existe mereu
+
 
 
 ?? module cu yml-uri diferite
@@ -76,9 +49,12 @@ as vrea sa creez in var / trees un master tree care sa existe mereu
 » create demos for configs;
 » admin TOOLbar buttons
 
-» documentatie TrenderTmpl
 
 =====================[ PHP clean + performance Code ]================================================================
+
+*** error_log ***
+    - adaugat [ivy] ca prefix
+    - adaugat flaguri de WARNING, ERROR etc...
 
 ***[]
     mereu avut in vedere simplitatea codului
@@ -91,9 +67,9 @@ as vrea sa creez in var / trees un master tree care sa existe mereu
 
 [] - revizie Cblog
 
-[] DMLsql
+[] Db_query
     - este o metoda pentru contine si apelarea metodei reLocate
-    - cu toate astea numele DMLsql nu sugereaza asta
+    - cu toate astea numele Db_query nu sugereaza asta
        => transparenta nu foarte mare
     - in plus aduce dupa sine un if ---
 
@@ -103,7 +79,7 @@ as vrea sa creez in var / trees un master tree care sa existe mereu
     - o tot uit si este sacaitoare - parca parca as vrea sa scap de ea...
 
 
-[] DMLsql_setValues
+[] Db_query_setValues
    - a se vedea comentariul de la ea
    - debate - obscure + procesare mai multa
    - in plus trebuie mentinuta o relatie intre
@@ -113,24 +89,9 @@ as vrea sa creez in var / trees un master tree care sa existe mereu
 [ victor ] server_processing.php - sta in public si ar trebui trecut prin procesSCRIPT
 
 
-[] # manage function - should be put in TgenTools respectiv create ATgenTools
-   si ACcore ar trebui sa use ATgenTools
-   dar nu stiu daca exista cumva vreo problema daca ATgenTools rescrie functii din TgenTools
-   de aceea deocamdata sunt rescrise doar in cadrul claselor
-
 =====================[ PHP ]================================================================
 
-***[]
-    - scapat de controllere care fac o gramada de if-uri  mai ales cele care testeaza submiturile
-    - trimis prin POST eventual -
-        » handle = modelName
-        » action - method name
 
-    - trebuie vazut daca nu cumva vreau sa fac ceva si pentru GET-uri
-
-
-P***[?] - metodele de where-uri din TmethDB - obscure si poate ar trebui scoase din uz
-        - trecut Cblog - queries cu create_function ca la Ccomments
 
 P**[]  - user pe modul de admin cu incarcare de ACcore  si user simplu
 
@@ -161,7 +122,8 @@ P**[]  - un mod de a valida datele venite de la formuri
 
 - iEdit - addBttConf - linia 473
       variabila bttConf - cu configurile butoanelor de editare
-     * ATENTIE  trebuie sa ridic un semn de intrebare? oare aceasta variabila nu ar fii mai bine sa fie publica
+     * ATENTIE  trebuie sa ridic un semn de intrebare? oare aceasta variabila
+     nu ar fii mai bine sa fie publica
 
 =====================[ CSS ]================================================================
 
@@ -183,7 +145,6 @@ P**[]  - un mod de a valida datele venite de la formuri
 
 [ ] documentare pe feedback priorities
 
-[ ] problema denumirii functiilor
 
 [] documeteaza metoda de  reqAsync
     - controlReq_async
