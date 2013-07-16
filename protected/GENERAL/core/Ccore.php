@@ -200,8 +200,9 @@ class Ccore extends Cunstable
           //try si catch
           // echo 'ACcore SETtree pt tree-ul '.$idTree;  #var_dump($this->tempTree);
           $treeSer = serialize($this->tempTree);
-          //umask(0777);
-          $succes  = file_put_contents($pathTree, $treeSer);
+          #umask(0777);
+          //$succes  = file_put_contents($pathTree,$treeSer);
+          $succes  = Toolbox::Fs_writeTo($pathTree, $treeSer);
 
           //if(defined('UMASK')) umask(UMASK);
           if (!$succes) {
