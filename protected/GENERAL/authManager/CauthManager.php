@@ -57,7 +57,7 @@ class CauthManager extends authCommon implements Serializable {
         $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
         $this->rodb->set_charset("utf8");
 
-        if(isset($_POST['login']) && $_POST['login'] == __CLASS__) {
+        if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
             //
             //echo "Setting login vars...";
             $this->loginName = $_POST['loginName'];
@@ -68,21 +68,21 @@ class CauthManager extends authCommon implements Serializable {
             $this->sanitize('password');
             //
             //echo "done!<br/> \n Authenticating user... ";
-            $this->authCheck($this->loginName,$this->password);
+            $this->authCheck($this->loginName, $this->password);
             //
             // --------[ set session cookie ]-------
-            sessionManager::setSessionCookie($this->userData,3600);
+            sessionManager::setSessionCookie($this->userData, 3600);
             sessionManager::sessionToSQL(3600);
 
             //Toolbox::clearSubmit();
-        }
-        else {
+        } else {
             //die('AHA!!');
             $this->user = User::getInstance($this->userData->uid);
             //var_dump($this->userData);
             //var_dump($_SESSION);
             //echo 'nologin';
         }
+        Toolbox::dump($this->userData, 'userData');
     }
     /* }}} */
 

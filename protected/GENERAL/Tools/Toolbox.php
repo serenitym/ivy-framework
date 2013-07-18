@@ -148,23 +148,22 @@ class Toolbox extends LibToolbox
             // Create the file
             try {
                 self::createFile($file);
-                switch ($mode) {
-                default:
-                case 'w':
-                        file_put_contents($file, $data);
-                        break;
-                case 'w+':
-                        file_put_contents($file, $data, FILE_APPEND);
-                        break;
-                }
             } catch (Exception $e) {
                 error_log(
                     "[Ivy] Error: failed to create file " . basename($file) . '!'
                     , E_USER_WARNING
                 );
             }
-
-            // Open handle with requested mode, then let the data
+        }
+        // Open handle with requested mode, then let the data
+        switch ($mode) {
+        default:
+        case 'w':
+                file_put_contents($file, $data);
+                break;
+        case 'w+':
+                file_put_contents($file, $data, FILE_APPEND);
+                break;
         }
     }/*}}}*/
 
