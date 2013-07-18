@@ -156,25 +156,25 @@ class User{
     }
 
 
-    public function _init_ ($uid = NULL) {
+    public function init($uid = null)
+    {
         $this->readOnlyConnect();
 
-        $params = print_r($uid, TRUE);
+        $params = print_r($uid, true);
 
         //trigger_error('Debug break!', E_USER_ERROR);
-        if(isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
+        if (isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
             $auth         = &$_SESSION['auth'];
             $this->uid    = $auth->uid;
             $this->cid    = $auth->cid ?: 0;
             $this->uname  = isset($uid) ?
-                                $auth->first_name . ' ' . $auth->last_name : 'Guest user';
+                                $auth->first_name . ' ' . $auth->last_name
+                                : 'Guest user';
             $this->email  = $auth->email;
-            $this->getUserGroups($uid,$this->cid);
-        }
-        else
+            $this->getUserGroups($uid, $this->cid);
+        } else {
             return 0;
-            //echo $this->uname = 'Guest';
-        //var_dump($this->C);
+        }
     }
 
 }

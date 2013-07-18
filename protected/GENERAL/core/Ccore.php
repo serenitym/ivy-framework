@@ -545,16 +545,20 @@ class Ccore extends Cunstable
        /**
          * DataBase connection
         */
-       $this->DB = new mysqli('p:'.DB_HOST,DB_USER,DB_PASS,DB_NAME);
-       //$this->DB = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8',
-                            //DB_USER, DB_PASS);
-       echo  $this->DB->error;
-       $this->DB->set_charset("utf8");
-
+        $this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        /*$this->mdb =& MDB2::singleton(
+            'mysqli://'
+            . DB_USER . ':'
+            . DB_PASS . '@'
+            . DB_HOST . '/'
+            . DB_NAME
+        );*/
+        echo  $this->DB->error;
+        $this->DB->set_charset("utf8");
 
         /**
          * GENERAL settings
-        */
+         */
         #atentie daca nu are template o sa includa tot din core/js si core/css
         $this->modName = 'core';
         $this->modType = 'GENERAL';

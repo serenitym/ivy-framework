@@ -75,15 +75,9 @@ class CauthManager extends authCommon implements Serializable {
             sessionManager::setSessionCookie($this->userData, 3600);
             sessionManager::sessionToSQL(3600);
 
-            // FIXME Temporary fix, until User class will work again
-            $this->user = $_SESSION['userData'];
-
             //Toolbox::clearSubmit();
         } else {
-            //$this->user = User::getInstance($_SESSION['user']->uid);
-
-            // FIXME Temporary fix, until User class will work again
-            $this->user = $_SESSION['userData'];
+            $this->user = User::getInstance($_SESSION['userData']->uid);
         }
     }
     /* }}} */
@@ -98,29 +92,32 @@ class CauthManager extends authCommon implements Serializable {
      * @access public
      * @return void
      */
-    public function authCheck($loginName='', $password='') {
-        if(strlen($loginName) > 0 && strlen($password) > 0) {
-            //echo "<b>Login attempt: user <i>$loginName</i> (using password: <i>$password</i>)</b>";
-            if(filter_var($loginName,FILTER_VALIDATE_EMAIL) != false)
-                $this->getLoginDetails($loginName);
-            else
-                $this->getLoginDetails($loginName,'username');
+    public function authCheck($loginName='', $password='')
+    {
+        if (strlen($loginName) > 0 && strlen($password) > 0) {
 
-            if($password === $this->userData->password) {
-                // This is where Cuser should be instantiated WITH uid as param.
+            if (filter_var($loginName, FILTER_VALIDATE_EMAIL) != false) {
+                $this->getLoginDetails($loginName);
+            } else {
+                $this->getLoginDetails($loginName, 'username');
+            }
+
+            if ($password === $this->userData->password) {
+                // This is where Cuser is instantiated WITH uid as param.
                 //die('Password match!');
                 //xdebug_start_trace(BASE_PATH.'trace.txt');
                 if (isset($_SESSION['user'])) {
                     $this->user = $_SESSION['user'];
                 } else {
-                    $this->user = User::getInstance($this->userData->uid);
+                    $this->user
+                        = $_SESSION['user']
+                            = User::getInstance($this->userData->uid);
                 }
                 $_SESSION['auth']=$this->userData;
                 //xdebug_stop_trace();
             }
 
-        }
-        else {
+        } else {
             // Return 0, this means the check returned a Guest account
             unset($_SESSION['auth']);
             return 0;
