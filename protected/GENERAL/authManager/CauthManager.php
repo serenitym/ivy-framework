@@ -1,15 +1,16 @@
 <?php
 
-/* {{{ Documentation */
-/**
+/** {{{ Documentation
  * CauthManager
  *
- * @uses authCommon
- * @package Auth
- * @version 0.1.2
- * @copyright Copyright (c) 2010 Serenity Media
- * @author  Victor Nițu <victor@serenitymedia.ro>
- * @license http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * PHP Version 5.4
+ *
+ * @category  Accounts
+ * @package   Auth
+ * @author    Victor Nițu <victor@serenitymedia.ro>
+ * @copyright 2010 Serenity Media
+ * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * @version   0.1.2
  */
 /* }}} */
 
@@ -21,14 +22,14 @@ class CauthManager extends authCommon implements Serializable {
     protected $password;
 
 
-    /* {{{ public DISPLAY() */
+    /* {{{ public _render_() */
     /**
-     * DISPLAY
+     * _render_
      *
      * @access public
      * @return void
      */
-    public function DISPLAY() {
+    public function _render_() {
         $display = '
           <form class="form-horizontal pull-right" action="" method="post">
             <div class="control-group">
@@ -54,10 +55,10 @@ class CauthManager extends authCommon implements Serializable {
      * @return void
      */
     protected function init () {
-        $this->rodb = new mysqli(dbHost,dbroUser,dbroPass,dbName);
+        $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
         $this->rodb->set_charset("utf8");
 
-        if(isset($_POST['login']) && $_POST['login'] == __CLASS__) {
+        if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
             //
             //echo "Setting login vars...";
             $this->loginName = $_POST['loginName'];
@@ -68,20 +69,15 @@ class CauthManager extends authCommon implements Serializable {
             $this->sanitize('password');
             //
             //echo "done!<br/> \n Authenticating user... ";
-            $this->authCheck($this->loginName,$this->password);
+            $this->authCheck($this->loginName, $this->password);
             //
             // --------[ set session cookie ]-------
-            sessionManager::setSessionCookie($this->userData,3600);
+            sessionManager::setSessionCookie($this->userData, 3600);
             sessionManager::sessionToSQL(3600);
 
             //Toolbox::clearSubmit();
-        }
-        else {
-            //die('AHA!!');
-            $this->user = User::getInstance($this->userData->uid);
-            //var_dump($this->userData);
-            //var_dump($_SESSION);
-            //echo 'nologin';
+        } else {
+            $this->user = User::getInstance($_SESSION['userData']->uid);
         }
     }
     /* }}} */
@@ -96,25 +92,32 @@ class CauthManager extends authCommon implements Serializable {
      * @access public
      * @return void
      */
-    public function authCheck($loginName='', $password='') {
-        if(strlen($loginName) > 0 && strlen($password) > 0) {
-            //echo "<b>Login attempt: user <i>$loginName</i> (using password: <i>$password</i>)</b>";
-            if(filter_var($loginName,FILTER_VALIDATE_EMAIL) != false)
-                $this->getLoginDetails($loginName);
-            else
-                $this->getLoginDetails($loginName,'username');
+    public function authCheck($loginName='', $password='')
+    {
+        if (strlen($loginName) > 0 && strlen($password) > 0) {
 
-            if($password === $this->userData->password) {
-                // This is where Cuser should be instantiated WITH uid as param.
+            if (filter_var($loginName, FILTER_VALIDATE_EMAIL) != false) {
+                $this->getLoginDetails($loginName);
+            } else {
+                $this->getLoginDetails($loginName, 'username');
+            }
+
+            if ($password === $this->userData->password) {
+                // This is where Cuser is instantiated WITH uid as param.
                 //die('Password match!');
-                //xdebug_start_trace(basePath.'trace.txt');
-                $this->user = User::getInstance($this->userData->uid);
+                //xdebug_start_trace(BASE_PATH.'trace.txt');
+                if (isset($_SESSION['user'])) {
+                    $this->user = $_SESSION['user'];
+                } else {
+                    $this->user
+                        = $_SESSION['user']
+                            = User::getInstance($this->userData->uid);
+                }
                 $_SESSION['auth']=$this->userData;
                 //xdebug_stop_trace();
             }
 
-        }
-        else {
+        } else {
             // Return 0, this means the check returned a Guest account
             unset($_SESSION['auth']);
             return 0;

@@ -250,31 +250,31 @@ class CHANGES {
               $LG = $this->C->lang;
 
               $name_old  = $this->masterTREE[$id]->{'name_'.$LG};
-              $type_old  = $this->masterTREE[$id]->type;
-              $nameF_old = $this->masterTREE[$id]->nameF;
+              $type_old  = $this->masterTREE[$id]->modName;
+              $resFile_old = $this->masterTREE[$id]->resFile;
 
 
               $name_new  = trim($detail['val']);
               $type_new  = $detail['type'];
-              $nameF_new = str_replace(' ','_',$name_new);
+              $resFile_new = str_replace(' ','_',$name_new);
 
 
-             if($this->lang != 'en' && $nameF_new!=$nameF_old)  $nameF_new = $nameF_old;
+             if($this->lang != 'en' && $resFile_new!=$resFile_old)  $resFile_new = $resFile_old;
 
 
     #===============================================================================================================
 
             foreach($this->langs AS $LGS)
             {
-                # GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+                # GET_resPath($modType='',$resName='', $modName='' ,$resFile='', $lang = '')
 
                 $modTypeOld = $this->C->get_modType($type_old);
                 $modTypeNew = $this->C->get_modType($type_new);
 
-                $fullPATH_old_LG  = $this->C->get_resPath($modTypeOld,$type_old,$LGS,$nameF_old);
+                $fullPATH_old_LG  = $this->C->Get_resPath($modTypeOld,$type_old,$resFile_old,$LGS);
                 if(is_file($fullPATH_old_LG)){
 
-                    $fullPATH_new_LG  = $this->C->get_resPath($modTypeNew,$type_new,$LGS,$nameF_new);
+                    $fullPATH_new_LG  = $this->C->Get_resPath($modTypeNew,$type_new,$resFile_new,$LGS);
 
 
                     $content = $this->C->GET_resContent($fullPATH_old_LG);
@@ -287,8 +287,8 @@ class CHANGES {
 
 
     #===============================================================================================================
-          #   $partialPATH_new = publicPath.'MODELS/'.$type_new.'/RES/';
-          #   $partialPATH_old = publicPath.'MODELS/'.$type_old.'/RES/';
+          #   $partialPATH_new = PUBLIC_PATH.'MODELS/'.$type_new.'/RES/';
+          #   $partialPATH_old = PUBLIC_PATH.'MODELS/'.$type_old.'/RES/';
 
 
         //______________________________________________________________________________________________________________
@@ -299,8 +299,8 @@ class CHANGES {
             {
                 if(is_dir($partialPATH_old."{$LGS}/") && is_dir($partialPATH_new."{$LGS}/"))
                 {
-                    $fullPATH_old_LG = $partialPATH_old."{$LGS}/".$nameF_old.'.html';
-                    $fullPATH_new_LG = $partialPATH_new."{$LGS}/".$nameF_new.'.html';
+                    $fullPATH_old_LG = $partialPATH_old."{$LGS}/".$resFile_old.'.html';
+                    $fullPATH_new_LG = $partialPATH_new."{$LGS}/".$resFile_new.'.html';
 
                     if(file_exists($fullPATH_old_LG))
                     {
@@ -334,27 +334,27 @@ class CHANGES {
 
                $name_new = trim($detail['val']);
                $type_new = $detail['type'];
-               $nameF_new = str_replace(' ','_',$name_new);
+               $resFile_new = str_replace(' ','_',$name_new);
 
 
 
         #_______________________________________________________________________________________________________________
 //???
 
-                # C->GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
-                #  get_resPath($modType, $modName,$lang='', $resName='')
+                # C->GET_resPath($modType='',$resName='', $modName='' ,$resFile='', $lang = '')
+                #  Get_resPath($modType, $modName,$lang='', $resName='')
               foreach($this->langs AS $LGS)
-                #$fullPath_new = $this->C->GET_resPath('','',$type_new,$nameF_new,$LGS);
-                $fullPath_new = $this->C->get_resPath('',$type_new,$LGS,$nameF_new);
+                #$fullPath_new = $this->C->GET_resPath('','',$type_new,$resFile_new,$LGS);
+                $fullPath_new = $this->C->Get_resPath('',$type_new,$resFile_new,$LGS);
                         file_put_contents($fullPath_new, 'No contents added yet');
 
 
         #______________________________________[ADD to RES]_____________________________________________________________
-               /*$partialPATH_new = publicPath.'MODELS/'.$type_new.'/RES/';
+               /*$partialPATH_new = PUBLIC_PATH.'MODELS/'.$type_new.'/RES/';
 
                foreach($this->langs AS $LGS)
                    if(is_dir($partialPATH_new."{$LGS}/"))
-                         file_put_contents($partialPATH_new."{$LGS}/".$nameF_new.'.html', 'No contents added yet');*/
+                         file_put_contents($partialPATH_new."{$LGS}/".$resFile_new.'.html', 'No contents added yet');*/
 
         #______________________________________[ ADD to DB ]____________________________________________________________
 
@@ -362,7 +362,7 @@ class CHANGES {
 
 
         #_______________________________________________________________________________________________________________
-              return 'id = '.$id.' ---NEW---'.$fullPath_new.'en/'.$nameF_new."<br/>";
+              return 'id = '.$id.' ---NEW---'.$fullPath_new.'en/'.$resFile_new."<br/>";
 
 
 
@@ -372,72 +372,73 @@ class CHANGES {
 
 
     }
-
-    function deleteITEM($id,$detail)  {
-
-             $this->getENDpoints($id);$ENDpoints_STR='';
-
-         #_____________________________[DELETE from RES]_______________________________________________________________
-
-
-                 foreach($this->ENDpoints AS $idITEM)
-                 {
-                     $ENDpoints_STR .="'{$idITEM}',";
-
-                     $type = $this->masterTREE[$idITEM]->type;
-                     $nameF = $this->masterTREE[$idITEM]->nameF;
-
-                    #=============================================================
-
-
-                     foreach($this->langs AS $LGS)
-                     {
-                         # GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
-                         #$fullPath = $this->C->GET_resPath('','',$type,$nameF,$LGS);
-                         $modType = $this->C->get_modType($type);
-                         $fullPath  = $this->C->get_resPath($modType,$type,$LGS,$nameF);
-
-                         if(is_file($fullPath))
-                                unlink($fullPath);
-                     }
-
-
-                    #==============================================================
-                      #$partialPATH = publicPath.'MODELS/'.$type.'/RES/';
-                         /*foreach($this->langs AS $LGS)
-                             if(is_file($partialPATH."{$LGS}/".$nameF.'.html'))
-                                     unlink($partialPATH."{$LGS}/".$nameF.'.html');*/
-
-
-                 }
-
-         #_____________________________________________________________________________________________________________
-            $ENDpoints_STR = '('.substr($ENDpoints_STR,0,-1).')';      unset($this->ENDpoints);
-
-         #_____________________________[DELETE from DB]________________________________________________________________
-
-              $query1 ="DELETE from ITEMS where id IN {$ENDpoints_STR} ";  $this->DB->query($query1);
-
-         #_____________________________________________________________________________________________________________
-              return 'id = '.$id.'--- DELETE --- '.$ENDpoints_STR."<br />";
-
-
-    }
-    function getENDpoints($id)        {
-
+    function getENDpoints($id)
+    {
          #propagation of DELETE in all children
          # toti descendetii id-ului deletat
 
-          $ch = $this->masterTREE[$id]->children;
-          if($ch)
-              foreach($ch AS $id_ch)
+        if (count($this->masterTREE[$id]->children) > 0) {
+              $ch = $this->masterTREE[$id]->children;
+              foreach ($ch AS $id_ch) {
                   $this->getENDpoints($id_ch);
+              }
+          }
 
           array_push($this->ENDpoints, $id) ;
-
-
-
       }
+
+    function deleteITEM($id,$detail)
+    {
+         $this->getENDpoints($id);$ENDpoints_STR='';
+
+         #_____________________________[DELETE from RES]_______________________________________________________________
+         if (!$this->ENDpoints || count($this->ENDpoints) == 0) {
+
+             error_log("[ ivy ] CHANGES - deleteITEMS : NU am reusit sa culeg "
+                     ." ENDpoints pentru itemul cu id-ul = {$id} ");
+             return "Nu s-a putut deleta itemul cu id = {$id} <br>";
+
+         } else {
+
+            foreach ($this->ENDpoints AS $idITEM) {
+               $ENDpoints_STR .="'{$idITEM}',";
+
+               if (isset($this->masterTREE[$idITEM])) {
+                   $type = $this->masterTREE[$idITEM]->modName;
+                   $resFile = $this->masterTREE[$idITEM]->resFile;
+                   //=============================================================
+                   foreach ($this->langs AS $LGS) {
+                       # GET_resPath($modType='',$resName='', $modName='' ,$resFile='', $lang = '')
+                       #$fullPath = $this->C->GET_resPath('','',$type,$resFile,$LGS);
+                       $modType = $this->C->get_modType($type);
+                       $fullPath  = $this->C->Get_resPath($modType,$type,$resFile,$LGS);
+
+                       if (is_file($fullPath)) {
+                           unlink($fullPath);
+                       }
+                   }
+               }
+
+               //==============================================================
+               //$partialPATH = PUBLIC_PATH.'MODELS/'.$type.'/RES/';
+               /*foreach($this->langs AS $LGS)
+                   if(is_file($partialPATH."{$LGS}/".$resFile.'.html'))
+                   unlink($partialPATH."{$LGS}/".$resFile.'.html');*/
+            }
+
+            //_____________________________________________________________________________________________________________
+            $ENDpoints_STR = '('.substr($ENDpoints_STR,0,-1).')';      unset($this->ENDpoints);
+
+            //_____________________________[DELETE from DB]________________________________________________________________
+
+              $query1 ="DELETE from ITEMS where id IN {$ENDpoints_STR} ";  $this->DB->query($query1);
+
+             //_____________________________________________________________________________________________________________
+              return 'id = '.$id.'--- DELETE --- '.$ENDpoints_STR."<br />";
+         }
+
+
+    }
   #=====================================================================================================================
 
 
@@ -480,7 +481,7 @@ class CHANGES {
     public function __construct(){
 
 
-       $this->pathChanges = varPath.$this->pathChanges;
+       $this->pathChanges = VAR_PATH.$this->pathChanges;
 
        # $this->set_pathChanges();
 

@@ -194,12 +194,12 @@ function popUp_ini(pathLoad, dataSend, completeFunc, header, width, height){
     //______________________________________[ set dataSend ]_________________________________________________
     //alert('In popUp_ini');
     // alert(typeof  dataSend);
-    if(dataSend instanceof Object) {
-        //alert('Este Object');
+    if(dataSend instanceof object) {
+        //alert('Este object');
         dataSend = jsonConcat(dataSend,{parsePOSTfile : pathLoad});
     }
     else {
-        //alert('nu este Object');
+        //alert('nu este object');
         dataSend = {parsePOSTfile : pathLoad};
     }
 
@@ -242,17 +242,17 @@ function popUp_load(){
         + '\n\n completeFunc '+this.completeFunc + ' length'+this.completeFunc.length
         + '\n\n type '+(typeof this.completeFunc));*/
 
-    var obj      = this;
+    var mod      = this;
    // pentru ca this is not in the scope inside setTimeout function
 
     setTimeout(function(){
 
         $('#popUp #popUp-content')
               .load(
-                  obj.procesSCRIPT,
-                  obj.dataSend,
+                  mod.procesSCRIPT,
+                  mod.dataSend,
                   function(){
-                        obj.popUp_callback();
+                        mod.popUp_callback();
                   }
 
                );
@@ -336,7 +336,7 @@ function popUp_call(opt){
                             ? opt.procesSCRIPT
                             : procesSCRIPT_file;
 
-        this.dataSend     = opt.dataSend instanceof Object
+        this.dataSend     = opt.dataSend instanceof object
                             ? opt.dataSend
                             : {};
 

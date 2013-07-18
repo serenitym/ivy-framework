@@ -33,7 +33,7 @@ class ClassLoader {
     }
 
     private function __construct() {
-        self::$saveFile = varPath.'ClassLoader.save.php';
+        self::$saveFile = VAR_PATH.'ClassLoader.save.php';
         $this->initClassList();
     }
 
@@ -56,7 +56,7 @@ class ClassLoader {
     }
 
     private function refreshClassList() {
-        $this->classList = $this->scanDirectory(fw_incPath);
+        $this->classList = $this->scanDirectory(FW_INC_PATH);
         $this->refreshed = TRUE;
 
         $this->saveClassList();

@@ -8484,7 +8484,7 @@ mocked
 mocker
 mockup
 modals
-models
+MODELS
 modems
 modern
 modest

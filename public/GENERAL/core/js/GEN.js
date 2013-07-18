@@ -59,7 +59,7 @@ $.fn.minHeight = function(){
 /* Aici vor sta functiile modulelor */
 var ivyMods = {
     set_iEdit:{
-        //moduleName : function(){}
+        //modName : function(){}
     }
 };
 
@@ -105,13 +105,13 @@ var fmw = function(){
            /**
             * opt= {
             *     callBackFn,
-            *     jqObj_img
+            *     jqmod_img
              *
             * }
             * */
             var defaults = {
                callBackFn: '',
-               jqObj_img: ''
+               jqmod_img: ''
            }
            var opt=$.extend(true,{},defaults, options);
 
@@ -130,10 +130,10 @@ var fmw = function(){
                            alert('functia cu numele '+opt.callBackFn+' nu pare sa fie o functie declarata');
 
 
-                    /*   if(opt.jqObj_img != '')
+                    /*   if(opt.jqmod_img != '')
                        {
-                           //alert(opt.jqObj_img.attr('src'));
-                           opt.jqObj_img.attr('src',url);
+                           //alert(opt.jqmod_img.attr('src'));
+                           opt.jqmod_img.attr('src',url);
                        }*/
 
                        popUp_remove();
@@ -167,7 +167,7 @@ var fmw = function(){
          /*
          options:
           - parsePOSTfile
-           - moduleName
+           - modName
           - methName
           callBack_fn :  callbackTest
          * */
@@ -223,14 +223,14 @@ var fmw = function(){
                       });
 
                   },
-                  fnload : function(jQobj, sendData, callBack_fn){
+                  fnload : function(jQmod, sendData, callBack_fn){
 
                       console.log("Am apelat functia fnload");
-                      if(typeof jQobj !='undefined')
+                      if(typeof jQmod !='undefined')
                       {
                           $.extend(sendData,defaults, options);
 
-                          jQobj.load(prop.procesSCRIPT, sendData, function()
+                          jQmod.load(prop.procesSCRIPT, sendData, function()
                           {
                                 if(typeof callBack_fn == 'function')
                                 {
@@ -340,7 +340,7 @@ fmw.popUp = {
                                     ? opt.procesSCRIPT
                                     : procesSCRIPT_file;
 
-                this.dataSend     = opt.dataSend instanceof Object
+                this.dataSend     = opt.dataSend instanceof object
                                     ? opt.dataSend
                                     : {};
 
@@ -364,17 +364,17 @@ fmw.popUp = {
              //   + '\n\n type '+(typeof this.completeFunc)
            );*/
 
-            var obj      = this;
+            var mod      = this;
            // pentru ca this is not in the scope inside setTimeout function
 
             setTimeout(function(){
 
                 $('#popUp #popUp-content')
                       .load(
-                          obj.procesSCRIPT,
-                          obj.dataSend,
+                          mod.procesSCRIPT,
+                          mod.dataSend,
                           function(){
-                                obj.popUp_callback();
+                                mod.popUp_callback();
                           }
 
                        );

@@ -13,7 +13,7 @@ class ACTOOLbar
         array_push($this->buttons,$buttonSTR);
     }
 
-    function DISPLAY()
+    function _render_()
     {
         //_____________________________________[Setting buttons]__________________
         //$disp = "<div id='admin_TOOLbar'>";
@@ -55,13 +55,15 @@ class ACTOOLbar
 
         $this->uname = isset($_SESSION['auth']->uname) ? : 'admin';
 
+        Toolbox::Fs_writeTo(PUBLIC_PATH . '/user1.log', print_r($this->C, true));
+
         array_push( $this->buttons,
-            "<a href='index.php?logOUT=1' id='logOUT'>Log out ({$this->uname})  </a>"
+            "<a href='index.php?logOUT=1' id='logOUT'>Log out {$this->C->user->uname} ({$this->C->user->uid})  </a>"
             );
 
 
 
-       /* $this->dispPATH = publicPath.'PLUGINS/TOOLbar/RES/TOOLbar.html';
-        if(!file_exists($this->dispPATH)) $this->getDISPLAY();*/
+       /* $this->dispPATH = PUBLIC_PATH.'PLUGINS/TOOLbar/RES/TOOLbar.html';
+        if(!file_exists($this->dispPATH)) $this->get_render_();*/
     }
 }

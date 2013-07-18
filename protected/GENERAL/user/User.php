@@ -10,27 +10,27 @@ class User{
     # sa zicem ca ar putea fi low, editor, masterEditor, etc
     var $uclass = 'webmaster';  # trebuie sa fi editorul articolului ca sa il poti edita
     #var $uclass = 'masterEditor'; # sa zicem ca ar putea fii low, editor, masterEditor, etc
-    function getRecordPermss(&$obj, $uidRec){
+    function getRecordPermss(&$mod, $uidRec){
         #echo "Incerc sa iau permisiunile pentru record";
         if($this->uclass=='webmaster'){
-            $obj->editRecordPermss = true;
-            $obj->pubPermss = true;
-            $obj->webmPermss = true;
+            $mod->editRecordPermss = true;
+            $mod->pubPermss = true;
+            $mod->webmPermss = true;
         }
         elseif($this->uid == $uidRec){
 
 
-             $obj->editRecordPermss = true;
+             $mod->editRecordPermss = true;
              if($this->uclass=='publisher')
-                 $obj->pubPermss = true;
-            # declarate deja ca default in $obj;
-            # $obj->pubPermss = ($this->uclass=='publisher' ? true : false);
+                 $mod->pubPermss = true;
+            # declarate deja ca default in $mod;
+            # $mod->pubPermss = ($this->uclass=='publisher' ? true : false);
         }
         else{
-            $obj->ED = 'not';
-            # declarate deja ca default in $obj;
-            #$obj->editRecordPermss = false;
-            #$obj->pubPermss = false;
+            $mod->ED = 'not';
+            # declarate deja ca default in $mod;
+            #$mod->editRecordPermss = false;
+            #$mod->pubPermss = false;
         }
 
 
@@ -46,10 +46,10 @@ class User{
          *              - si este autorul recordului  - poate edita
          *
          */
-    function get_EDrecord(&$obj, $uidRec){
+    function get_EDrecord(&$mod, $uidRec){
 
         if(isset($this->admin) && $this->admin != NULL){
-            if($obj->editRecords_Permss)   return '';
+            if($mod->editRecords_Permss)   return '';
             elseif($uidRec == $this->uid)  return '';
             else return 'not';
 
@@ -59,7 +59,7 @@ class User{
 
     }
 
-    function getRecordsPermss(&$obj=''){
+    function getRecordsPermss(&$mod=''){
 
         # daca este pe profilul personal
         # daca este masterEditor, admin ceva...
@@ -71,8 +71,8 @@ class User{
         # daca nu va da return doar true sau false
 
         if($this->uclass=='webmaster'){
-            if($obj!='' && is_object($obj))
-                 $obj->editRecords_Permss = true;
+            if($mod!='' && is_object($mod))
+                 $mod->editRecords_Permss = true;
             return true;
         }
         else
@@ -156,27 +156,25 @@ class User{
     }
 
 
-    public function init ($uid = NULL) {
+    public function init($uid = null)
+    {
         $this->readOnlyConnect();
 
-        $params = print_r($uid, TRUE);
-        var_dump($uid);
-        //var_dump($this->DB);
+        $params = print_r($uid, true);
 
         //trigger_error('Debug break!', E_USER_ERROR);
-        if(isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
+        if (isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
             $auth         = &$_SESSION['auth'];
             $this->uid    = $auth->uid;
             $this->cid    = $auth->cid ?: 0;
             $this->uname  = isset($uid) ?
-                                $auth->first_name . ' ' . $auth->last_name : 'Guest user';
+                                $auth->first_name . ' ' . $auth->last_name
+                                : 'Guest user';
             $this->email  = $auth->email;
-            $this->getUserGroups($uid,$this->cid);
-        }
-        else
+            $this->getUserGroups($uid, $this->cid);
+        } else {
             return 0;
-            //echo $this->uname = 'Guest';
-        //var_dump($this->C);
+        }
     }
 
 }

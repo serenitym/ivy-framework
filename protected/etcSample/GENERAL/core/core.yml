@@ -12,16 +12,16 @@ mainModel: sitePrezentare
 #========================================
 # tipuri de module existente
 #========================================
-mods: [PLUGINS, MODELS, GENERAL, LOCALS]
+modTypes: [PLUGINS, MODELS, GENERAL, LOCALS]
 
 #nu imi e foarte clar la ce sunt bune urmatoarele
-models: [contact,  single]
+MODELS: [contact,  single]
 
-plugins: [toolbar, ivyMenu, feedback]
+PLUGINS: [toolbar, ivyMenu, feedback]
 
-general: [TOOLbar, GEN_edit, EDITmode]
+GENERAL: [TOOLbar, GEN_edit, EDITmode]
 
-locals: [  gallery, team, portfolio, news ]
+LOCALS: [  gallery, team, portfolio, news ]
 
 #========================================
 # modulele instantiate automat
@@ -47,7 +47,7 @@ tree: []
 
 # typeul / modelul default cand se intra
 type: single
-type_MOD: MODELS
+modType: MODELS
 
 id: 1
 idT: 1
@@ -59,8 +59,8 @@ idC: 1
 # other settings
 #========================================
 
-INC_css: ''
-INC_js: ''
+cssInc: ''
+jsInc: ''
 admin: false
 # DB: pointer la baza de date
 

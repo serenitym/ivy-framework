@@ -326,8 +326,8 @@ var QUnit = {
 	 *
 	 * @example equal( format("Received {0} bytes.", 2), "Received 2 bytes." );
 	 *
-	 * @param Object actual
-	 * @param Object expected
+	 * @param object actual
+	 * @param object expected
 	 * @param String message (optional)
 	 */
 	equal: function(actual, expected, message) {
@@ -566,26 +566,26 @@ extend(QUnit, {
 	},
 
 	// Safe object type checking
-	is: function( type, obj ) {
-		return QUnit.objectType( obj ) == type;
+	is: function( type, mod ) {
+		return QUnit.objectType( mod ) == type;
 	},
 
-	objectType: function( obj ) {
-		if (typeof obj === "undefined") {
+	objectType: function( mod ) {
+		if (typeof mod === "undefined") {
 				return "undefined";
 
 		// consider: typeof null === object
 		}
-		if (obj === null) {
+		if (mod === null) {
 				return "null";
 		}
 
-		var type = Object.prototype.toString.call( obj )
+		var type = object.prototype.toString.call( mod )
 			.match(/^\[object\s(.*)\]$/)[1] || '';
 
 		switch (type) {
 				case 'Number':
-						if (isNaN(obj)) {
+						if (isNaN(mod)) {
 								return "nan";
 						} else {
 								return "number";
@@ -598,7 +598,7 @@ extend(QUnit, {
 				case 'Function':
 						return type.toLowerCase();
 		}
-		if (typeof obj === "object") {
+		if (typeof mod === "object") {
 				return "object";
 		}
 		return undefined;
@@ -1015,7 +1015,7 @@ QUnit.equiv = function () {
             //   initial === would have catch identical references anyway
             "function": function () {
                 var caller = callers[callers.length - 1];
-                return caller !== Object &&
+                return caller !== object &&
                         typeof caller !== "undefined";
             },
 
@@ -1155,36 +1155,36 @@ QUnit.jsDump = (function() {
 	var reName = /^function (\w+)/;
 
 	var jsDump = {
-		parse:function( obj, type ) { //type is used mostly internally, you can fix a (custom)type in advance
-			var	parser = this.parsers[ type || this.typeOf(obj) ];
+		parse:function( mod, type ) { //type is used mostly internally, you can fix a (custom)type in advance
+			var	parser = this.parsers[ type || this.typeOf(mod) ];
 			type = typeof parser;
 
-			return type == 'function' ? parser.call( this, obj ) :
+			return type == 'function' ? parser.call( this, mod ) :
 				   type == 'string' ? parser :
 				   this.parsers.error;
 		},
-		typeOf:function( obj ) {
+		typeOf:function( mod ) {
 			var type;
-			if ( obj === null ) {
+			if ( mod === null ) {
 				type = "null";
-			} else if (typeof obj === "undefined") {
+			} else if (typeof mod === "undefined") {
 				type = "undefined";
-			} else if (QUnit.is("RegExp", obj)) {
+			} else if (QUnit.is("RegExp", mod)) {
 				type = "regexp";
-			} else if (QUnit.is("Date", obj)) {
+			} else if (QUnit.is("Date", mod)) {
 				type = "date";
-			} else if (QUnit.is("Function", obj)) {
+			} else if (QUnit.is("Function", mod)) {
 				type = "function";
-			} else if (typeof obj.setInterval !== undefined && typeof obj.document !== "undefined" && typeof obj.nodeType === "undefined") {
+			} else if (typeof mod.setInterval !== undefined && typeof mod.document !== "undefined" && typeof mod.nodeType === "undefined") {
 				type = "window";
-			} else if (obj.nodeType === 9) {
+			} else if (mod.nodeType === 9) {
 				type = "document";
-			} else if (obj.nodeType) {
+			} else if (mod.nodeType) {
 				type = "node";
-			} else if (typeof obj === "object" && typeof obj.length === "number" && obj.length >= 0) {
+			} else if (typeof mod === "object" && typeof mod.length === "number" && mod.length >= 0) {
 				type = "array";
 			} else {
-				type = typeof obj;
+				type = typeof mod;
 			}
 			return type;
 		},
@@ -1324,8 +1324,8 @@ function getText( elems ) {
  */
 QUnit.diff = (function() {
 	function diff(o, n){
-		var ns = new Object();
-		var os = new Object();
+		var ns = new object();
+		var os = new object();
 
 		for (var i = 0; i < n.length; i++) {
 			if (ns[n[i]] == null)

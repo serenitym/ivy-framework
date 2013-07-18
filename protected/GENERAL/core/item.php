@@ -10,8 +10,8 @@
  */
 class item
 {
-    var  $id;              # id curent
-    var  $p_id;            # id parinte;
+   /* var  $id;              # id curent
+    var  $idParent;            # id parinte;
     var  $idT;             # idT al tree-ului principal
     var  $level;           # pe ce level este acest copil (nepot, stranepot ...etc) starting from 0
     var  $children;        # array( poz=>id_child )
@@ -20,11 +20,11 @@ class item
     var  $name_ro;          # corespondent din BD (titlu[LG])
     var  $name_en;
     var  $name;             # name of the current language    RULE:  name    = name[LG]
-    var  $nameF;            # numele fisierului din RES ;     RULE:  nameF  = str_replace(' ', '_' , name)
+    var  $resFile;            # numele fisierului din RES ;     RULE:  resFile  = str_replace(' ', '_' , name)
 
     var  $type;             #  tipul modelului / modulului  determina ->   mod.-ul  instantiat
                             #                                         -> js/ csss
 
     var  $new;              # OPT:  'new '
-    var  $disp_cont=1;
+    var  $disp_cont=1;*/
 }

@@ -84,8 +84,8 @@ var jQuery = function( selector, context ) {
 	DOMContentLoaded,
 
 	// Save a reference to some core methods
-	toString = Object.prototype.toString,
-	hasOwn = Object.prototype.hasOwnProperty,
+	toString = object.prototype.toString,
+	hasOwn = object.prototype.hasOwnProperty,
 	push = Array.prototype.push,
 	slice = Array.prototype.slice,
 	trim = String.prototype.trim,
@@ -144,7 +144,7 @@ jQuery.fn = jQuery.prototype = {
 					ret = rsingleTag.exec( selector );
 
 					if ( ret ) {
-						if ( jQuery.isPlainObject( context ) ) {
+						if ( jQuery.isPlainobject( context ) ) {
 							selector = [ document.createElement( ret[1] ) ];
 							jQuery.fn.attr.call( selector, context, true );
 
@@ -250,7 +250,7 @@ jQuery.fn = jQuery.prototype = {
 		}
 
 		// Add the old object onto the stack (as a reference)
-		ret.prevObject = this;
+		ret.prevobject = this;
 
 		ret.context = this.context;
 
@@ -308,7 +308,7 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	end: function() {
-		return this.prevObject || this.constructor(null);
+		return this.prevobject || this.constructor(null);
 	},
 
 	// For internal use only.
@@ -361,13 +361,13 @@ jQuery.extend = jQuery.fn.extend = function() {
 				}
 
 				// Recurse if we're merging plain objects or arrays
-				if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+				if ( deep && copy && ( jQuery.isPlainobject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
 					if ( copyIsArray ) {
 						copyIsArray = false;
 						clone = src && jQuery.isArray(src) ? src : [];
 
 					} else {
-						clone = src && jQuery.isPlainObject(src) ? src : {};
+						clone = src && jQuery.isPlainobject(src) ? src : {};
 					}
 
 					// Never move original objects, clone them
@@ -489,41 +489,41 @@ jQuery.extend({
 	// See test/unit/core.js for details concerning isFunction.
 	// Since version 1.3, DOM methods and functions like alert
 	// aren't supported. They return false on IE (#2968).
-	isFunction: function( obj ) {
-		return jQuery.type(obj) === "function";
+	isFunction: function( mod ) {
+		return jQuery.type(mod) === "function";
 	},
 
-	isArray: Array.isArray || function( obj ) {
-		return jQuery.type(obj) === "array";
+	isArray: Array.isArray || function( mod ) {
+		return jQuery.type(mod) === "array";
 	},
 
-	isWindow: function( obj ) {
-		return obj != null && obj == obj.window;
+	isWindow: function( mod ) {
+		return mod != null && mod == mod.window;
 	},
 
-	isNumeric: function( obj ) {
-		return !isNaN( parseFloat(obj) ) && isFinite( obj );
+	isNumeric: function( mod ) {
+		return !isNaN( parseFloat(mod) ) && isFinite( mod );
 	},
 
-	type: function( obj ) {
-		return obj == null ?
-			String( obj ) :
-			class2type[ toString.call(obj) ] || "object";
+	type: function( mod ) {
+		return mod == null ?
+			String( mod ) :
+			class2type[ toString.call(mod) ] || "object";
 	},
 
-	isPlainObject: function( obj ) {
-		// Must be an Object.
+	isPlainobject: function( mod ) {
+		// Must be an object.
 		// Because of IE, we also have to check the presence of the constructor property.
 		// Make sure that DOM nodes and window objects don't pass through, as well
-		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
+		if ( !mod || jQuery.type(mod) !== "object" || mod.nodeType || jQuery.isWindow( mod ) ) {
 			return false;
 		}
 
 		try {
-			// Not own constructor property must be Object
-			if ( obj.constructor &&
-				!hasOwn.call(obj, "constructor") &&
-				!hasOwn.call(obj.constructor.prototype, "isPrototypeOf") ) {
+			// Not own constructor property must be object
+			if ( mod.constructor &&
+				!hasOwn.call(mod, "constructor") &&
+				!hasOwn.call(mod.constructor.prototype, "isPrototypeOf") ) {
 				return false;
 			}
 		} catch ( e ) {
@@ -535,13 +535,13 @@ jQuery.extend({
 		// if last one is own, then all properties are own.
 
 		var key;
-		for ( key in obj ) {}
+		for ( key in mod ) {}
 
-		return key === undefined || hasOwn.call( obj, key );
+		return key === undefined || hasOwn.call( mod, key );
 	},
 
-	isEmptyObject: function( obj ) {
-		for ( var name in obj ) {
+	isEmptyobject: function( mod ) {
+		for ( var name in mod ) {
 			return false;
 		}
 		return true;
@@ -587,7 +587,7 @@ jQuery.extend({
 				tmp = new DOMParser();
 				xml = tmp.parseFromString( data , "text/xml" );
 			} else { // IE
-				xml = new ActiveXObject( "Microsoft.XMLDOM" );
+				xml = new ActiveXobject( "Microsoft.XMLDOM" );
 				xml.async = "false";
 				xml.loadXML( data );
 			}
@@ -630,10 +630,10 @@ jQuery.extend({
 	each: function( object, callback, args ) {
 		var name, i = 0,
 			length = object.length,
-			isObj = length === undefined || jQuery.isFunction( object );
+			ismod = length === undefined || jQuery.isFunction( object );
 
 		if ( args ) {
-			if ( isObj ) {
+			if ( ismod ) {
 				for ( name in object ) {
 					if ( callback.apply( object[ name ], args ) === false ) {
 						break;
@@ -649,7 +649,7 @@ jQuery.extend({
 
 		// A special, fast, case for the most common use of each
 		} else {
-			if ( isObj ) {
+			if ( ismod ) {
 				for ( name in object ) {
 					if ( callback.call( object[ name ], name, object[ name ] ) === false ) {
 						break;
@@ -918,7 +918,7 @@ jQuery.extend({
 });
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
+jQuery.each("Boolean Number String Function Array Date RegExp object".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
 
@@ -983,10 +983,10 @@ return jQuery;
 })();
 
 
-// String to Object flags format cache
+// String to object flags format cache
 var flagsCache = {};
 
-// Convert String-formatted flags into Object-formatted ones and store in cache
+// Convert String-formatted flags into object-formatted ones and store in cache
 function createFlags( flags ) {
 	var object = flagsCache[ flags ] = {},
 		i, length;
@@ -1021,7 +1021,7 @@ function createFlags( flags ) {
  */
 jQuery.Callbacks = function( flags ) {
 
-	// Convert flags from String-formatted to Object-formatted
+	// Convert flags from String-formatted to object-formatted
 	// (we check in cache first)
 	flags = flags ? ( flagsCache[ flags ] || createFlags( flags ) ) : {};
 
@@ -1274,16 +1274,16 @@ jQuery.extend({
 					}).promise();
 				},
 				// Get a promise for this deferred
-				// If obj is provided, the promise aspect is added to the object
-				promise: function( obj ) {
-					if ( obj == null ) {
-						obj = promise;
+				// If mod is provided, the promise aspect is added to the object
+				promise: function( mod ) {
+					if ( mod == null ) {
+						mod = promise;
 					} else {
 						for ( var key in promise ) {
-							obj[ key ] = promise[ key ];
+							mod[ key ] = promise[ key ];
 						}
 					}
-					return obj;
+					return mod;
 				}
 			},
 			deferred = promise.promise({}),
@@ -1687,7 +1687,7 @@ jQuery.extend({
 
 	hasData: function( elem ) {
 		elem = elem.nodeType ? jQuery.cache[ elem[jQuery.expando] ] : elem[ jQuery.expando ];
-		return !!elem && !isEmptyDataObject( elem );
+		return !!elem && !isEmptyDataobject( elem );
 	},
 
 	data: function( elem, name, data, pvt /* Internal Use Only */ ) {
@@ -1845,7 +1845,7 @@ jQuery.extend({
 
 				// If there is no data left in the cache, we want to continue
 				// and let the cache object itself get destroyed
-				if ( !( pvt ? isEmptyDataObject : jQuery.isEmptyObject )( thisCache ) ) {
+				if ( !( pvt ? isEmptyDataobject : jQuery.isEmptyobject )( thisCache ) ) {
 					return;
 				}
 			}
@@ -1857,7 +1857,7 @@ jQuery.extend({
 
 			// Don't destroy the parent cache unless the internal data object
 			// had been the only thing left in it
-			if ( !isEmptyDataObject(cache[ id ]) ) {
+			if ( !isEmptyDataobject(cache[ id ]) ) {
 				return;
 			}
 		}
@@ -2013,11 +2013,11 @@ function dataAttr( elem, key, data ) {
 }
 
 // checks a cache object for emptiness
-function isEmptyDataObject( obj ) {
-	for ( var name in obj ) {
+function isEmptyDataobject( mod ) {
+	for ( var name in mod ) {
 
 		// if the public data object is empty, the private is still empty
-		if ( name === "data" && jQuery.isEmptyObject( obj[name] ) ) {
+		if ( name === "data" && jQuery.isEmptyobject( mod[name] ) ) {
 			continue;
 		}
 		if ( name !== "toJSON" ) {
@@ -2907,8 +2907,8 @@ jQuery.event = {
 	add: function( elem, types, handler, data, selector ) {
 
 		var elemData, eventHandle, events,
-			t, tns, type, namespaces, handleObj,
-			handleObjIn, quick, handlers, special;
+			t, tns, type, namespaces, handlemod,
+			handlemodIn, quick, handlers, special;
 
 		// Don't attach events to noData or text/comment nodes (allow plain objects tho)
 		if ( elem.nodeType === 3 || elem.nodeType === 8 || !types || !handler || !(elemData = jQuery._data( elem )) ) {
@@ -2917,9 +2917,9 @@ jQuery.event = {
 
 		// Caller can pass in an object of custom data in lieu of the handler
 		if ( handler.handler ) {
-			handleObjIn = handler;
-			handler = handleObjIn.handler;
-			selector = handleObjIn.selector;
+			handlemodIn = handler;
+			handler = handlemodIn.handler;
+			selector = handlemodIn.selector;
 		}
 
 		// Make sure that the handler has a unique ID, used to find/remove it later
@@ -2963,8 +2963,8 @@ jQuery.event = {
 			// Update special based on newly reset type
 			special = jQuery.event.special[ type ] || {};
 
-			// handleObj is passed to all event handlers
-			handleObj = jQuery.extend({
+			// handlemod is passed to all event handlers
+			handlemod = jQuery.extend({
 				type: type,
 				origType: tns[1],
 				data: data,
@@ -2973,7 +2973,7 @@ jQuery.event = {
 				selector: selector,
 				quick: selector && quickParse( selector ),
 				namespace: namespaces.join(".")
-			}, handleObjIn );
+			}, handlemodIn );
 
 			// Init the event handler queue if we're the first
 			handlers = events[ type ];
@@ -2994,18 +2994,18 @@ jQuery.event = {
 			}
 
 			if ( special.add ) {
-				special.add.call( elem, handleObj );
+				special.add.call( elem, handlemod );
 
-				if ( !handleObj.handler.guid ) {
-					handleObj.handler.guid = handler.guid;
+				if ( !handlemod.handler.guid ) {
+					handlemod.handler.guid = handler.guid;
 				}
 			}
 
 			// Add to the element's handler list, delegates in front
 			if ( selector ) {
-				handlers.splice( handlers.delegateCount++, 0, handleObj );
+				handlers.splice( handlers.delegateCount++, 0, handlemod );
 			} else {
-				handlers.push( handleObj );
+				handlers.push( handlemod );
 			}
 
 			// Keep track of which events have ever been used, for event optimization
@@ -3023,7 +3023,7 @@ jQuery.event = {
 
 		var elemData = jQuery.hasData( elem ) && jQuery._data( elem ),
 			t, tns, type, origType, namespaces, origCount,
-			j, events, special, handle, eventType, handleObj;
+			j, events, special, handle, eventType, handlemod;
 
 		if ( !elemData || !(events = elemData.events) ) {
 			return;
@@ -3052,12 +3052,12 @@ jQuery.event = {
 
 			// Remove matching events
 			for ( j = 0; j < eventType.length; j++ ) {
-				handleObj = eventType[ j ];
+				handlemod = eventType[ j ];
 
-				if ( ( mappedTypes || origType === handleObj.origType ) &&
-					 ( !handler || handler.guid === handleObj.guid ) &&
-					 ( !namespaces || namespaces.test( handleObj.namespace ) ) &&
-					 ( !selector || selector === handleObj.selector || selector === "**" && handleObj.selector ) ) {
+				if ( ( mappedTypes || origType === handlemod.origType ) &&
+					 ( !handler || handler.guid === handlemod.guid ) &&
+					 ( !namespaces || namespaces.test( handlemod.namespace ) ) &&
+					 ( !selector || selector === handlemod.selector || selector === "**" && handleObj.selector ) ) {
 					eventType.splice( j--, 1 );
 
 					if ( handleObj.selector ) {

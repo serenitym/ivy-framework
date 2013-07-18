@@ -74,7 +74,7 @@
 		 * Internal collection of all RoundRect objects. Used to ensure all
 		 * RoundRects are properly cleaned up so that IE does not leak memory
 		 * all over the ground.
-		 * @type {Object.<string, RoundRect>}
+		 * @type {object.<string, RoundRect>}
 		 */
 		collection = {},
 
@@ -97,7 +97,7 @@
 		 * A map of images that are used as background-images. This is needed
 		 * in order to get the correct size of the original image in order to
 		 * clip it for repeat-x and repeat-y.
-		 * @type {Object.<string, (Image|Object)>}
+		 * @type {object.<string, (Image|object)>}
 		 */
 		imageMap = {},
 
@@ -118,13 +118,13 @@
 
 	/**
 	 * Proxy function.
-	 * @param {Object} obj Object to bind as ‘this’
+	 * @param {object} mod object to bind as ‘this’
 	 * @param {Function} fn Function to call
 	 * @return {Function}
 	 */
-	function proxy(obj, fn) {
+	function proxy(mod, fn) {
 		return function () {
-			return fn.apply(obj || this, arguments);
+			return fn.apply(mod || this, arguments);
 		};
 	}
 
@@ -375,7 +375,7 @@
 	/**
 	 * A hash map of nodeNames that will fail if we try to round them. What a
 	 * bummer.
-	 * @type {Object.<string, boolean>}
+	 * @type {object.<string, boolean>}
 	 */
 	RoundRect.disallowed = { BODY: true, TABLE: true, TR: true, TD: true, SELECT: !ie8, OPTION: true };
 
@@ -388,18 +388,18 @@
 	 * @return {RoundRect}
 	 */
 	RoundRect.create = function (element, dynamic) {
-		var id = element[expando], obj;
-		if (id && (obj = collection[id])) {
-			if (dynamic !== undefined && obj.dynamic !== dynamic) {
-				if (obj.dynamic) {
-					obj.start();
+		var id = element[expando], mod;
+		if (id && (mod = collection[id])) {
+			if (dynamic !== undefined && mod.dynamic !== dynamic) {
+				if (mod.dynamic) {
+					mod.start();
 				}
 				else {
-					obj.stop();
+					mod.stop();
 				}
 			}
 
-			return obj;
+			return mod;
 		}
 
 		return new RoundRect(element, dynamic);
@@ -432,7 +432,7 @@
 
 		/**
 		 * :hover -> ns + -hover
-		 * @param {Object} sheet CSSStyleSheet, IE style.
+		 * @param {object} sheet CSSStyleSheet, IE style.
 		 */
 		function processStyleSheet(sheet) {
 			var i, rule;
@@ -532,7 +532,7 @@
 
 		/**
 		 * Cached values for the element’s width, height, top, and left offset.
-		 * @type {Object.<string, *>}
+		 * @type {object.<string, *>}
 		 * @private
 		 */
 		dimensions: undefined,
@@ -546,14 +546,14 @@
 
 		/**
 		 * Cached values for the top, right, bottom, and left border widths.
-		 * @type {Object.<string, *>}
+		 * @type {object.<string, *>}
 		 * @private
 		 */
 		borderWidths: undefined,
 
 		/**
 		 * VML elements used to draw the border and background.
-		 * @type {Object.<string, Element>}
+		 * @type {object.<string, Element>}
 		 */
 		vml: undefined,
 
@@ -570,7 +570,7 @@
 		backgroundImage: null,
 
 		/**
-		 * @type {Object.<string, string>}
+		 * @type {object.<string, string>}
 		 * @private
 		 */
 		originalStyles: undefined,
@@ -579,7 +579,7 @@
 		 * References to event handlers for this element and its container.
 		 * Required in order to prevent memory leaks.
 		 * Defined in the constructor.
-		 * @type {Object.<string, Object.<string, Array.<Function>>>}
+		 * @type {object.<string, object.<string, Array.<Function>>>}
 		 * @private
 		 */
 		events: undefined,
@@ -987,7 +987,7 @@
 
 		/**
 		 * Calculates the width, height, top, and left offset of the element.
-		 * @return {Object.<string, number>} Object with four keys: width,
+		 * @return {object.<string, number>} object with four keys: width,
 		 * height, top, left.
 		 * @private
 		 */
@@ -1002,7 +1002,7 @@
 
 		/**
 		 * Calculates the element’s border widths.
-		 * @return {Object.<string, number>} Object with four keys: top,
+		 * @return {object.<string, number>} object with four keys: top,
 		 * right, bottom, left.
 		 * @private
 		 */
@@ -1112,12 +1112,12 @@
 			// Without a timeout, IE will throw “unspecified error”s
 			setTimeout(proxy(this, function () {
 				this.addEvent('container', 'mouseenter', proxy(this, function () {
-					var fakeEvent = document.createEventObject(window.event);
+					var fakeEvent = document.createEventobject(window.event);
 					fakeEvent.toElement = fakeEvent.srcElement = this.element;
 					this.element.fireEvent('on' + window.event.type, fakeEvent);
 				}));
 				this.addEvent('container', 'mouseleave', proxy(this, function () {
-					var fakeEvent = document.createEventObject(window.event);
+					var fakeEvent = document.createEventobject(window.event);
 					fakeEvent.fromElement = fakeEvent.srcElement = this.element;
 					this.element.fireEvent('on' + window.event.type, fakeEvent);
 				}));

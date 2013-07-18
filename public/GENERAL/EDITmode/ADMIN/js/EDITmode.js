@@ -39,7 +39,7 @@ var iEdit = function(){
      * Config ex:
      *
      *  elemName_ex: {
-     *            moduleName : '',
+     *            modName : '',
      *            addBt: {
      *                atrValue: 'un nume',
      *                style : 'oric',
@@ -47,7 +47,7 @@ var iEdit = function(){
      *                status: '',
      *                methName: '',
      *                async : new asyncConf({
-     *                                moduleName: 'modulename',
+     *                                modName: 'modName',
      *                                methName: 'methName',
      *                                parsePOSTfile : 'filePath.php' ,
      *                                callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
@@ -124,11 +124,11 @@ var iEdit = function(){
 
               //=============================[set moduleControler for action ]==========================================
 
-             if(typeof BTT.moduleName !='undefined'){
+             if(typeof BTT.modName !='undefined'){
                  TOOLSbtn.parent().before(
-                     "<input type='hidden' name='moduleName' value='"+BTT.moduleName+"' />" +
+                     "<input type='hidden' name='modName' value='"+BTT.modName+"' />" +
                       "<input type='hidden' name='methName' value='' />");
-                 var jq_ctrlModuleName = TOOLSbtn.parent().prev("input[name=methName]");
+                 var jq_ctrlmodName = TOOLSbtn.parent().prev("input[name=methName]");
              }
 
 
@@ -143,12 +143,12 @@ var iEdit = function(){
                          .find('input[class^=editModeBTT][name^=delete_]')
                          .attr('onclick',"iEdit.evCallback.async_delete('"+Name+"','"+id+"'); return false;");
                  }
-                 else if(typeof BTT.moduleName !='undefined' && typeof BTT.deleteBt.methName != 'undefined' )
+                 else if(typeof BTT.modName !='undefined' && typeof BTT.deleteBt.methName != 'undefined' )
                  {
                       TOOLSbtn
                          .find('input[class^=editModeBTT][name^=delete_]')
                           .on('click', function(){
-                              jq_ctrlModuleName.attr('value',BTT.deleteBt.methName);
+                              jq_ctrlmodName.attr('value',BTT.deleteBt.methName);
                           });
                  }
              }
@@ -169,7 +169,7 @@ var iEdit = function(){
                       +' avem callback-ul ' +  BTT.saveBt.async.callBack_fn
                       + ' si file-ul de procesare ' + BTT.saveBt.async.parsePOSTfile);*/
                  }
-                 else if(typeof BTT.moduleName !='undefined' && typeof BTT.saveBt.methName != 'undefined' )
+                 else if(typeof BTT.modName !='undefined' && typeof BTT.saveBt.methName != 'undefined' )
                  {
 
                      /**
@@ -179,7 +179,7 @@ var iEdit = function(){
                      TOOLSbtn
                       .find('input[class^=editModeBTT][name^=save_]')
                          .on('click', function(){
-                              jq_ctrlModuleName.attr('value',BTT.saveBt.methName);
+                              jq_ctrlmodName.attr('value',BTT.saveBt.methName);
 
                           });
 
@@ -644,7 +644,7 @@ extraBts
                       var cls     = classes.replace('ENT','');   //ENT || SING - restul claselor fara denumirea de ENT sau SING
                      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                      var html_extraBTTS = '';              // tagurile cu butoanele extra
-                     var html_ctrlAction = '';             //hidden inputurile cu methName si moduleName pentru apelare directa in core
+                     var html_ctrlAction = '';             //hidden inputurile cu methName si modName pentru apelare directa in core
                      var BTT = {
                           status : 1,
                           style : '',
@@ -659,8 +659,8 @@ extraBts
                          {
                              $.extend(BTT, bttConf[nameENT].addBt);
 
-                             if(typeof bttConf[nameENT].moduleName != 'undefined' && BTT.methName!='')
-                                html_ctrlAction  =  "<input type='hidden' name='moduleName' value='"+bttConf[nameENT].moduleName+"' />" +
+                             if(typeof bttConf[nameENT].modName != 'undefined' && BTT.methName!='')
+                                html_ctrlAction  =  "<input type='hidden' name='modName' value='"+bttConf[nameENT].modName+"' />" +
                                                      "<input type='hidden' name='methName' value='"+BTT.methName+"' />";
                          }
 

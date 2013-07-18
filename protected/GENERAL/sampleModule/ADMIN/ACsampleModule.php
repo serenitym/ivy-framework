@@ -7,10 +7,10 @@ class ACsampleModule extends CsampleModule{
  *
  *  reLocate($location='', $ANCORA='',$paramAdd='');
  *
- *  DMLsql($query,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='')
+ *  Db_query($query,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='')
  *
  *
- *  DMLsql_bulk($queries,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='')
+ *  Db_queryBulk($queries,$reset=true,$ANCORA='',$location='',$paramAdd='', $errorMessage='')
  *    - run multiple queries
  *
  *
@@ -18,7 +18,7 @@ class ACsampleModule extends CsampleModule{
  *
  *  - _handlePosts_functionName
  *
- *      => daca s-au trimis moduleName & methName
+ *      => daca s-au trimis modName & methName
  *      => core va incerca sa apeleze aceasta metoda intai apoi functionName
  *          daca _handlePosts_ returneaza true
  *

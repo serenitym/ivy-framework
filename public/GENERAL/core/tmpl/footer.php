@@ -21,8 +21,8 @@
             <?php
                 if(isset($core->admin) && $core->admin)
                     echo "fmw.admin = 1;";
-                 echo "fmw.idC = $core->idC;
-                       fmw.idT = $core->idT;";
+                 echo "fmw.idC = $core->idNode;
+                       fmw.idT = $core->idTree;";
             ?>
         });
 
@@ -30,7 +30,7 @@
     </script>
 
  <?php
-   echo $core->INC_js;
+   echo $core->jsInc;
    $footer_TMPL = tmpl_inc.'footer.php';
    if(is_file($footer_TMPL)) require_once($footer_TMPL);
  ?>

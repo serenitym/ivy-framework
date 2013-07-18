@@ -21,10 +21,10 @@ class ACusrManager {
      */
     function set_DISPLAY()  {
 
-      #  $dispPATH = resPath.'PLUGINS/'.$this->lang.'/GEN_edit.html';
-      # C->GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+      #  $dispPATH = RES_PATH.'PLUGINS/'.$this->lang.'/GEN_edit.html';
+      # C->GET_resPath($modType='',$resName='', $modName='' ,$resFile='', $lang = '')
 
-        $dispPATH = $this->C->get_resPath('GENERAL','usrManager');
+        $dispPATH = $this->C->Get_resPath('GENERAL','usrManager');
        # echo 'dispPATH '.$dispPATH.'<br>';
 
         if(file_exists($dispPATH))

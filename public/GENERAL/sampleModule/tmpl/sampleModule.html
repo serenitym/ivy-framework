@@ -25,16 +25,15 @@
     ex: $o->news = recordurile news-urilor
                  = array(0 =>[title=>'', lead=> '' , pictureUrl=> '' ] )
 
-    » preluate cu GET_objProperties
+    » preluate cu Handle_Db_fetch
     =====================================================================
-     renderDisplay_Items ($items, $tmplStr='', $tmplPath='', &$obj='')
+     Render_items ($items, &$mod=', $tmplType='', $tmpl)
 
      $items = arra
 -->
 
 <div>
-    ".$this->renderDisplay_Items(
-        $o->news,
+    ".$this->Render_items($o->news, $o, ''
         "
             <div>
                 <p>Title : {~ao->title}</p>
@@ -48,23 +47,21 @@
 
             </div>
         "
-        ,'',$o
     )."
 
 </div>
 
 <!-- Iterarea prin array-uri unidensionale
 
-     renderDisplay_Items_uniDimens($items, $tmplStr='', $tmplPath='', &$obj='')
+     Render_array($items, &$mod='', $tmplType='', $tmpl='')
 
         - logica este idem cu cea a arra-urile muldimensionale doar
         ca ne referim la itemul curent cu ~i sau $i pentru tmplStr / tmplPath
 
  -->
 <div>
-    ".$this-> renderDisplay_Items_uniDimens(
-        $this->someItems,
-        <p>{~i}</p>
+    ".$this-> Render_array( $this->someItems, '', 'str',
+        "<p>{~i}</p>"
     )."
 </div>
 
@@ -72,24 +69,24 @@
 
 <!-- Integrarea de templateuri ale altui obiect / sau ale aceluiasi obiect
 
-    renderDisplay_fromObj(&$obj, $tmplStr='', $tmplPath='')
+    renderDisplay_frommod(&$mod, $tmplStr='', $tmplPath='')
             - ase folosii parametrul de tmplPath al metodei
 -->
 
  <div>
-     ".$this->renderDisplay_fromObj(
-        $this->objName,
+     ".$this->renderDisplay_frommod(
+        $this->modName,
         '',
-        $this->objName->modType.'/'
-            .$this->objName->modName.'/'.
+        $this->modName->modType.'/'
+            .$this->modName->modName.'/'.
             .'tmpl/templateFile.html'
      )."
 
 
-     ".$this->renderDisplay_fromObj(
-            $this->objName,
+     ".$this->renderDisplay_frommod(
+            $this->modName,
             '',
-            'MODELS/objName/tmpl/templateFile.html'
+            'MODELS/modName/tmpl/templateFile.html'
      )."
 
 
@@ -99,10 +96,10 @@
 <div>
 
     ".( $this->admin
-        ?  $this->renderDisplay_fromObj(
+        ?  $this->renderDisplay_frommod(
              $o,
              '',
-            'MODELS/objName/tmpl/templateFile.html')
+            'MODELS/modName/tmpl/templateFile.html')
 
         : ""
 
@@ -112,12 +109,11 @@
  <!--==========================[ FOLOSIREA EDITmode]=====================================-->
  <!--ENTS-->
 <div class='allENTS allNews' id='allNews_{$o->LG}'>
-    ".$this->renderDisplay_Items(
-        $o->news,
+    ".$this->Render_items($o->news, $o ,''
         "
             <div class='ENT news' id='news_{~ao->idNews}_{~o->lang}'>
                 <p>Title :
-                    <a href='index.php?idC={~o->idC}&idT={~o->idT}&idNews={~ao->idNews}'>
+                    <a href='index.php?idC={~o->idNode}&idT={~o->idTree}&idNews={~ao->idNews}'>
                         <span class='EDtxt titleNews'>{~ao->title}</span>
                     </a>
                 </p>
@@ -135,8 +131,6 @@
 
             </div>
         "
-        ,'',$o
-
     )."
 
 </div>

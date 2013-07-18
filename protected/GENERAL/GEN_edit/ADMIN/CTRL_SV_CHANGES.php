@@ -24,7 +24,7 @@ class CTRL_SV_CHANGES extends CHANGES
 
 
       #==================================================================================================================
-         $types['OLD'] = $OLD_type = (isset($this->masterTREE[$id]->type) ? $this->masterTREE[$id]->type : '');
+         $types['OLD'] = $OLD_type = (isset($this->masterTREE[$id]->modName) ? $this->masterTREE[$id]->modName : '');
          $types['NEW'] = $NEW_type = (isset($detail['type']) && $detail['type']!=$OLD_type ? $detail['type'] : '');
          $TESTdisplay='';
      #===================================================================================================================
@@ -34,7 +34,7 @@ class CTRL_SV_CHANGES extends CHANGES
              {
                  $ob_handle_NAME = 'AC'.$nameTYPE.'_handle_GENedit';
 
-                 if(file_exists(fw_incPath."MODELS/$nameTYPE/ADMIN/".$ob_handle_NAME.'.php'))
+                 if(file_exists(FW_INC_PATH."MODELS/$nameTYPE/ADMIN/".$ob_handle_NAME.'.php'))
                  {
                      $handle = new $ob_handle_NAME($this->DB, $change_type, $id, $detail,$statusTYPE, $this->masterTREE);  unset($handle);
 
@@ -64,7 +64,7 @@ class CTRL_SV_CHANGES extends CHANGES
 
                                 $mes2 = $this->getOBJECT_handle($change,$id,$detail);         #testez daca exista un obiect, care sa se descurce cu aceste schimbari
                             #______________________________________________________________________________________________________________
-                                $type_old = ( isset($this->masterTREE[$id]->type) ?  $this->masterTREE[$id]->type : '');
+                                $type_old = ( isset($this->masterTREE[$id]->modName) ?  $this->masterTREE[$id]->modName : '');
                                 $this->TESTdisplay .= " {$change} type =  {$type_old} <br/> {$mes} <br/> {$mes2} ";
 
                             }
@@ -91,19 +91,19 @@ class CTRL_SV_CHANGES extends CHANGES
         $this->langs = &$GE->C->langs;
 
     #===================================================================================================================
-       # $this->pathChanges = fw_pubPath.$this->pathChanges;
+       # $this->pathChanges = FW_PUB_PATH.$this->pathChanges;
         parent::__construct();
 
-        $this->masterTREE = $this->C->create_masterTREE();
+        $this->masterTREE = $this->C->Build_masterTree();
         $this->parseCHANGES();
         $this->parseCHANGES_TREE();
 
-        $this->C->regenerateALLtrees();
+        $this->C->regenerateAllTrees();
        # var_dump($this->affected_MODELS);
 
-        $this->C->solve_affectedMOD($this->affected_GENERAL,'GENERAL');
-        $this->C->solve_affectedMOD($this->affected_PLUGINS,'PLUGINS');
-        $this->C->solve_affectedMOD($this->affected_MODELS,'MODELS');
+        $this->C->solveAffectedModules($this->affected_GENERAL,'GENERAL');
+        $this->C->solveAffectedModules($this->affected_PLUGINS,'PLUGINS');
+        $this->C->solveAffectedModules($this->affected_MODELS,'MODELS');
 
     }
 }

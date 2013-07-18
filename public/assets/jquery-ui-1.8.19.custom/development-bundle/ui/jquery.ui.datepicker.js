@@ -781,13 +781,13 @@ $.extend(Datepicker.prototype, {
 	},
 
 	/* Find an object's position on the screen. */
-	_findPos: function(obj) {
-		var inst = this._getInst(obj);
+	_findPos: function(mod) {
+		var inst = this._getInst(mod);
 		var isRTL = this._get(inst, 'isRTL');
-        while (obj && (obj.type == 'hidden' || obj.nodeType != 1 || $.expr.filters.hidden(obj))) {
-            obj = obj[isRTL ? 'previousSibling' : 'nextSibling'];
+        while (mod && (mod.type == 'hidden' || mod.nodeType != 1 || $.expr.filters.hidden(mod))) {
+            mod = mod[isRTL ? 'previousSibling' : 'nextSibling'];
         }
-        var position = $(obj).offset();
+        var position = $(mod).offset();
 	    return [position.left, position.top];
 	},
 
@@ -974,7 +974,7 @@ $.extend(Datepicker.prototype, {
 
 	   @param  format    string - the expected format of the date
 	   @param  value     string - the date in the above format
-	   @param  settings  Object - attributes include:
+	   @param  settings  object - attributes include:
 	                     shortYearCutoff  number - the cutoff year for determining the century (optional)
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
@@ -1157,7 +1157,7 @@ $.extend(Datepicker.prototype, {
 
 	   @param  format    string - the desired format of the date
 	   @param  date      Date - the date value to format
-	   @param  settings  Object - attributes include:
+	   @param  settings  object - attributes include:
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
 	                     monthNamesShort  string[12] - abbreviated names of the months (optional)
@@ -1781,7 +1781,7 @@ function isArray(a) {
 
 /* Invoke the datepicker functionality.
    @param  options  string - a command, optionally followed by additional parameters or
-                    Object - settings for attaching new datepicker functionality
+                    object - settings for attaching new datepicker functionality
    @return  jQuery object */
 $.fn.datepicker = function(options){
 	

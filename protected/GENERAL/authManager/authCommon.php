@@ -29,7 +29,7 @@ class authCommon {
     /* }}} */
 
     private function dbConnect() {
-        $this->rodb = new mysqli(dbHost,dbroUser,dbroPass,dbName);
+        $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
         $this->rodb->set_charset("utf8");
     }
 
@@ -53,15 +53,15 @@ class authCommon {
         if(!$this->rodb->query($query))
             throw new Exception('Query failed: ' . $this->DB->error);
         else
-            return TRUE;
+            return true;
     }
 
     protected function storeResult($result) {
         if(!is_object($result))
-            return FALSE;
+            return false;
         else {
-            $this->userData = $result->fetch_object();
-            return TRUE;
+            $_SESSION['userData'] = $this->userData = $result->fetch_object();
+            return true;
         }
     }
 

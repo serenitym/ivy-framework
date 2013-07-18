@@ -388,7 +388,7 @@ $.widget = function( name, base, prototype ) {
 	// otherwise we'll modify the options hash on the prototype that we're
 	// inheriting from
 //	$.each( basePrototype, function( key, val ) {
-//		if ( $.isPlainObject(val) ) {
+//		if ( $.isPlainobject(val) ) {
 //			basePrototype[ key ] = $.extend( {}, val );
 //		}
 //	});
@@ -1336,24 +1336,24 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	},
 
-	_adjustOffsetFromHelper: function(obj) {
-		if (typeof obj == 'string') {
-			obj = obj.split(' ');
+	_adjustOffsetFromHelper: function(mod) {
+		if (typeof mod == 'string') {
+			mod = mod.split(' ');
 		}
-		if ($.isArray(obj)) {
-			obj = {left: +obj[0], top: +obj[1] || 0};
+		if ($.isArray(mod)) {
+			mod = {left: +mod[0], top: +mod[1] || 0};
 		}
-		if ('left' in obj) {
-			this.offset.click.left = obj.left + this.margins.left;
+		if ('left' in mod) {
+			this.offset.click.left = mod.left + this.margins.left;
 		}
-		if ('right' in obj) {
-			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		if ('right' in mod) {
+			this.offset.click.left = this.helperProportions.width - mod.right + this.margins.left;
 		}
-		if ('top' in obj) {
-			this.offset.click.top = obj.top + this.margins.top;
+		if ('top' in mod) {
+			this.offset.click.top = mod.top + this.margins.top;
 		}
-		if ('bottom' in obj) {
-			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		if ('bottom' in mod) {
+			this.offset.click.top = this.helperProportions.height - mod.bottom + this.margins.top;
 		}
 	},
 
@@ -4028,24 +4028,24 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	},
 
-	_adjustOffsetFromHelper: function(obj) {
-		if (typeof obj == 'string') {
-			obj = obj.split(' ');
+	_adjustOffsetFromHelper: function(mod) {
+		if (typeof mod == 'string') {
+			mod = mod.split(' ');
 		}
-		if ($.isArray(obj)) {
-			obj = {left: +obj[0], top: +obj[1] || 0};
+		if ($.isArray(mod)) {
+			mod = {left: +mod[0], top: +mod[1] || 0};
 		}
-		if ('left' in obj) {
-			this.offset.click.left = obj.left + this.margins.left;
+		if ('left' in mod) {
+			this.offset.click.left = mod.left + this.margins.left;
 		}
-		if ('right' in obj) {
-			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		if ('right' in mod) {
+			this.offset.click.left = this.helperProportions.width - mod.right + this.margins.left;
 		}
-		if ('top' in obj) {
-			this.offset.click.top = obj.top + this.margins.top;
+		if ('top' in mod) {
+			this.offset.click.top = mod.top + this.margins.top;
 		}
-		if ('bottom' in obj) {
-			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		if ('bottom' in mod) {
+			this.offset.click.top = this.helperProportions.height - mod.bottom + this.margins.top;
 		}
 	},
 
@@ -9065,13 +9065,13 @@ $.extend(Datepicker.prototype, {
 	},
 
 	/* Find an object's position on the screen. */
-	_findPos: function(obj) {
-		var inst = this._getInst(obj);
+	_findPos: function(mod) {
+		var inst = this._getInst(mod);
 		var isRTL = this._get(inst, 'isRTL');
-        while (obj && (obj.type == 'hidden' || obj.nodeType != 1 || $.expr.filters.hidden(obj))) {
-            obj = obj[isRTL ? 'previousSibling' : 'nextSibling'];
+        while (mod && (mod.type == 'hidden' || mod.nodeType != 1 || $.expr.filters.hidden(mod))) {
+            mod = mod[isRTL ? 'previousSibling' : 'nextSibling'];
         }
-        var position = $(obj).offset();
+        var position = $(mod).offset();
 	    return [position.left, position.top];
 	},
 
@@ -9258,7 +9258,7 @@ $.extend(Datepicker.prototype, {
 
 	   @param  format    string - the expected format of the date
 	   @param  value     string - the date in the above format
-	   @param  settings  Object - attributes include:
+	   @param  settings  object - attributes include:
 	                     shortYearCutoff  number - the cutoff year for determining the century (optional)
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
@@ -9441,7 +9441,7 @@ $.extend(Datepicker.prototype, {
 
 	   @param  format    string - the desired format of the date
 	   @param  date      Date - the date value to format
-	   @param  settings  Object - attributes include:
+	   @param  settings  object - attributes include:
 	                     dayNamesShort    string[7] - abbreviated names of the days from Sunday (optional)
 	                     dayNames         string[7] - names of the days from Sunday (optional)
 	                     monthNamesShort  string[12] - abbreviated names of the months (optional)
@@ -10065,7 +10065,7 @@ function isArray(a) {
 
 /* Invoke the datepicker functionality.
    @param  options  string - a command, optionally followed by additional parameters or
-                    Object - settings for attaching new datepicker functionality
+                    object - settings for attaching new datepicker functionality
    @return  jQuery object */
 $.fn.datepicker = function(options){
 	

@@ -195,7 +195,7 @@ class PhpQuickProfiler {
 		$this->gatherMemoryData();
 		$this->gatherQueryData();
 		$this->gatherSpeedData();
-        require_once(fw_pubPath.$this->config.'display.php');
+        require_once(FW_PUB_PATH.$this->config.'display.php');
 		displayPqp($this->output, $this->config);
 	}
 

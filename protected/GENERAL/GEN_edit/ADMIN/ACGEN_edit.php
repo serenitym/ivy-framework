@@ -37,7 +37,7 @@ class ACGEN_edit
             $this->TESTdisplay .= $CTRL_changes->TESTdisplay;
         }
     #___________________________________________________________________________________________________________________
-        $basePath = fw_incPath.'GENERAL/GEN_edit/ADMIN/';
+        $basePath = FW_INC_PATH.'GENERAL/GEN_edit/ADMIN/';
         foreach($this->POSTparsers AS $parserName) {
             if(is_file($basePath.$parserName.'.php')) $this->$parserName = new $parserName();
         }
@@ -98,7 +98,7 @@ class ACGEN_edit
                 $type = $item['type'];
                 $name = $item['name'];
 
-               # if(!in_array($type,$this->C->models) && !in_array($type,$this->C->plugins)) $type='no-edit';
+               # if(!in_array($type,$this->C->MODELS) && !in_array($type,$this->C->PLUGINS)) $type='no-edit';
 
                 $list .= "\n<li id='list_{$id}'>
                     <div class='{$type}'>$name</div>";
@@ -165,7 +165,7 @@ $html .="
        }
     function get_Types_TG() {
 
-        if(count($this->types) == 0) $this->types = array_merge($this->C->models,$this->C->locals); # $this->get_Types_DB();             # daca nu au fost declarate tipuri le preia din BD
+        if(count($this->types) == 0) $this->types = array_merge($this->C->MODELS,$this->C->LOCALS); # $this->get_Types_DB();             # daca nu au fost declarate tipuri le preia din BD
 
         $types_options = '';
         foreach($this->types AS $type)
@@ -228,10 +228,10 @@ $html .="
 
     function set_DISPLAY()  {
 
-      #  $dispPATH = resPath.'PLUGINS/'.$this->lang.'/GEN_edit.html';
-      # C->GET_resPath($type_MOD='',$resName='', $mod_name='' ,$nameF='', $lang = '')
+      #  $dispPATH = RES_PATH.'PLUGINS/'.$this->lang.'/GEN_edit.html';
+      # C->GET_resPath($modType='',$resName='', $modName='' ,$nameF='', $lang = '')
 
-        $dispPATH = $this->C->get_resPath('GENERAL','GEN_edit');
+        $dispPATH = $this->C->Module_Get_pathRes($this,'GEN_edit');
        # echo 'dispPATH '.$dispPATH.'<br>';
 
         if(!file_exists($dispPATH))
@@ -257,7 +257,7 @@ $html .="
     }
 
 
-    function _setINI(){
+    function _init_(){
 
          $this->menus = &$this->C->menus;
          $this->lang2 = &$this->C->lang2;

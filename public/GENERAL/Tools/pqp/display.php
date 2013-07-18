@@ -17,9 +17,9 @@
 
 function displayPqp($output, $config) {
 
-$cssUrl = fw_pubURL.$config.'/css/pQp.css';
+$cssUrl = FW_PUB_URL.$config.'/css/pQp.css';
 
-echo fw_pubURL.$config.'css/pQp.css';
+echo FW_PUB_URL.$config.'css/pQp.css';
 
 echo <<<JAVASCRIPT
 <!-- JavaScript -->

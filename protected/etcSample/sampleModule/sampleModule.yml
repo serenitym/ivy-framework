@@ -11,7 +11,7 @@ objREQ:
   0: propName
   user: propName
 
-# calea catre fisierul yaml care trebuie inclus la acesta se va adauga constanta incPath
+# calea catre fisierul yaml care trebuie inclus la acesta se va adauga constanta INC_PATH
 include:
   - 'path/modelName.yml'
 
@@ -23,7 +23,7 @@ template_file: ""
 
 
 # scripturi de inclus in hard mode
-assetsINC:
+assetsInc:
   js:
     -"/assets/..js"
     -"/assets/..js"
@@ -33,7 +33,7 @@ assetsINC:
     - "/assets/...css"
 
 # scripuri de inclus pentru un anumit template file
-assetsINC_tmplFileName:
+assetsInc_tmplFileName:
     js:
        -"/assets/..js"
        -"/assets/..js"

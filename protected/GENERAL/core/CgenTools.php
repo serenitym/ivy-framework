@@ -1,7 +1,6 @@
 <?php
 /**
- * TgenTools
- * Trait tha definitely does something :-)
+ * CgenTools
  *
  * @package Core
  * @version 1.0
@@ -9,13 +8,14 @@
  * @author  Ioana Cristea
  * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
  */
-class CgenTools extends CManage{
+class CgenTools extends Cmanage{
 
-   var $renderObj;
+   var $rendermod;
    var $historyArgs;   #array setat de model
 
 
-   public function SET_HISTORYargs($id, $concat='',$argString=''){
+   public function SET_HISTORYargs($id, $concat='',$argString='')
+   {
 
         $end_ul = '';
 
@@ -27,13 +27,13 @@ class CgenTools extends CManage{
          }
 
 
-         if(isset($this->tree[$id]->p_id)) $this->SET_HISTORYargs($this->tree[$id]->p_id,"<span class='divider'>/</span>", $argString);
+         if(isset($this->tree[$id]->idParent)) $this->SET_HISTORYargs($this->tree[$id]->idParent,"<span class='divider'>/</span>", $argString);
 
          if($id)
          {
              $backName  = $this->tree[$id]->name;
 
-             $simpleHref = "href='index.php?idT={$this->idT}&idC={$id}{$argString}'";
+             $simpleHref = "href='index.php?idT={$this->idTree}&idC={$id}{$argString}'";
              $this->simpleHref_history .= "<li><a {$simpleHref}> $backName </a> $concat </li>".$end_ul;
 
 
@@ -44,12 +44,21 @@ class CgenTools extends CManage{
 
 
        }
-   public function SET_HISTORY($id,$concat='')    {
+   /**
+    * daca level=3 => 4-level = 1;
+    *      level=2 => 4-2 = 2;
+    *      level=1 => 4-1 = 3
+    *
+    * if(!idParent) =>level=1;
+    * if(!$id) = > am ajuns la sfarsit
+    */
+   public function SET_HISTORY($id,$concat='')
+   {
 
            if(!isset($this->simpleHref_history) || $this->simpleHref_history==''){
 
                # concat este un simplu caracter cu care se concateneaza
-               if(isset($this->tree[$id]->p_id))$trueLEVEL = $this->SET_HISTORY($this->tree[$id]->p_id,"<span class='small9'>&gt;&gt;</span>");
+               if(isset($this->tree[$id]->idParent))$trueLEVEL = $this->SET_HISTORY($this->tree[$id]->idParent,"<span class='small9'>&gt;&gt;</span>");
                if($id)
                {
 
@@ -63,10 +72,10 @@ class CgenTools extends CManage{
                    #old href:    index.php?idC={$idT}&idT={$idT}&level=nr
                    #newFormat:   idT-idC-L{level} / backName;
 
-                   $href = ($trueLEVEL==2 || $this->idT==1  ? '': "href='".$this->idT."-{$id}-L{$trueLEVEL}/$this->history_TITLE'");
+                   $href = ($trueLEVEL==2 || $this->idTree==1  ? '': "href='".$this->idTree."-{$id}-L{$trueLEVEL}/$this->history_TITLE'");
                    $this->history_HREF .="<a {$href}> $backName $concat </a>";
 
-                   $simpleHref = "href='index.php?idT={$this->idT}&idC={$id}'";
+                   $simpleHref = "href='index.php?idT={$this->idTree}&idC={$id}'";
                    $this->simpleHref_history .= "<a {$simpleHref}> $backName $concat </a>";
 
                    return $trueLEVEL+1;
@@ -75,33 +84,9 @@ class CgenTools extends CManage{
            }
 
 
-       }  /**
-            * daca level=3 => 4-level = 1;
-            *      level=2 => 4-2 = 2;
-            *      level=1 => 4-1 = 3
-            *
-            * if(!p_id) =>level=1;
-            * if(!$id) = > am ajuns la sfarsit
-            */
-   public function SET_HTML_headerIMG()           {
-
-           $this->HTML_headerIMG = file_get_contents(fw_pubPath.'/GENERAL/RES/headerIMG.html');
        }
-   public function GET_idT_from_idC($Cid)         {
-
-               $res = $this->DB->query("SELECT Pid from TREE  where Cid='{$Cid}'");
-               if($res->num_rows > 0)
-               {
-                   $row=$res->fetch_assoc();
-
-                   if($row['Pid'] > 0)  { /* echo $row['Pid']; */  $this->GET_idT_from_idC($row['Pid']);}
-                   else $this->idT =  $Cid;
-               }
-
-
-           }
-
-   public function GET_pagination($query,$nrItems,$GETargs,$uniq,&$obj='', $ANCORA='')   {
+   public function GET_pagination($query,$nrItems,$GETargs,$uniq,&$mod='', $ANCORA='')
+   {
 
           #echo '<b>pagination Query</b> '.$query."<br>";
            //@todo: probabil ca hreful ar trebui cumva refacut
@@ -130,12 +115,12 @@ class CgenTools extends CManage{
            # daca se trimite un pointer al obiectului care cere paginarea atunci pentru acest obiect
            # se vor seta urmatoarele variabile
            # LimitStart poate sa aiba presetata limita
-               if(is_object($obj))
+               if(is_object($mod))
                {
 
-                    $obj->LimitStart += ($CURRENTpage - 1)*$nrItems;
-                    #$obj->LimitEnd   = $obj->LimitStart + $nrItems;
-                    $obj->Pn = $CURRENTpage;
+                    $mod->LimitStart += ($CURRENTpage - 1)*$nrItems;
+                    #$mod->LimitEnd   = $mod->LimitStart + $nrItems;
+                    $mod->Pn = $CURRENTpage;
 
                }
 
@@ -161,20 +146,25 @@ class CgenTools extends CManage{
            else return ' ';
 
        }
-
-   public function get_modType($modName){
+   public function get_modType($modName)
+   {
        $modType = '';
-        if(    in_array($modName,$this->models )) $modType = 'MODELS';
-        elseif(in_array($modName,$this->plugins)) $modType = 'PLUGINS';
-        elseif(in_array($modName,$this->locals)) $modType = 'LOCALS';
+        if(    in_array($modName,$this->MODELS )) $modType = 'MODELS';
+        elseif(in_array($modName,$this->PLUGINS)) $modType = 'PLUGINS';
+        elseif(in_array($modName,$this->LOCALS)) $modType = 'LOCALS';
 
        return $modType;
    }
 
-
     /*=================[ meth - images] ====================================*/
-
-    public function get_resImages_paths($modName){
+    /**
+     * Returneaza un array cu path-urile imaginilor uploadate pentru un modul
+     * @param $modName
+     *
+     * @return array
+     */
+    public function get_resImages_paths($modName)
+    {
         /**
          * USE
          *
@@ -193,69 +183,59 @@ class CgenTools extends CManage{
              ?>
          *
          *
-         *  'resPath'
-         *  'resURL'
+         *  'RES_PATH'
+         *  'RES_URL'
          *
         */
-        $resDir = resPath."uploads/images/{$modName}";
+        $resDir = RES_PATH."uploads/images/{$modName}";
         $imgFiles_Paths = glob("$resDir/*.jpg");
         return $imgFiles_Paths;
-
     }
-
-    public function get_resImages_urls($modName){
-
+    /**
+     * Transforma path-urile pentru imagini in URL-uri
+     * @param $modName
+     *
+     * @return array
+     */
+    public function get_resImages_urls($modName)
+    {
         $imgFiles_Paths = $this->get_resImages_paths($modName);
         $imgFiles_Urls = array();
         foreach($imgFiles_Paths AS $key=>$filePath){
-
-            $imgFiles_Urls[$key] = str_replace(resPath,resURL,$filePath);
+            $imgFiles_Urls[$key] = str_replace(RES_PATH,RES_URL,$filePath);
         }
 
         return $imgFiles_Urls;
     }
-
-    public function set_imgRelativePath( $full_urlPath){
-
-        return str_replace(baseURL, '', $full_urlPath);
+    /**
+     * Extrage baseUrl din src-ul imaginii
+     *
+     * @param $full_urlPath
+     *
+     * @return mixed
+     */
+    public function set_imgRelativePath( $full_urlPath)
+    {
+        return str_replace(BASE_URL, '', $full_urlPath);
     }
-
 
     /*=================[ END - meth - images] ====================================*/
 
-    static function READyml($file_yml, &$obj =''){
-
-        if(!$obj)
-        {
-            $obj = new stdClass();
-            $RETobj = true;
+    static function readYml($file_yml, &$mod ='')
+    {
+        if (!$mod) {
+            $mod = new stdClass();
+            $RETmod = true;
         }
-        Ccore::GETconf($obj,$file_yml);
-        if(isset($RETobj)) return $obj;
-
-    }
-
-    public function GET_asincronMeth($objName, $methName){
-
-
-        if(is_object($this->$objName))
-        {
-            if(method_exists($this->$objName, $methName)){
-
-                return $this->$objName->{$methName}();
-            }
-            else {
-                return " Metoda $methName nu exista sau nu poate fii accesata <br>";
-
-            }
-
-        } else {
-            return " Obiectul $objName nu este instantiat <br>";
+        Ccore::Module_configYamlProps($mod,$file_yml);
+        if (isset($RETmod)) {
+            return $mod;
         }
     }
-
-
-
-
+    # manage function - should be put in TgenTools respectiv create ATgenTools
+    static function debugMess($mess)
+    {
+        return '';
+    }
 
 }
