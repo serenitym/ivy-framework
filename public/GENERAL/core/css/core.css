@@ -77,7 +77,7 @@ textarea.ivy-light:focus{
 
 
 /*===========================================================  =============================================== */
-
+.clearfix {clear: both;}
 .no-display{ display: none;}
 
 .hidden {visibility: visible !important;}
