@@ -1,15 +1,16 @@
 <?php
 
-/* {{{ Documentation */
-/**
+/** {{{ Documentation
  * CauthManager
  *
- * @uses authCommon
- * @package Auth
- * @version 0.1.2
- * @copyright Copyright (c) 2010 Serenity Media
- * @author  Victor Nițu <victor@serenitymedia.ro>
- * @license http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * PHP Version 5.4
+ *
+ * @category  Accounts
+ * @package   Auth
+ * @author    Victor Nițu <victor@serenitymedia.ro>
+ * @copyright 2010 Serenity Media
+ * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * @version   0.1.2
  */
 /* }}} */
 
@@ -74,15 +75,16 @@ class CauthManager extends authCommon implements Serializable {
             sessionManager::setSessionCookie($this->userData, 3600);
             sessionManager::sessionToSQL(3600);
 
+            // FIXME Temporary fix, until User class will work again
+            $this->user = $_SESSION['userData'];
+
             //Toolbox::clearSubmit();
         } else {
-            //die('AHA!!');
-            $this->user = User::getInstance($this->userData->uid);
-            //var_dump($this->userData);
-            //var_dump($_SESSION);
-            //echo 'nologin';
+            //$this->user = User::getInstance($_SESSION['user']->uid);
+
+            // FIXME Temporary fix, until User class will work again
+            $this->user = $_SESSION['userData'];
         }
-        Toolbox::dump($this->userData, 'userData');
     }
     /* }}} */
 
@@ -108,7 +110,11 @@ class CauthManager extends authCommon implements Serializable {
                 // This is where Cuser should be instantiated WITH uid as param.
                 //die('Password match!');
                 //xdebug_start_trace(BASE_PATH.'trace.txt');
-                $this->user = User::getInstance($this->userData->uid);
+                if (isset($_SESSION['user'])) {
+                    $this->user = $_SESSION['user'];
+                } else {
+                    $this->user = User::getInstance($this->userData->uid);
+                }
                 $_SESSION['auth']=$this->userData;
                 //xdebug_stop_trace();
             }

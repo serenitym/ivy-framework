@@ -53,15 +53,15 @@ class authCommon {
         if(!$this->rodb->query($query))
             throw new Exception('Query failed: ' . $this->DB->error);
         else
-            return TRUE;
+            return true;
     }
 
     protected function storeResult($result) {
         if(!is_object($result))
-            return FALSE;
+            return false;
         else {
-            $this->userData = $result->fetch_object();
-            return TRUE;
+            $_SESSION['userData'] = $this->userData = $result->fetch_object();
+            return true;
         }
     }
 

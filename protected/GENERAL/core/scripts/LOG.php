@@ -6,7 +6,7 @@
  *
  * PHP Version 5.3+
  *
- * @category Auth
+ * @category Accounts
  * @package  Auth
  * @author   Victor Nițu <victor@serenitymedia.ro>
  * @license  http://www.gnu.org/licenses/agpl-3.0.html AGPLv3
@@ -79,7 +79,6 @@ file_put_contents(VAR_PATH.'tmp/sercore.txt', $sercore);
 
 // var_dump(Toolbox::http_response_code('http://google.ro'));
 // var_dump($_SESSION['auth']->user);
-
 
 
 //???
