@@ -55,7 +55,6 @@ class ACTOOLbar
 
         $this->uname = isset($_SESSION['auth']->uname) ? : 'admin';
 
-        Toolbox::Fs_writeTo(PUBLIC_PATH . '/user1.log', print_r($this->C, true));
 
         array_push( $this->buttons,
             "<a href='index.php?logOUT=1' id='logOUT'>Log out {$this->C->user->uname} ({$this->C->user->uid})  </a>"
