@@ -1,15 +1,27 @@
 <?php
-class User{
+class Cuser extends permissions{
 
-    use Singleton;
-    use tReadOnlyDB;
+    // comming from $_SESSION['userData'] & seted by CauthManager
+    public $uid = 0;                // user ID
+    public $cid = 0;                // class ID | table - auth_classes
+    public $uname  = 'Guest';       // user name | table - auth_users.name
+    public $email  = 'Guest';
+    /**
+    * @var string uclass
+    *
+    * - guest
+    * - webmaster - poate edita, publica,deleta...
+    * - masterEditor -
+    * - publisher - nu poate edita decat articolele la care este autor
+    */
+    public $uclass = 'guest';
+    public $permissions;
 
-    var $uid = 0;
-    var $uname = 'Guest';
+    //public $classes = array();
+    public $sets = array();
 
-    # sa zicem ca ar putea fi low, editor, masterEditor, etc
-    var $uclass = 'webmaster';  # trebuie sa fi editorul articolului ca sa il poti edita
-    #var $uclass = 'masterEditor'; # sa zicem ca ar putea fii low, editor, masterEditor, etc
+
+    // trebuie mutate undeva in Cblog , aceasta este o clasa de generala de user
     function getRecordPermss(&$mod, $uidRec){
         #echo "Incerc sa iau permisiunile pentru record";
         if($this->uclass=='webmaster'){
@@ -90,11 +102,18 @@ class User{
 
     }
     function checkOwn($uidRec){
-         if($this->uid == $uidRec) return true;
+
+         if ($this->uid == $uidRec) {
+             return true;
+         } else {
+             return false;
+         }
     }
 
 
-    public function get_avatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
+    public function get_avatar( $email, $s = 80, $d = 'mm', $r = 'g',
+        $img = false, $atts = array()
+    ) {
         if (!defined('AVATAR') || AVATAR == FALSE) return 0;
         $url = 'http://cdn.libravatar.org/avatar/40f8d096a3777232204cb3f796c577b7?s=80&amp;d=mm';
         $url2  = 'http://cdn.libravatar.org/avatar/';
@@ -134,47 +153,49 @@ class User{
         $this->stats = $this->DB->query($statsQuery)->fetch_object();
     }
 
-    private function getUserGroups ($uid, $cid = 0) {
-        $query = "SELECT group_concat(g) AS groups FROM (
-                   SELECT auth_map_users_groups.gid AS g
-                    FROM auth_map_users_groups
-                    JOIN auth_groups ON (auth_groups.gid = auth_map_users_groups.gid)
-                    WHERE auth_map_users_groups.uid = '" . $this->uid . "'
-                  UNION
-                   sELECT auth_map_classes_groups.gid AS g
-                    FROM auth_map_classes_groups
-                    JOIN auth_groups ON (auth_map_classes_groups.gid = auth_groups.gid)
-                    WHERE auth_map_classes_groups.cid = '" . $this->cid . "'
-                  ) AS T;";
-        $groups = $this->rodb->query($query);
-        $this->groupsCSV = $groups->fetch_row()[0];
-        $this->groups = explode(',', $this->groupsCSV);
-    }
-
-    private function getGroupsString () {
-        //return substr(implode(', ', $this->groups),0,-2);
-    }
-
-
-    public function init($uid = null)
+    public function _init_()
     {
-        $this->readOnlyConnect();
-
-        $params = print_r($uid, true);
+        //$uid = $_SESSION['userData']->uid;
 
         //trigger_error('Debug break!', E_USER_ERROR);
-        if (isset($_SESSION['auth']) && is_object($_SESSION['auth'])) {
-            $auth         = &$_SESSION['auth'];
-            $this->uid    = $auth->uid;
-            $this->cid    = $auth->cid ?: 0;
-            $this->uname  = isset($uid) ?
-                                $auth->first_name . ' ' . $auth->last_name
-                                : 'Guest user';
-            $this->email  = $auth->email;
-            $this->getUserGroups($uid, $this->cid);
+        if (isset($_SESSION['auth'])/* && count($_SESSION['userData']) > 0*/) {
+
+            // dont realy know why it doesn't work
+           /* foreach ($_SESSION['auth'] AS $dbFields => $dbValue) {
+                $this->$dbFields = $dbValue;
+            }*/
+
+
+            $userData     = &$_SESSION['userData'];
+            $this->uid    = $userData->uid;
+            $this->cid    = $userData->cid ?: 0;
+            $this->uname  = $userData->uname;
+            $this->email  = $userData->email;
+            $this->uclass = $userData->uclass;
+           // $this->first_name  = $userData->first_name;
+           // $this->last_name  = $userData->last_name;
+            $this->permissions  = $userData->permissions;
+
+            if (!$this->permissions) {
+                $this->_init_permissions();
+                error_log("[ ivy ] Cuser - _init_ : Citim permisiunile din bd");
+                echo "<br> Cuser _init_ : permissions from db ";
+                var_dump($this->permissions);
+
+            } else {
+                $this->permissions =  unserialize($this->permissions);
+                echo "<br> Cuser _init_ : permissions from serialized ";
+                var_dump($this->permissions);
+            }
+
         } else {
             return 0;
         }
+
+        // unset l apermisions
+        $_SESSION['user'] = $this;
+        echo "<br> Cuser - _init_ :";
+        var_dump($this);
     }
 
 }

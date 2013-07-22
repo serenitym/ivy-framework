@@ -37,6 +37,7 @@ class sessionManager extends authCommon {
     static function destroySession() {
         //unset($core);
         unset($_SESSION['auth']);
+        unset($_SESSION['user']);
         unset($_SESSION['NR_pages']);
         session_destroy();
     }
