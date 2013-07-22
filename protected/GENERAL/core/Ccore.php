@@ -537,7 +537,7 @@ class Ccore extends Cunstable
 #===============================================================================
 
     # COMMENT THIS!!!
-    function __construct($auth=NULL)
+    function __construct($userData=NULL)
     {
         if(PROFILER == 1)
             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
@@ -566,11 +566,16 @@ class Ccore extends Cunstable
         $this->Module_Set_incFilesJsCss($this);
         //var_dump($this);
 
-        // set vectorul de module utilizate
-        $this->_Set_Fs_usedModules();
+        /**
+         * Local project settings
+         */
+       if (isset($this->mainModel) && isset($this->mainTemplate)) {
+            #  Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
+            $this->Set_incFiles($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
+            $this->Set_incFiles($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
+       }
 
-        //var_dump($this->cssInc);
-        //var_dump($this->jsInc);
+
 
         /**
          * Set modul user
@@ -578,25 +583,34 @@ class Ccore extends Cunstable
          * nu are proprietatile necesare pentru templatind
          * modName, modType
         */
-        if ($auth) {
-            $this->user = &$auth->user;
-            $this->user->modName = 'user';
-            $this->user->modType = 'GENERAL';
+       if ($userData) {
+            //$this->user = &$userData->user;
+            if (isset($_SESSION['user'])) {
+                error_log("[ ivy ] Ccore - _init_ exista SESSION['user']");
+                $this->user = $_SESSION['user'];
+                //echo "User prin session";
+            } else {
+                array_push($this->default_GENERAL,'user');
+                //$this->Module_Build('user','GENERAL');
+            }
+
         }
 
-        /**
-         * Local project settings
-         */
-        if (isset($this->mainModel) && isset($this->mainTemplate)) {
-            #  Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
-            $this->Set_incFiles($this->mainModel, 'LOCALS', 'css','', $this->mainTemplate);
-            $this->Set_incFiles($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
-        }
 
         // instantiaza modulele default + current
         $this->_init_modules();
+
+
+        // set vectorul de module utilizate
+        $this->_Set_Fs_usedModules();
+        //var_dump($_SESSION['userData']);
+        //var_dump($_SESSION['user']);
+
         #echo 'Ccore: __construct';
         #var_dump($this);
+
+
+
     }
 
 
@@ -621,13 +635,14 @@ class Ccore extends Cunstable
             #echo "A fost apelat core wakeup si DB NU este connectat <br>";
 
         } else {
-            echo "A fost apelat  este connectat <br>";
+           // echo "A fost apelat core -> DB_reConnect este connectat <br>";
         }
 
 
     }
     public function __wakeup()
     {
+       // echo "wakeup core ";
         $this->DB_reConnect();
         $this->Handle_postRequest(false);
     }

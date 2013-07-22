@@ -7,8 +7,7 @@
  *  + resPath
  *  + displayPage
  *  + displayPathRes
- *
- * **metode magice**
+ * * **metode magice**
  *  + _init_
  *  + _setRes_
  *  + _render_()
