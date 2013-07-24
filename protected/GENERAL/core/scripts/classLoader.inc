@@ -37,11 +37,16 @@ class ClassLoader {
         $this->initClassList();
     }
 
-    public function loadClass($className) {
-        if ( !array_key_exists($className, $this->classList) && !$this->refreshed ) {
+    public function loadClass($className)
+    {
+        $packageClass = str_replace('_', '/', $className);
+        if (stream_resolve_include_path($packageClass)) {
+            include_once $packageClass . '.php';
+            return true;
+        } elseif ( !array_key_exists($className, $this->classList) && !$this->refreshed ) {
             $this->refreshClassList();
         }
-        include_once($this->classList[$className]);
+        include_once $this->classList[$className] ;
     }
 
     private function initClassList() {
@@ -56,7 +61,8 @@ class ClassLoader {
     }
 
     private function refreshClassList() {
-        $this->classList = $this->scanDirectory(FW_INC_PATH);
+        $this->classList = $this->scanDirectory(FW_INC_PATH)
+                         + $this->scanDirectory('/usr/share/php');
         $this->refreshed = TRUE;
 
         $this->saveClassList();
