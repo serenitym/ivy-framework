@@ -40,32 +40,24 @@ class ACTOOLbar
         return $disp;
        // file_put_contents($this->dispPATH,$disp);
     }
-    function __construct($C)
+    function _init_()
     {
-        $this->C = &$C;
-
-        $this->lang = &$C->lang;
-        $this->lang2 = &$C->lang2;
-
-
         $currentPOPUP = (isset($_POST['currentPOPUP']) ? $_POST['currentPOPUP'] : '');
         $currentPOPUP_modeType = (isset($_POST['currentPOPUP_modeType']) ? $_POST['currentPOPUP_modeType'] : '');
         $this->statusPOPUP = "<input type='hidden' name='statusPOPUP' value='".$currentPOPUP."' />".
-                             "<input type='hidden' name='statusPOPUP_modeType' value='".$currentPOPUP_modeType."' />" ;
+        "<input type='hidden' name='statusPOPUP_modeType' value='".$currentPOPUP_modeType."' />" ;
 
         $this->uname = isset($_SESSION['auth']->uname) ? : 'admin';
 
 
         array_push( $this->buttons,
-            "<a href='index.php?logOUT=1' id='logOUT'>
-                Log out {$this->C->user->uname}
-                [ id: {$this->C->user->uid} | class: {$this->C->user->uclass} ]
-             </a>"
-            );
+        "<a href='index.php?logOUT=1' id='logOUT'>
+                        Log out {$this->C->user->uname}
+                        [ id: {$this->C->user->uid} | class: {$this->C->user->uclass} ]
+                     </a>"
+                    );
 
-
-
-       /* $this->dispPATH = PUBLIC_PATH.'PLUGINS/TOOLbar/RES/TOOLbar.html';
-        if(!file_exists($this->dispPATH)) $this->get_render_();*/
     }
+    /*function __construct($C)
+    {     }*/
 }

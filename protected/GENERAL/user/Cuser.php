@@ -21,96 +21,6 @@ class Cuser extends permissions{
     public $sets = array();
 
 
-    // trebuie mutate undeva in Cblog , aceasta este o clasa de generala de user
-    function getRecordPermss(&$mod, $uidRec){
-        #echo "Incerc sa iau permisiunile pentru record";
-        if($this->uclass=='webmaster'){
-            $mod->editRecordPermss = true;
-            $mod->pubPermss = true;
-            $mod->webmPermss = true;
-        }
-        elseif($this->uid == $uidRec){
-
-
-             $mod->editRecordPermss = true;
-             if($this->uclass=='publisher')
-                 $mod->pubPermss = true;
-            # declarate deja ca default in $mod;
-            # $mod->pubPermss = ($this->uclass=='publisher' ? true : false);
-        }
-        else{
-            $mod->ED = 'not';
-            # declarate deja ca default in $mod;
-            #$mod->editRecordPermss = false;
-            #$mod->pubPermss = false;
-        }
-
-
-        # adica daca userul este acelasi de userul care a edita articolul
-        # sau daca are permisiuni de masterEditor
-        # atunci poate edita articolul
-    }
-
-        /**
-         * Daca este un user logat
-         *      - daca are permisiuni de master poate edita
-         *      - daca nu are permisiuni
-         *              - si este autorul recordului  - poate edita
-         *
-         */
-    function get_EDrecord(&$mod, $uidRec){
-
-        if(isset($this->admin) && $this->admin != NULL){
-            if($mod->editRecords_Permss)   return '';
-            elseif($uidRec == $this->uid)  return '';
-            else return 'not';
-
-        }
-
-        return 'not';
-
-    }
-
-    function getRecordsPermss(&$mod=''){
-
-        # daca este pe profilul personal
-        # daca este masterEditor, admin ceva...
-        # deocamdata toate se pot edita si sterge
-        # variabila EDrecord este cea de care trebuie avut grija
-        #$editRecords
-
-        #daca i se transmite un pointer la un obiect va seta si o variabila
-        # daca nu va da return doar true sau false
-
-        if($this->uclass=='webmaster'){
-            if($mod!='' && is_object($mod))
-                 $mod->editRecords_Permss = true;
-            return true;
-        }
-        else
-            return false;
-
-
-
-    }
-    function getCommentsPermss($uidRec){
-
-        if($this->uid == $uidRec) return true;
-        elseif($this->uclass=='webmaster') return true;
-        else
-            return false;
-
-    }
-    function checkOwn($uidRec){
-
-         if ($this->uid == $uidRec) {
-             return true;
-         } else {
-             return false;
-         }
-    }
-
-
     public function get_avatar( $email, $s = 80, $d = 'mm', $r = 'g',
         $img = false, $atts = array()
     ) {
@@ -165,7 +75,6 @@ class Cuser extends permissions{
                 $this->$dbFields = $dbValue;
             }*/
 
-
             $userData     = &$_SESSION['userData'];
             $this->uid    = $userData->uid;
             $this->cid    = $userData->cid ?: 0;
@@ -175,27 +84,34 @@ class Cuser extends permissions{
            // $this->first_name  = $userData->first_name;
            // $this->last_name  = $userData->last_name;
             $this->permissions  = $userData->permissions;
+            $this->rights =& $this->permissions;
 
             if (!$this->permissions) {
                 $this->_init_permissions();
                 error_log("[ ivy ] Cuser - _init_ : Citim permisiunile din bd");
-                echo "<br> Cuser _init_ : permissions from db ";
-                var_dump($this->permissions);
+                //echo "<br> Cuser _init_ : permissions from db ";
+                //var_dump($this->permissions);
 
             } else {
                 $this->permissions =  unserialize($this->permissions);
-                echo "<br> Cuser _init_ : permissions from serialized ";
-                var_dump($this->permissions);
+                //echo "<br> Cuser _init_ : permissions from serialized ";
+                //var_dump($this->permissions);
             }
 
         } else {
             return 0;
         }
 
+        //@todo: $_SESSION['userData'] poate ar trebui facut unset si la el
+        //din moment ce e folosit doar la autentificare
+
         // unset l apermisions
+        unset($this->C);
+        unset($this->tree);
+        unset($this->DB);
         $_SESSION['user'] = $this;
-        echo "<br> Cuser - _init_ :";
-        var_dump($this);
+        //echo "<br> Cuser - _init_ :";
+        //var_dump($this);
     }
 
 }

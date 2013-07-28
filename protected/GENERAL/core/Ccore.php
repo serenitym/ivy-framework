@@ -426,18 +426,20 @@ class Ccore extends Cunstable
     public function Handle_postRequest()
     {
 
-       // var_dump($_POST);
+        //var_dump($_POST);
         if (isset($_POST['modName']) && isset($_POST['methName'])) {
 
             $modName    = $_POST['modName'];
             $methName   = $_POST['methName'];
-            $relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : true ;
+            // oricum cred ca face relocate in CmethDb
+            //$relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : false ;
 
-            if(is_object($this->$modName) && method_exists($this->$modName,$methName))
-            {
+            // ======================================[test handling support]====
+
+            $handlingSupport = true;
+            if(is_object($this->$modName) && method_exists($this->$modName,$methName)){
+
                 $mod = &$this->$modName;
-                //===============[solve request Modules ]==========================
-
                 /**
                  * Daca exista o metoda care sa parseze posturile
                  *  - exemplu validare , trim-uire
@@ -447,32 +449,12 @@ class Ccore extends Cunstable
                  * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
                  * daca nu se mai intampla nimic
                 */
-                if(method_exists($mod,'_hook_'.$methName))
-                {
-                    $validData =$mod->{'_hook_'.$methName}();
-                    if ($validData) {
-                        $mod->{$methName}();
-
-                        // =================[refresh page]======================
-                        // nu imi e foarte clar de ce e pusa aceasta procedura
-                        // in doua locuri
-                        if($relocate){
-                            $this->reLocate();
-                        }
-                    }
-                    //safty reasons
-                    unset($_POST);
-
-                } else{
-                    $mod->{$methName}();
-                     // =================[refresh page]======================
-                    if ($relocate) {
-                        $this->reLocate();
-                    }
+                if(method_exists($mod,'_hook_'.$methName)) {
+                    $handlingSupport = $mod->{'_hook_'.$methName}();
                 }
 
             } else {
-
+                $handlingSupport = false;
                 if (!is_object($this->$modName)) {
                     error_log("[ ivy ] "." Ccore - Handle_postRequest"
                             ."There is no object ".$modName);
@@ -481,11 +463,16 @@ class Ccore extends Cunstable
                     error_log("[ ivy ] "." Ccore - Handle_postRequest"
                             . " Object has no method ".$methName);
                 }
-
             }
 
-        } else {
-         //   echo "No post modName or methName";
+            //========================================[ handle request data]====
+            if($handlingSupport) {
+                $relocate = $mod->{$methName}();
+                if ($relocate) {
+                    $this->reLocate();
+                }
+            }
+
         }
 
     }
@@ -505,8 +492,8 @@ class Ccore extends Cunstable
       */
     public function _init_modules()
     {
-        #================[ set current tree & module ]==========================
 
+        #================[ set current tree & module ]==========================
         if ($this->_Set_currentTreeNode() &&  $this->Set_currentTree()) {
             $this->_Set_currentNode();
         } else {
@@ -530,14 +517,14 @@ class Ccore extends Cunstable
         }
         //var_dump($this->cssInc);
         //var_dump($this->jsInc);
+       // var_dump($_POST);
         $this->Handle_postRequest();
 
     }
 
 #===============================================================================
 
-    # COMMENT THIS!!!
-    function __construct($userData=NULL)
+    function _init_($userData=NULL)
     {
         if(PROFILER == 1)
             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
@@ -612,6 +599,12 @@ class Ccore extends Cunstable
 
 
     }
+    # COMMENT THIS!!!
+    function __construct($userData=NULL)
+    {
+        $this->_init_($userData);
+
+    }
 
 
     /**
@@ -630,6 +623,7 @@ class Ccore extends Cunstable
          * valabila doar pentru core*/
         $DBstat = $this->DB->ping();
         if ($DBstat == FALSE) {
+
             $this->DB = '';
             $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
             #echo "A fost apelat core wakeup si DB NU este connectat <br>";
@@ -640,7 +634,7 @@ class Ccore extends Cunstable
 
 
     }
-    public function __wakeup()
+    public function wakeup()
     {
        // echo "wakeup core ";
         $this->DB_reConnect();

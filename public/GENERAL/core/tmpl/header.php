@@ -3,15 +3,9 @@
 <head>
     <meta charset=utf-8>
 
-
-
     <?php
-
         echo
-
-           //$core->SEO->DISPLAY().
            //'<base href="'.PUBLIC_URL.'" />'.
-
            (isset($core->admin)
                    ? ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
                    : '')
@@ -24,14 +18,17 @@
             if(is_file($header_TMPL)) require_once($header_TMPL);
 
            echo  $core->cssInc;
-
     ?>
 
-        <link rel="icon" type="image/png"
-        href="<?php echo FAV_ICON; ?>">
+    <?php
+      echo (isset($core->admin)
+                 ? '  <script type="text/javascript"  src="assets/jquery-ui-1.8.19.custom/js/jquery-ui-1.8.19.custom.min.js"></script> '
+                   . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
+                   . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
+                 : '');
+    ?>
 
-
+    <link rel="icon" type="image/png" href="<?php echo FAV_ICON; ?>">
 
 </head>
-
 <body >

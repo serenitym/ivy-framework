@@ -19,6 +19,7 @@ if ($_POST['restoreCore'] && file_exists(VAR_PATH.'tmp/sercore.txt')) {
     error_log("[ ivy ] "."Restore Core restoreCore = ".$_POST['restoreCore']);
     $sercore  = file_get_contents(VAR_PATH.'tmp/sercore.txt');
     $core     = unserialize($sercore);
+    $core->wakeup();
 
 } else {
 

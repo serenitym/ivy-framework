@@ -138,6 +138,7 @@ class CmethDB extends CrenderTmpl {
     ) {
 
         $this->DB->query($query);
+        //echo $query."<br>";
         // daca se cere reset
         if ($reset) {
             $this->reLocate($location,$ANCORA,$paramAdd);
@@ -164,9 +165,6 @@ class CmethDB extends CrenderTmpl {
     }
 
 
-    #=============================[ Set Values ]================================
-
-    // Sql_setValsFromArr
     /**
      *  Seteaza stringul pt sql UPDATE / INSERT de genul
      *  varName1 = 'varValue1', varName2 = 'varValue2', ...
@@ -177,18 +175,18 @@ class CmethDB extends CrenderTmpl {
      *
      * @return string - 'varValue1', varName2 = 'varValue2', ...
      */
-    public function Db_setValsFromArr($values)
+    public function Db_setFromAssoc($values)
     {
-        $set = '';
+        $sets = array();
         foreach($values AS $varName=>$varValue) {
             $varValue = $this->DB->real_escape_string($varValue);
-            $set .= "$varName = '".$varValue."', ";
+            array_push($sets, "$varName = '".$varValue."'");
         }
 
-        $set = substr($set,0,-2);
-
+        $set = implode(', ', $sets);
         return $set;
     }
+
 
 
 
