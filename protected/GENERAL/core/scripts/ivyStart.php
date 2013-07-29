@@ -27,8 +27,33 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 
     // ----[ or just go as usual ] -----
 
+// Require the HTTP_Session2 PEAR file
+//require_once 'HTTP/Session2.php';
+
+HTTP_Session2::useTransSID(false);
+//HTTP_Session2::useCookies(false);
+
+// enter your DSN
+HTTP_Session2::setContainer(
+    'MDB2',
+    array('dsn' => DSN,
+        'table' => 'sessiondata')
+);
+
 // --------[ start the session ]--------
-sessionManager::startSession();
+HTTP_Session2::start('s');
+HTTP_Session2::setExpire(time() + 60); // set expire to 60 seconds
+HTTP_Session2::setIdle(time() + 5);    // set idle to 5 seconds
+
+if (HTTP_Session2::isExpired()) {
+    HTTP_Session2::destroy();
+}
+
+if (HTTP_Session2::isIdle()) {
+    HTTP_Session2::destroy();
+}
+
+HTTP_Session2::updateIdle();
 // =====================================
 
 
