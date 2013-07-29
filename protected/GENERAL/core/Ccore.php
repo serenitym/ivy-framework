@@ -136,29 +136,29 @@ class Ccore extends Cunstable
     public function Build_Db_tree($children, $idTree, $parentId='', $level=0)
     {
         foreach ($children AS $idCh) {
-             $this->tempTree[$idCh] = new item();
-             $node  = &$this->tempTree[$idCh];
+            $this->tempTree[$idCh] = new item();
+            $node  = &$this->tempTree[$idCh];
 
-             $query = "SELECT name_ro, name_en, type, opt
-                       FROM ITEMS
-                       WHERE id='$idCh' ";
-             $qArr  = $this->DB->query($query)->fetch_assoc();
+            $query = "SELECT name_ro, name_en, type, opt
+                      FROM ITEMS
+                      WHERE id='$idCh' ";
+            $qArr  = $this->DB->query($query)->fetch_assoc();
 
-             $node->name    = $qArr['name_'.$this->langs[0]];
-             $node->name_ro = $qArr['name_ro'];
-             $node->name_en = $qArr['name_en'];
-             // deprecated type
-             $node->modName = $qArr['type'];
+            $node->name    = $qArr['name_'.$this->langs[0]];
+            $node->name_ro = $qArr['name_ro'];
+            $node->name_en = $qArr['name_en'];
+            // deprecated type
+            $node->modName = $qArr['type'];
 
-             // to be handled by the manager if it choses it to do so...
-             $node->modOpt  = !$qArr['opt'] ? '' : json_decode($qArr['opt']);
-             $node->id      = $idCh;
-             $node->idParent= $parentId;
+            // to be handled by the manager if it choses it to do so...
+            $node->modOpt  = !$qArr['opt'] ? '' : json_decode($qArr['opt']);
+            $node->id      = $idCh;
+            $node->idParent= $parentId;
 
-             // deprecated idT
-             $node->idTree  = $idTree;
-             $node->level   = $level;
-             $node->resFile = str_replace(' ', '_', $node->name);
+            // deprecated idT
+            $node->idTree  = $idTree;
+            $node->level   = $level;
+            $node->resFile = str_replace(' ', '_', $node->name);
 
             //deprecated
             $node->type    = $qArr['type'];
@@ -542,7 +542,6 @@ class Ccore extends Cunstable
 
         //$this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-        echo  $this->DB->error;
 
         /**
          * GENERAL settings
