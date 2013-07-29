@@ -1,7 +1,62 @@
 @charset "UTF-8";
 /*RESETS */
-p{    margin: 0.5em 0em; }
+p{ margin: 0.5em 0em; }
+body, textarea{line-height: initial;
+    font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+    font-size: 9pt;
+}
+form{margin: initial;}
 
+.ui-datepicker {font-size: 11px !important;}
+/*==================================================== [ATmpl] =============== */
+
+/* divul pentru ADMIN template */
+.ATmpl, .ATmpl-inline      {display: none; }
+
+/*  cand ajunge in cadrul unui form se face vizibil  */
+form.addForm .ATmpl,
+form[id^="EDITform"] .ATmpl {display: inherit !important;}
+
+ /*  cand ajunge in cadrul unui form se face vizibil  */
+.addForm  .ATmpl-inline,
+form[id^="EDITform"] .ATmpl-inline { display: inline-block !important;}
+
+/*Ce nu ar trebui sa se vada in cadrul unui formde EDITARE*/
+.addForm .noATmpl,
+form[id^="EDITform"] .noATmpl {display: none;}
+
+form.addForm .ATmpl .hidden,
+form[id^="EDITform"] .ATmpl .hidden {display: none;}
+
+
+/*==================================================[ helpers ]============== */
+.clearfix {clear: both;}
+.no-display{ display: none;}
+.hidden, .hiddeHidden {display: none;}
+/*
+.hidden {visibility: visible !important;}
+*/
+
+
+.ib { display: inline-block; vertical-align: text-top;}
+.vt {vertical-align: top;}
+.radio-btn {vertical-align: top;}
+
+.b{font-weight: bold;}
+
+
+/*==================================================== [elements] =========== */
+
+.label-mini{
+    padding: 1px 5px;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.hr-shadow {
+    box-shadow: 0px -8px 7px 4px white, 0 5px 30px #bbb;
+    border-top: 1px solid #e9e9e9;
+}
 
 /*============================ [ buttons ] ==============================*/
 input[type="submit"].ivy,
@@ -11,16 +66,16 @@ button.ivy{
     cursor: pointer;
     border-radius: 4px;
     background: rgba(150,150,150,0.5);
-    border: 1px solid rgba(200,200,200,0.3);
+    border: 1px outset rgba(200,200,200,0.3);
 }
+
 input[type="submit"].ivy:hover,
 input[type="reset"].ivy:hover,
 input[type="button"].ivy:hover,
 button.ivy:hover{
-    background: rgba(150,150,150,0.7);
+    background: rgba(150,150,150,0.3);
 
 }
-
 
 input[type="submit"].ivy-light,
 input[type="reset"].ivy-light,
@@ -31,6 +86,7 @@ button.ivy-light{
     background: rgba(200,200,200,0.6);
     border: 1px solid rgba(250,250,250,0.3);
 }
+
 input[type="submit"].ivy-light:hover,
 input[type="reset"].ivy-light:hover,
 input[type="button"].ivy-light:hover,
@@ -38,8 +94,6 @@ button.ivy-light:hover{
     background: rgba(200,200,200,0.8);
 
 }
-
-
 
 
 /*=========================================================== [ inputs ] =============================================== */
@@ -61,7 +115,7 @@ textarea.ivy-light{
    cursor: pointer;
    border-radius: 3px;
    background: rgba(255,255,255,0.6);
-   border: 1px solid rgba(250,250,250,0.3);
+   border: 1px solid rgba(150,150,150,0.5);
 
 }
 
@@ -69,44 +123,12 @@ input[type="text"].ivy-light:focus,
 input[type="password"].ivy-light:focus,
 textarea.ivy-light:focus{
 
-   outline-color: #ffffff;
-   /* outline-offset: 1px;
-*/
+   outline-color: #ddd;
+   /* outline-offset: 1px; */
 
 }
 
-
-/*===========================================================  =============================================== */
-.clearfix {clear: both;}
-.no-display{ display: none;}
-
-.hidden {visibility: visible !important;}
-body{line-height: initial;}
-form{margin: initial;}
-.ui-datepicker {font-size: 11px !important;}
-
-/*=========================================================== [ATmpl] =============================================== */
-
-.ATmpl, .ATmpl-inline      {display: none; }           /* divul pentru ADMIN template */
-form[id^="EDITform"] .ATmpl,
-form.addForm .ATmpl
-{display: inherit !important;}      /*  cand ajunge in cadrul unui form se face vizibil  */
-
-.addForm  .ATmpl-inline,
-form[id^="EDITform"] .ATmpl-inline
-{
-    display: inline-block !important;
-}      /*  cand ajunge in cadrul unui form se face vizibil  */
-
-form[id^="EDITform"] .noATmpl,
-.addForm .noATmpl
-{display: none;}  /*Ce nu ar trebui sa se vada in cadrul unui formde EDITARE*/
-
-
-
-
-
-/*========================================[ popUp - styling ]========================================================*/
+/*==============================================[ popUp - styling ]============*/
 
 #popUp-canvas{
     z-index: 9901;
@@ -145,34 +167,8 @@ form[id^="EDITform"] .noATmpl,
             min-height: 200px;
         }
 
+/*============================================================================*/
 
-
-/*=================================================================================================================== */
-.hidden, .hiddeHidden {display: none;}
-
-
-
-.ib {
-    display: inline-block;
-    vertical-align: text-top;}
-
-.vaTop {vertical-align: top;}
-.radio-btn {vertical-align: top;}
-
-.b{font-weight: bold;}
-
-/*====================================================================================================*/
-
-.label-mini{
-    padding: 1px 5px;
-    font-size: 10px;
-    line-height: 12px;
-}
-
-.hr-shadow {
-    box-shadow: 0px -8px 7px 4px white, 0 5px 30px #bbb;
-    border-top: 1px solid #e9e9e9;
-}
 
 .thumb-pic{
     overflow: hidden;
@@ -197,10 +193,8 @@ form[id^="EDITform"] .noATmpl,
        }
 
 
-/*==============================================[general styling ]====================================================*/
 
-
-/*==============================================[general styling ]====================================================*/
+/*==============================================[general styling ]=============*/
 .Cgray {color: gray;}
 
 .width25 {width: 25px;}

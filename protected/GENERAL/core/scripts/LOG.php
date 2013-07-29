@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set fdm=marker: */
 
 /** {{{
@@ -63,6 +64,8 @@ if (isset($_SESSION['auth'])) {
 } else {
     $core = new CLcore($auth);
 }
+//var_dump($_SESSION);
+
 // $_SESSION['core'] = &$core;
 // ======================================
 

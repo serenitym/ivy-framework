@@ -1,4 +1,5 @@
 <?php
+//var_dump($_REQUEST);
 global $core;
 define('tmpl_inc', PUBLIC_PATH . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/tmpl/");
 define('tmpl_url', PUBLIC_URL . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/");

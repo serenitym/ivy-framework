@@ -16,24 +16,20 @@
  *      - save
  *      - exit edit (cancel)
  */
-
+/**
+ *  UTILIZARE:
+   $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } )
+ */
+// DOCUMENTEAZA TOT editMODEUL URGENT
 
 var LG = 'ro';
 var procesSCRIPT_file     = 'procesSCRIPT.php';                   // intermediaza requesturile scripurilor .js
 var parsePOSTfile_getTags = 'MODELS/blog/ADMIN/getTags.php';
 
-/**
- *  UTILIZARE:
-   $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } ) */
-
-// DOCUMENTEAZA TOT editMODEUL URGENT
-//trebuie cumva setat daca vreau sau nu indicatii pentru butoane
-
 
 var iEdit = function(){
 
     var LG = 'ro';
-
 
     /**
      * Config ex:
@@ -58,11 +54,14 @@ var iEdit = function(){
      *            deleteBt : {methName:'', status : 1, atrName:"delete_"+Name, atrValue: 'd' },
                   saveBt : {methName:'',status : 1, atrName:"save_"+Name, atrValue: 's' },
 
+                  // pentru partea de add
                   extraBts:
                   {
                       manageGroup: {
                           callBack: "ivyMods.team.showManageGroups();",
-                          atrValue: 'manage Groups',
+                          attrValue: 'manage Groups',
+                          attrName: 'manage Groups',
+                          attrType: 'submit/ button',
                           class: ''
                       },
                       showAllmembers:{
@@ -71,7 +70,8 @@ var iEdit = function(){
                           class: ''
                       }
                   }
-
+                  // pentru orice element, trebuie un refactoring aici
+                  extraButtons: {}
      *       },
      *
      *  Utilizarea configului
@@ -84,17 +84,11 @@ var iEdit = function(){
      *      .  allProperties
      */
     var bttConf =    {
-
             comment : {
                 addBt : {status :false},
                 saveBt: {status : false}
             }
-
-
-
-
     };
-
 
     //========================================[ PROTECTED FUNCTIONS ]====================================
     /**
@@ -110,9 +104,13 @@ var iEdit = function(){
            else return defaults;
     }
 
-    function split( val )        {    return val.split( /,\s*/ ); }
+    function split( val )        {
+        return val.split( /,\s*/ );
+    }
 
-    function extractLast( term ) {    return split( term ).pop(); }
+    function extractLast( term ) {
+        return split( term ).pop();
+    }
 
     function actionBtns_binds(BLOCK,Name,id){
 
@@ -121,7 +119,6 @@ var iEdit = function(){
          {
              var BTT = bttConf[Name];
 
-
               //=============================[set moduleControler for action ]==========================================
 
              if(typeof BTT.modName !='undefined'){
@@ -129,8 +126,8 @@ var iEdit = function(){
                      "<input type='hidden' name='modName' value='"+BTT.modName+"' />" +
                       "<input type='hidden' name='methName' value='' />");
                  var jq_ctrlmodName = TOOLSbtn.parent().prev("input[name=methName]");
+                // console.log(' jq_ctrlmodName '+jq_ctrlmodName.attr('name'));
              }
-
 
              //=============================[delete button ]============================================================
              //if( typeof BTTdelete.asincr[Name]!='undefined')
@@ -138,7 +135,6 @@ var iEdit = function(){
              {
                  if(typeof BTT.deleteBt.async !='undefined')
                  {
-
                      TOOLSbtn
                          .find('input[class^=editModeBTT][name^=delete_]')
                          .attr('onclick',"iEdit.evCallback.async_delete('"+Name+"','"+id+"'); return false;");
@@ -152,26 +148,11 @@ var iEdit = function(){
                           });
                  }
              }
-
-
-
-             //=============================[save button ]==============================================================
-
+             // save button
              if( typeof BTT.saveBt != 'undefined')
              {
-                 if( typeof BTT.saveBt.async != 'undefined')
+                 if(typeof BTT.modName !='undefined' && typeof BTT.saveBt.methName != 'undefined' )
                  {
-                     TOOLSbtn
-                         .find('input[class^=editModeBTT][name^=save_]')
-                         .attr('onclick',"iEdit.evCallback.async_save('"+Name+"','"+id+"'); return false;");
-
-                     /* console.log(' pentru '+Name
-                      +' avem callback-ul ' +  BTT.saveBt.async.callBack_fn
-                      + ' si file-ul de procesare ' + BTT.saveBt.async.parsePOSTfile);*/
-                 }
-                 else if(typeof BTT.modName !='undefined' && typeof BTT.saveBt.methName != 'undefined' )
-                 {
-
                      /**
                       * ATENTIE
                       *     - nu stiu de ce nu merge cu live
@@ -180,10 +161,21 @@ var iEdit = function(){
                       .find('input[class^=editModeBTT][name^=save_]')
                          .on('click', function(){
                               jq_ctrlmodName.attr('value',BTT.saveBt.methName);
+                             // alert('Click on save button ' + jq_ctrlmodName.attr('value'));
 
                           });
 
+                 } else if( typeof BTT.saveBt.async != 'undefined') {
+                      TOOLSbtn
+                          .find('input[class^=editModeBTT][name^=save_]')
+                          .attr('onclick',"iEdit.evCallback.async_save('"+Name+"','"+id+"'); return false;");
+
+                      /* console.log(' pentru '+Name
+                       +' avem callback-ul ' +  BTT.saveBt.async.callBack_fn
+                       + ' si file-ul de procesare ' + BTT.saveBt.async.parsePOSTfile);*/
                  }
+
+
              }
 
 
@@ -192,8 +184,6 @@ var iEdit = function(){
 
 
     }
-
-
 
     function async_save_reconstruct(Name ,id, postData){
 
@@ -210,38 +200,40 @@ var iEdit = function(){
 
     }
 
-
     function transform(BLOCK,formSelector, elmName){
 
-             BLOCK.find('*[class^=ED]').map(function(){
+             BLOCK.find('*[class^=ED]').map(function()
+             {
                  // selELEM =  $(this).attr('class')+' ';
-
                  if($(this).parents('*[class^=allENTS]').length <= 1)
                  {
 
-                     var desc = ($(this).attr('class')+' ').split(' ');
+                     var desc   = ($(this).attr('class')+' ').split(' ');
                      var EDtype  = desc[0];
-                     var EDname  = desc[desc.length-2]; //  (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca pune un elem in plus , nu stiu de ce
-
-                     if(EDtype=='EDeditor' || EDtype=='EDpic')
-                         var EDvalue = $.trim($(this).html());
-                     else
-                         var EDvalue = $.trim($(this).text());
-
+                     /**
+                      * (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca
+                      * pune un elem in plus , nu stiu de ce
+                      * @type {*}
+                      */
+                     var EDname  = desc[desc.length-2];
+                     var EDvalue = ( EDtype=='EDeditor' || EDtype=='EDpic' )
+                                 ? $.trim($(this).html())
+                                 : $.trim($(this).text());
 
 
                      //  alert('EDname '+EDtype+'  EDname '+EDname+' value '+EDvalue);
                      var EDtag  = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
                      var jqEDtag = $(EDtag);
 
-                     if(jqEDtag.length > 0)
+                     if (jqEDtag.length > 0) {
                          replace(EDtype, EDname, EDvalue,formSelector, jqEDtag);
-                     /* else
-                      alert(EDtag);*/
+                     }  else {
+                         console.log(EDtag);
+                     }
 
                  }
 
-          });
+             });
     }
 
     function replace(EDtype, EDname, EDvalue,formSelector, jqEDtag){
@@ -249,7 +241,8 @@ var iEdit = function(){
           //alert(EDtype+' '+EDname+" "+EDvalue+" "+formSelector);
 
        // var EDtag        = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
-        var INPUTname    = EDname+"_"+LG;
+        //var INPUTname    = EDname+"_"+LG;
+        var INPUTname    = EDname;
         var INPUTclass   = 'EDITOR '+EDname;
 
         var INPUTclasses =jqEDtag.attr('class').replace(EDtype, 'EDITOR');
@@ -478,8 +471,6 @@ extraBts
     }
 
 
-
-
     function test(){
         console.log("Am apelat functia test si LG = "+LG);
     }
@@ -498,14 +489,21 @@ extraBts
              * ma refer la o variabila locala a obiectului (privata) iEdit
              * aceasta variabila nu poate fii accesata din afara lui
              * */
-             bttConf[bttName] = bttName_conf;
+
+           /*// tests
+            console.log('bttName = ' + bttName +' elemente = '+ bttName_conf.length);
+            for(var optType in bttName_conf) {
+                console.log('optType = '+ optType  + ' cu elemente = '+ bttName_conf[optType].length);
+            }
+            console.log(' ');*/
+            bttConf[bttName] = bttName_conf;
         },
         add_bttsConf: function(btts){
 
             /**
              * Deci ma pot referii la cine?*/
            // alert(typeof this.add_bttConf);   // = function
-            for(bttName in btts)  this.add_bttConf(bttName, btts[bttName]);
+            for(var bttName in btts)  this.add_bttConf(bttName, btts[bttName]);
         },
 
         init :{
@@ -546,8 +544,7 @@ extraBts
             tools :        function(){
 
                  // vizibilitate pentru variabilele locale (ex: LG ) si functiile locale (ex: replace)
-
-                var get_elmDet = function(elm)    {
+                function get_elmDet(elm)    {
 
                    /**
                     * UTILIZARE GENERALA EDITmode.js
@@ -569,10 +566,10 @@ extraBts
                     */
 
                       var desc    =  elm.attr('id').split('_');
-                      var classes = elm.attr('class');
-                      var TYPEarr = classes.split(' ');
+                      var classes =  elm.attr('class');
+                      var TYPEarr =  classes.split(' ');
                       var BTT     =  {atrValue : 'e', style : ''};
-                      var Name    = desc[0];
+                      var Name    =  desc[0];
 
                        if(typeof bttConf[Name] !='undefined' && typeof bttConf[Name].edit !='undefined')
                        $.extend(BTT,  bttConf[Name].edit);
@@ -582,27 +579,13 @@ extraBts
                           TYPE    : TYPEarr[0],     //ENT || SING
                           cls     : classes.replace(this.TYPE,''),
                           id      : desc[1],
-                          Name    : Name      //ENTname || SINGname
+                          Name    : Name      //ENTname || SINGname,
                        }
 
                 }
-                $("*[class^=SING], *[class^=ENT]").map(function()
-                   {
-
-                       var elD = get_elmDet($(this)); //from element Details
-                       /**
-                        * uses
-                        *
-                        * BTT{style, name}
-                        * id
-                        * Name
-                        * TYPE
-                        * cls
-                        */
-                       $(this).wrapInner("<div class='ELMcontent' />");          // pentru a putea recupera continutul
-                       $(this).prepend
-                       (
-                           "<div class='TOOLSem' style='display: none;'>" +
+                function get_htmlToolsem(elDetails){
+                    var elD = elDetails;
+                    return  "<div class='TOOLSem' style='display: none;'>" +
                                "<div class='TOOLSbtn'>" +
                                "   <span>" +
                                "       <input type='button' class='editModeBTT' "+elD.BTT.style+" name='EDIT' value='"+elD.BTT.atrValue+"'" +
@@ -610,258 +593,247 @@ extraBts
                                "       <i>Edit Content</i>" +
                                "   </span>" +
                                "</div>" +
-                           "</div>"
-                       );
-                   });
+                            "</div>"
+                }
+
+                $("*[class^=SING], *[class^=ENT]").map(function()
+                {
+                    var elD   = get_elmDet($(this)); //from element Details
+                    var tools = get_htmlToolsem(elD);
+                    $(this).wrapInner("<div class='ELMcontent' />");          // pentru a putea recupera continutul
+                    $(this).prepend(tools);
+                });
 
             },
             tools_addEnt : function(){
+                /**
+               * UTILIZARE GENERALA EDITmode.js
+               *
+               * < * class='allENTS [otherClasses] [entSName]' id = '[entSName]_[LG]' >
+               *     - add new ent
+               *
+               *     <class='ENT [otherClasses] [entName]' id = '[entName]_[id]_[LG]' >
+               *
+               *  - delete
+               *  - edit
+               *  - save
+               *  - exit edit (cancel)
+               *
+               *  < * class='SING [otherClasses] [singName]' id = '[singName]_[id]_[LG]' >
+               *      - edit
+               *      - save
+               *      - exit edit (cancel)
+               */
+                function Get_firstEntProps(firstENT){
 
-                 var get_elmDet = function(firstENT)    {
+                    var classes         = firstENT.attr('class');
+                    var TYPEarr         = classes.split(' ');
+                    var cls             = classes.replace('ENT','');   //ENT || SING - restul claselor fara denumirea de ENT sau SING
+                    var nameENT         = TYPEarr[TYPEarr.length - 1]; //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
+                    var BTT             = {status : 1, style : '', atrValue: '+', methName: '' };
 
-                     /**
-                        * UTILIZARE GENERALA EDITmode.js
-                        *
-                        * < * class='allENTS [otherClasses] [entSName]' id = '[entSName]_[LG]' >
-                        *     - add new ent
-                        *
-                        *     <class='ENT [otherClasses] [entName]' id = '[entName]_[id]_[LG]' >
-                        *
-                        *  - delete
-                        *  - edit
-                        *  - save
-                        *  - exit edit (cancel)
-                        *
-                        *  < * class='SING [otherClasses] [singName]' id = '[singName]_[id]_[LG]' >
-                        *      - edit
-                        *      - save
-                        *      - exit edit (cancel)
-                        */
+                    if (typeof bttConf[nameENT] !='undefined') {
+                        $.extend(BTT, bttConf[nameENT].addBt);
+                    }
 
-                      var classes = firstENT.attr('class');
-                      var TYPEarr = classes.split(' ');
-                      var nameENT = TYPEarr[TYPEarr.length - 1];        //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
-                      var cls     = classes.replace('ENT','');   //ENT || SING - restul claselor fara denumirea de ENT sau SING
-                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                     var html_extraBTTS = '';              // tagurile cu butoanele extra
-                     var html_ctrlAction = '';             //hidden inputurile cu methName si modName pentru apelare directa in core
-                     var BTT = {
-                          status : 1,
-                          style : '',
-                          atrValue: '+',
-                          methName: ''
-                      };
+                    return {
+                        FORM_content    : firstENT.find('.ELMcontent').html(),
+                        FORM_class      : cls+" addForm",
+                        nameENT         : nameENT,
+                        FORM_id         : "new_"+nameENT+'_'+LG,
+                        html_extraBTTS  : function(){
+
+                            if(typeof bttConf[nameENT] == 'undefined'
+                               || typeof bttConf[nameENT].extraBts =='undefined'
+                            ) {
+                                console.log('NU Avem extra butoane');
+                                return '';
+                            } else {
+
+                                console.log('Avem extra butoane');
+                                var extraBts =  bttConf[nameENT].extraBts;
+                                var htmlButtons = '';
+                                for(var key in extraBts){
+
+                                    var extraBtt = {
+                                        callBack : '',
+                                        atrValue : key,
+                                        atrName: key,
+                                        atrType:  'button'
+                                    };
+                                    $.extend(extraBtt, extraBts[key]);
+                                    htmlButtons += "" +
+                                        "<span>" +
+                                            "<input type='"+extraBtt.atrType+"' " +
+                                                  " class='editModeBTT' " +
+                                                  " name='"+extraBtt.atrName+"' " +
+                                                  " value='"+extraBtt.atrValue+"' " +
+                                                  " onclick=\""+extraBtt.callBack+"\">" +
+                                        "</span>" ;
+                                }
+
+                                return htmlButtons;
+                            }
+
+                        }(),
+                        html_ctrlAction : function(){
+                               if (typeof bttConf[nameENT] !='undefined'
+                                   && typeof bttConf[nameENT].modName != 'undefined') {
+                                   return  "<input type='hidden' name='modName' value='"+bttConf[nameENT].modName+"' />" +
+                                           "<input type='hidden' name='methName' value='"+BTT.methName+"' />";
+
+                               }
+                               return '';
+                        }(),
+                        BTT             : BTT
+                    };
+
+                }
+                function Get_htmlToolsem(elD){
+
+                    var buttons  =  elD.html_extraBTTS ;
+                        buttons +=  !elD.BTT.status ? '' :
+                                    "<span>" +
+                                           "<input type='button'  class='editModeBTT' "+elD.BTT.style+"  name='addNewENT' value='"+elD.BTT.atrValue+"' " +
+                                                             " onclick=\"iEdit.evCallback.addEnt('"+elD.nameENT+"')\">" +
+                                           "<i>Add new</i>" +
+                                    "</span>";
+
+                    var toolsEm =  buttons == '' ? '' :
+                                    "<div class='TOOLSem'>" +
+                                       "<div class='TOOLSbtn'>" +
+                                          buttons +
+
+                                        "</div>" +
+                                    "</div>";
+                    return toolsEm;
+                }
+                function Get_htmlAddForm(elD){
+
+                    var form = "<form action='' method='post' class='"+elD.FORM_class+"'   id='"+elD.FORM_id+"' style='display: none;'>" +
+                                     elD.html_ctrlAction+
+                                    "<div class='TOOLSem'>" +
+                                          "<div class='TOOLSbtn'>                                                                        " +
+                                          "     <span>" +
+                                                  "<input type='submit' class='editModeBTT'   name='save_add"+elD.nameENT+"' value='s' />" +
+                                                  "<i>save</i>" +
+                                              "</span>                         " +
+                                          "     <span>" +
+                                                  "<input type='button' class='editModeBTT'   name='EXIT' value='x' onclick=\"iEdit.evCallback.remove_addNew('"+elD.nameENT+"'); return false;\">" +
+                                                  "<i>Exit</i>" +
+                                              "</span>       " +
 
 
-                     if(typeof bttConf[nameENT] !='undefined')
-                     {
-                         if(typeof bttConf[nameENT].addBt !='undefined')
-                         {
-                             $.extend(BTT, bttConf[nameENT].addBt);
 
-                             if(typeof bttConf[nameENT].modName != 'undefined' && BTT.methName!='')
-                                html_ctrlAction  =  "<input type='hidden' name='modName' value='"+bttConf[nameENT].modName+"' />" +
-                                                     "<input type='hidden' name='methName' value='"+BTT.methName+"' />";
-                         }
+                                    "     </div>          " +
+                                    "</div> " +
+                                    "<div class='ELMcontent'>" +
+                                          elD.FORM_content +
+                                    "</div>"+
+                                "</form>";
+                    return form;
+                }
+                function Prepare_addForm(elD, addForm){
+                       // *** ATENTIE trebuie golita si imaginea
+                       /**
+                       * Se golesc toate fieldurile editabile
+                       * apoi se pune o alta clasa fieldurilor editabile - cu CKeditor pentru a
+                       * nu mai trebui sa distrug instantele de CKeditor pentru add-uri
+                       * */
+                        // probabil ca cele 2 ar trebuii inlantuite
 
-                        //~~~~~~~~~~~~~~~~~~~~~~~~[ extraBts]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                         if(typeof bttConf[nameENT].extraBts !='undefined')
-                         {
-
-                             var extraBts =  bttConf[nameENT].extraBts;
-                             for(key in extraBts){
-
-                                 var extraBtt = {callBack : '', atrValue : key,  atrName: key};
-                                 $.extend(extraBtt, extraBts[key]);
-
-                                 html_extraBTTS +="<span>" +
-                                                      "<input type='button'  class='editModeBTT'  name='"+extraBtt.atrName+"' value='"+extraBtt.atrValue+"' " +
-                                                                     " onclick=\""+extraBtt.callBack+"\">" +
-                                                 "</span>" ;
-                             }
-                         }
+                      addForm
+                      .find('*[class^=ED]')
+                      .empty();
+                       //  .find('*[class^=ED]').not('*[class=EDpic]').empty();
 
 
+                      addForm
+                      .find('*[class^=EDeditor]')
+                      .map(function(){
+                           var classEditor = $(this).attr('class');
+                           var classEditor = classEditor.replace('EDeditor', 'EDaddEditor');
+                           $(this).attr('class', classEditor);
 
-                     }
+                       });
 
-                     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                      /**
+                       * Pentru formularul de adaugare de pic se creeaza un alt tip de ED
+                       * EDaddPic
+                       * */
+                      addForm
+                      .find('*[class^=EDpic]')
+                      .map(function(){
+                           var classEditor = $(this).attr('class');
+                           var classEditor = classEditor.replace('EDpic', 'EDaddPic');
 
-                      return {
-                          BTT               : BTT,
-                          html_extraBTTS    : html_extraBTTS,
-                          html_ctrlAction   : html_ctrlAction,
-                          nameENT           : nameENT,
-                          FORM_class        :  cls+" addForm",
-                          FORM_id           : "new_"+nameENT+'_'+LG,
-                          FORM_content      : firstENT.find('.ELMcontent').html()
+                           var imgHeight = $(this).height();
+                           var imgWidth = $(this).width();
 
-                       }
+                          /**
+                           * daca imaginea nu are width sau height atunci se presupune ca parintele care
+                           * contine imaginea va avea unul din cele doua
+                            */
+                           if(!imgHeight) imgHeight =  $(this).parent().height();
+                           if(!imgWidth) imgWidth = $(this).parent().width();
 
-               }
+                           $(this)
+                               .attr('class', classEditor)
+                               .attr('src',"http://placehold.it/"+imgWidth+"x"+imgHeight+'&text=add%20Image');
+                         // $(this).css('background','gray');
+                      });
 
+                     //  alert( $('form[class$=addForm]').find('a').length);
+                      // nu imi e foarte clar de ce nu se foloseste selecta addForm
+                      $('form[class$=addForm][id='+elD.FORM_id+']')
+                      .find('a')
+                      .on('click', function(){ return false;});
+                      // KK
+                      $('form[class$=addForm][id='+elD.FORM_id+']')
+                      .find('a[rel=alterPics_group] >img')
+                      .unwrap();
+
+                }
+
+                // pentru ca in interiorul lui map nu ma mai pot referi la init
+                // cu this
                 $('*[class^=allENTS]').map(function()
                 {
                       var allENTS   = $(this);
                       var firstENT  = $(this).find('*[class^=ENT]:first');
 
-
-
                       if(firstENT.length > 0) // daca sunt elemente in cadrul allENTS
                       {
-                           var elD = get_elmDet(firstENT); //from element Details
-                            /**
-                         * uses
-                         * BTT {style, name, status}
-                         *
-                         * nameENT
-                         * FORM_class
-                         * FORM_id
-                         * content
-                         * */
-                            //daca nu este eliminat butonul sau exista butoane extra
+                          var elD = Get_firstEntProps(firstENT); //from element Details
 
-                           var html_addBtn = elD.BTT.status
-                                             ? "<span>" +
-                                                      "<input type='button'  class='editModeBTT' "+elD.BTT.style+"  name='addNewENT' value='"+elD.BTT.atrValue+"' " +
-                                                                        " onclick=\"iEdit.evCallback.addEnt('"+elD.nameENT+"')\">" +
-                                                      "<i>Add new</i>" +
-                                                "</span>"
-                                             : "";
-
-
-                           /**
-                            * Daca exista buton de add sau extra butoane pentru toate ENT-urile
-                            * */
-                           if(html_addBtn!='' || elD.html_extraBTTS!='')
-                           {
-
-                                //alert(BTTstatus);
-                                 allENTS.prepend
-                                 (
-                                   "<div class='TOOLSem'>" +
-                                       "<div class='TOOLSbtn'>" +
-
-                                            elD.html_extraBTTS+
-                                            html_addBtn +
-
-                                       "</div>" +
-                                   "</div>"
-
-                                 );
-
-                           }
-                          /**
-                           * creaza buton de formul de add conform primului ENT din lista
-                           * transformand toate campurile editabile in inputuri
-                           * */
+                          allENTS.prepend(Get_htmlToolsem(elD));
+                          //alert(BTTstatus);
                            if(elD.BTT.status)
                            {
-                                  //____________________________________________________________________________________________
-                                firstENT.before
-                                (
-                                     "<form action='' method='post' class='"+elD.FORM_class+"'   id='"+elD.FORM_id+"' style='display: none;'>" +
-                                         elD.html_ctrlAction+
-                                        "<div class='TOOLSem'>" +
-                                              "<div class='TOOLSbtn'>                                                                        " +
-                                              "     <span>" +
-                                                      "<input type='submit' class='editModeBTT'   name='save_add"+elD.nameENT+"' value='s' />" +
-                                                      "<i>save</i>" +
-                                                  "</span>                         " +
-                                              "     <span>" +
-                                                      "<input type='button' class='editModeBTT'   name='EXIT' value='x' onclick=\"iEdit.evCallback.remove_addNew('"+elD.nameENT+"'); return false;\">" +
-                                                      "<i>Exit</i>" +
-                                                  "</span>       " +
+                                firstENT.before(Get_htmlAddForm(elD));
+                                var addForm =  $("#"+elD.FORM_id);
+                                //console.log('addForm id = '+ addForm.attr('id'));
+                                Prepare_addForm(elD, addForm);
+                                //transform($("#"+elD.FORM_id),'form[class$=addForm]', elD.nameENT);
+                                transform(addForm,'form[class$=addForm]', elD.nameENT);
 
-
-
-                                        "     </div>          " +
-                                        "</div> " +
-                                        "<div class='ELMcontent'>" +
-                                              elD.FORM_content +
-                                        "</div>"+
-                                    "</form>"
-                                 );
-                                  // ___________________________________________________________________________________________
-
-                              // *** ATENTIE trebuie golita si imaginea
-                              /**
-                               * Se golesc toate fieldurile editabile
-                               * apoi se pune o alta clasa fieldurilor editabile - cu CKeditor pentru a
-                               * nu mai trebui sa distrug instantele de CKeditor pentru add-uri
-                               * */
-                                 // probabil ca cele 2 ar trebuii inlantuite
-                              var addForm =  $("#"+elD.FORM_id);
-                              addForm
-                                 //  .find('*[class^=ED]').not('*[class=EDpic]').empty();
-                                   .find('*[class^=ED]').empty();
-
-
-                              addForm
-                                  .find('*[class^=EDeditor]')
-                                  .map(function(){
-                                       var classEditor = $(this).attr('class');
-                                       var classEditor = classEditor.replace('EDeditor', 'EDaddEditor');
-                                       $(this).attr('class', classEditor);
-                               });
-
-                              /**
-                               * Pentru formularul de adaugare de pic se creeaza un alt tip de ED
-                               * EDaddPic
-                               * */
-                              addForm
-                                  .find('*[class^=EDpic]')
-                                  .map(function()
-                                  {
-                                       var classEditor = $(this).attr('class');
-                                       var classEditor = classEditor.replace('EDpic', 'EDaddPic');
-
-                                       var imgHeight = $(this).height();
-                                       var imgWidth = $(this).width();
-
-                                      /**
-                                       * daca imaginea nu are width sau height atunci se presupune ca parintele care
-                                       * contine imaginea va avea unul din cele doua
-                                        */
-                                       if(!imgHeight) imgHeight =  $(this).parent().height();
-                                       if(!imgWidth) imgWidth = $(this).parent().width();
-
-                                       $(this)
-                                           .attr('class', classEditor)
-                                           .attr('src',"http://placehold.it/"+imgWidth+"x"+imgHeight+'&text=add%20Image');
-                                     // $(this).css('background','gray');
-                               });
-
-                              /**
-                               * Daca nu exista ENTS visible inseamna ca nu a fost adaugat nici un ENT
-                               * => trebuie sa apara TOOLSem din start , fara mouse over
-                               * */
-                              var ENTS = addForm.next('*[class^=ENT]:visible');
-                              if(ENTS.length == 0) {
-                                  addForm.prev('.TOOLSem').css('visibility','visible');
-                              }
-
-                              $('form[class$=addForm][id='+elD.FORM_id+']').find('a').on('click', function(){ return false;});
-                              // KK
-                              $('form[class$=addForm][id='+elD.FORM_id+']').find('a[rel=alterPics_group] >img').unwrap();
-                              transform($("#"+elD.FORM_id),'form[class$=addForm]', elD.nameENT);
-                            //  alert( $('form[class$=addForm]').find('a').length);
-
-
-
-                          }//if(BTT.status)
-                      } //if(firstENT)
+                               /**
+                                * Daca nu exista ENTS visible inseamna ca nu a fost adaugat nici un ENT
+                                * => trebuie sa apara TOOLSem din start , fara mouse over
+                                * */
+                               var countENTS = allENTS
+                                                .find('*[class^=ENT]:visible')
+                                                .length;
+                               if(countENTS == 0) {
+                                   addForm
+                                       .prev('.TOOLSem')
+                                       .css('visibility','visible');
+                               }
+                          }
+                      }
                 });
 
             }
-
-            ,testFunc : function(){
-
-                console.log(test());
-            }
-           /* ,setLG : function(newLG){
-                LG = newLG;
-            }*/
         },
         evCallback : {
 
@@ -898,6 +870,7 @@ extraBts
 
 
               },
+
             loadPic:   function(id){
 
                 //alert($('img#'+id).attr('src'));
@@ -963,15 +936,13 @@ extraBts
 
 
             },
-            general_ExitEditContent: function(){},
 
+            general_ExitEditContent: function(){},
 
              // set by init.tools_addEnt
             addEnt: function(nameENT){
 
                 var addFORM_id    = "new_"+nameENT+'_'+LG;
-
-
 
                 this.exitEditContent_byType('ENT');
                 this.exitEditContent_byType('SING');
@@ -983,163 +954,183 @@ extraBts
 
 
             },
+
             // set by init.tools
             editContent : function(id,Name,TYPE,cls){
 
-
-                /*    this.generalRemove_addNew();
-                    if(TYPE == 'SING')
+                /*
+                   this.generalRemove_addNew();
+                   if(TYPE == 'SING')
                         this.exitEditContent_byType(TYPE);
                 */
-                    this.generalRemove_addNew();
-                    this.exitEditContent_byType('ENT');
-                    this.exitEditContent_byType('SING');
+                this.generalRemove_addNew();
+                this.exitEditContent_byType('ENT');
+                this.exitEditContent_byType('SING');
 
-                    var elD = function(){
+                function Get_elmDet(){
 
-                           var BLOCK   = $('*[id^='+Name+'_'+id+'_]');
+                   var BLOCK   = $('*[id^='+Name+'_'+id+'_]');
 
-                          /* atentie atrName - depind lucruri de el deci nu ar trebui schimbat*/
-                           var BTT = getBtt(Name, {
-                               deleteBt : {status : 1, atrName:"delete_"+Name, atrValue: 'd'},
-                               saveBt   : {status : 1, atrName:"save_"+Name, atrValue: 's'},
-                               moduleCtrl: ''
-                           });
-                           //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                           var DELETE_tag  = function(){
+                  /* atentie atrName - depind lucruri de el deci nu ar trebui schimbat*/
+                   var BTT = getBtt(Name, {
+                       deleteBt : {status : 1, atrName:"delete_"+Name, atrValue: 'd'},
+                       saveBt   : {status : 1, atrName:"save_"+Name, atrValue: 's'},
+                       extraButtons:{},
+                       modName: ''
+                   });
 
-                                var tag = '';
-                                if (TYPE == 'ENT' && BTT.deleteBt.status)
-                                {
-                                   tag =
-                                   "<span>" +
-                                   "     <input type='submit'  class='editModeBTT' " +
-                                               " name='"+BTT.deleteBt.atrName+"' value='"+BTT.deleteBt.atrValue+"' />" +
-                                   "     <i>Delete</i>" +
-                                    "</span>";
-                                }
-                                return tag;  }();
+                   var DELETE_tag     = function(){
 
-                           var SAVE_tag    = function(){
+                        var tag = '';
+                        if (TYPE == 'ENT' && BTT.deleteBt.status)
+                        {
+                           tag =
+                           "<span>" +
+                           "     <input type='submit'  class='editModeBTT' " +
+                                       " name='"+BTT.deleteBt.atrName+"' value='"+BTT.deleteBt.atrValue+"' />" +
+                           "     <i>Delete</i>" +
+                            "</span>";
+                        }
+                        return tag;
+                   }();
+                   var SAVE_tag       = function(){
 
-                              var tag = '';
-                              if ( BTT.saveBt.status )
-                                  tag =
-                                    "<span>" +
-                                    "   <input type='submit'  class='editModeBTT editM-save' " +
-                                                " name='"+BTT.saveBt.atrName+"' value='"+BTT.saveBt.atrValue+"' />" +
-                                    "   <i>Save</i>" +
-                                    "</span>";
+                      var tag = '';
+                      if ( BTT.saveBt.status )
+                          tag =
+                            "<span>" +
+                            "   <input type='submit'  class='editModeBTT editM-save' " +
+                                        " name='"+BTT.saveBt.atrName+"' value='"+BTT.saveBt.atrValue+"' />" +
+                            "   <i>Save</i>" +
+                            "</span>";
 
-                               return tag;
-                           }();
+                       return tag;
+                   }();
+                   var EXTRA_tags     = function(){
 
-                           var EXTRA_tags = function(){
+                      if(typeof bttConf[Name] == 'undefined'
+                         || typeof bttConf[Name].extraButtons =='undefined'
+                      ) {
+                          console.log('NU Avem extra butoane');
+                          return '';
+                      } else {
 
-                                /**
-                                 ATENTIE!!!
+                          console.log('Avem extra butoane');
+                          var extraBts =  bttConf[Name].extraButtons;
+                          var htmlButtons = '';
+                          for(var key in extraBts){
 
-                               * Este cumva ok ca butoanele extra sa fie in cadrul templateului pentru model, deoarece este mult mai clar asa
-                               * Dar trebuie eventual gasita o metodata mai putin costisitoare si eventual mai eleganta
-                               *
-                               * DESCRIERE -
-                               * daca inaintea unui element avem definit un elemnt.addTOOLSbtn - acesta va contine butoanele EXTRA pentru TOOLSbtn
-                               * se adauc butoanele la forma standard pentru TOOLSbtn
-                               * */
-                                // POATE AR TREBUI SA GASESC O METODA MAI PUTIN COSTISITOARE
-                               var tag = '';
-                               var  EXTRA_btns = BLOCK.prevAll('.addTOOLSbtn');
-                               if(!EXTRA_btns.length)                          //daca nu gaseste butoane extra sa zicem la inceputul lui allEnts
-                                    EXTRA_btns = BLOCK.prev('.addTOOLSbtn');   // incearca sa caute butoane inaintea entului curent
+                              var extraBtt = {
+                                  callBack : '',
+                                  attrValue : key,
+                                  attrName: key,
+                                  attrType:  'button'
+                              };
+                              $.extend(extraBtt, extraBts[key]);
+                              htmlButtons += "" +
+                                  "<span>" +
+                                      "<input type='"+extraBtt.attrType+"' " +
+                                            " class='editModeBTT' " +
+                                            " name='"+extraBtt.attrName+"' " +
+                                            " value='"+extraBtt.attrValue+"' " +
+                                            " onclick=\""+extraBtt.callBack+"\">" +
+                                  "</span>" ;
+                          }
+                          return htmlButtons;
 
-                               if(EXTRA_btns.length ){
-
-                                      EXTRA_btns.find('input').addClass('editModeBTT').wrap("<span>");
-                                      tag = EXTRA_btns.html();
-                               }
-
-                               return tag;
-
-                           }();
-
-                           //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-                           return {
-                                BLOCK      : BLOCK,
-                                BTT        : BTT,
-                                DELETE_tag : DELETE_tag,
-                                SAVE_tag   : SAVE_tag,
-                                EXTRA_tags : EXTRA_tags,
-                                elmContent : BLOCK.find('.ELMcontent').html()
-
-                           };
-                    }();
-
-                 //====================================================================================================================
-                 var EXTRAS_TAG = '';
-                 // if(eval('typeof '+Name+'_extra != "undefined" '))
-                 //    EXTRAS_TAG = eval(Name+'_extra.getHTMLtag("'+id+'")'); //  daca este definit un Obiect de extra
+                      }
 
 
-                 //====================================================================================================================
-                /**
-                 * use
-                 *
-                 * cls
-                 * id
-                 * EXTRAS_TAG
-                 * EXTRA_tags
-                 * SAVE_tag
-                 * DELETE_tag
-                 * Name
-                 * content
-                 * */
+                   }();
+                   var EXTRA_htmlTags = function(){
+                       /**
+                        ATENTIE!!! POATE AR TREBUI SA GASESC O METODA MAI PUTIN COSTISITOARE
+                      *
+                      * DESCRIERE -
+                      * daca inaintea unui element avem definit un elemnt.addTOOLSbtn
+                      * - acesta va contine butoanele EXTRA pentru TOOLSbtn
+                      * se adauc butoanele la forma standard pentru TOOLSbtn
+                      *
+                        * Utilitate:
+                        *  - este util sa las butoanele in cadrul templateului pentru
+                        *  cazuri in care butoanele sunt conditionate de php prin template
+                      *
+                      * */
+                      var tag = '';
+                      var  EXTRA_btns = BLOCK.prevAll('.addTOOLSbtn');
+                      if(!EXTRA_btns.length)                          //daca nu gaseste butoane extra sa zicem la inceputul lui allEnts
+                           EXTRA_btns = BLOCK.prev('.addTOOLSbtn');   // incearca sa caute butoane inaintea entului curent
 
-                    $.when(
-                           elD.BLOCK.after
-                           (
-                               "<form action='' method='post' class='"+cls+"' id='EDITform_"+id+"' >" +
-                                   "<input type='hidden' name='BLOCK_id' value='"+id+"' />" +
-                                   "<div class='TOOLSem'>" +
-                                        "<div class='TOOLSbtn'>" +
-                                                   EXTRAS_TAG+
-                                               elD.EXTRA_tags +
-                                               elD.SAVE_tag +
-                                               elD.DELETE_tag+
-                                              "<span>" +
-                                              "    <input type='button'  class='editModeBTT editM-exit' " +
-                                                          "name='EXIT' value='x'" +
-                                                           " onclick=\"iEdit.evCallback.exitEditContent_byName('"+Name+"','"+id+"')\">" +
-                                              "    <i>Exit</i>" +
-                                              "</span>" +
-                                        "</div>" +
-                                   "</div>" +
-                                   "<div class='ELMcontent'>" +
-                                       elD.elmContent+
-                                   "</div>"+
+                      if(EXTRA_btns.length ){
 
-                               "</form>"
-                           )
-                         ).then( function(){
-                              elD.BLOCK.next().show();
-                              actionBtns_binds(elD.BLOCK,Name,id);
-                           });
+                             EXTRA_btns.find('input').addClass('editModeBTT').wrap("<span>");
+                             tag = EXTRA_btns.html();
+                      }
 
-                //==================================================================================================================
-                 // daca este definit un Obiect de extra
-                // if( eval('typeof '+Name+'_extra != "undefined" '))  eval(Name+'_extra.alterCSS_EDITform()');
+                      return tag;
 
 
+                   }();
 
-                  transform(elD.BLOCK,'form[class$='+Name+'][id=EDITform_'+id+']', Name);
-                  // disable all links 'a' in this form
-                 $('form[class$='+Name+'][id=EDITform_'+id+']').find('a').on('click', function(){return false;});
+                    return {
+                        BLOCK      : BLOCK,
+                        BTT        : BTT,
+                        DELETE_tag : DELETE_tag,
+                        SAVE_tag   : SAVE_tag,
+                        EXTRA_tags : EXTRA_tags + EXTRA_htmlTags,
+                        elmContent : BLOCK.find('.ELMcontent').html()
+                    };
+
+                }
+                function Get_htmlForm(elD){
+                    var form = "" +
+                        "<form action='' method='post' class='"+cls+"' id='EDITform_"+id+"' >" +
+                             "<input type='hidden' name='BLOCK_id' value='"+id+"' />" +
+                             "<div class='TOOLSem'>" +
+                                  "<div class='TOOLSbtn'>" +
+                                         //    EXTRAS_TAG +
+                                         elD.EXTRA_tags +
+                                         elD.SAVE_tag +
+                                         elD.DELETE_tag+
+                                        "<span>" +
+                                        "    <input type='button'  class='editModeBTT editM-exit' " +
+                                                    "name='EXIT' value='x'" +
+                                                     " onclick=\"iEdit.evCallback.exitEditContent_byName('"+Name+"','"+id+"')\">" +
+                                        "    <i>Exit</i>" +
+                                        "</span>" +
+                                  "</div>" +
+                             "</div>" +
+                             "<div class='ELMcontent'>" +
+                                 elD.elmContent+
+                             "</div>"+
+                        "</form>";
+                    return form;
+                }
+                //==============================================================
+
+                 var elD  = Get_elmDet();
+                 var form = Get_htmlForm(elD);
+                 //console.log(form);
+
+                 $.when(
+                     elD.BLOCK.after(form)
+                 ).then(
+                     function(){
+                          elD.BLOCK.next().show();
+                          actionBtns_binds(elD.BLOCK,Name,id);
+                     }
+                 );
+                //==============================================================
+
+                 transform(elD.BLOCK,'form[class$='+Name+'][id=EDITform_'+id+']', Name);
+                 // disable all links 'a' in this form
+                 $('form[class$='+Name+'][id=EDITform_'+id+']')
+                     .find('a')
+                     .on('click', function(){return false;});
 
                   elD.BLOCK.hide();
 
-
             },
-
 
             // set by actionBtns_binds
             async_delete : function(Name ,id){
@@ -1157,6 +1148,7 @@ extraBts
                     $("*[id^="+Name+"_"+id+"]").remove();
 
             },
+
             async_save   : function(Name ,id){
 
                   //var postData = collect_postData(Name, id, "input[type=text] ,input[type=hidden] , textarea, select");
@@ -1292,17 +1284,12 @@ function spec_setTOOLS(elmSel,elmType,elmName, elmId){
 
 $(document).ready(function()      {
 
-
     /**
      * -- SETTINGS--
      *
      *  EDsel => EDname = new SELoptions(Array_ro,Array_en);
      *  extras => EDname_extra = functionName(id);
      */
-
-   // LG = $("input[name=lang]").val();  //Need to get the current LG;
-   // setEditMODE();
-
    iEdit.init.set_iEdit();
    //iEdit.init.setLG('ru');
    //iEdit.init.testFunc();

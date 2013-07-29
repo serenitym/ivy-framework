@@ -14,8 +14,10 @@ CKEDITOR.editorConfig = function( config )
 					config.extraPlugins = 'link';
 					config.extraPlugins = 'save';
 					//config.extraPlugins = 'scayt';
-					config.language = 'ro';
+					config.language = 'en';
 					config.skin = 'moono';
+                   // config.extraPlugins = 'slideshow';
+
 
 
 
@@ -32,7 +34,7 @@ CKEDITOR.editorConfig = function( config )
 	{ name: 'document', items : [ 'Source','Print','Save'] },
 	{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 	{ name: 'links', items : [ 'Link','Unlink' ] },
-	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','SpecialChar' ] },
+	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','SpecialChar','Slideshow'  ] },
 	'/',
 	{ name: 'styles', items : [ 'Font','FontSize' ] },
 	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
@@ -61,7 +63,7 @@ CKEDITOR.editorConfig = function( config )
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','RemoveFormat' ] },
         { name: 'paragraph', items : ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','BulletedList' ] },
         { name: 'colors', items : [ 'TextColor','BGColor' ] },
-        { name: 'insert', name:'save',items : [ 'Image','Flash','Table' ] }
+        { name: 'insert', name:'save',items : [ 'Image','Flash','Table', 'Slideshow' ] }
     ];
 //config.toolbar = 'Full';
 config.toolbar_Full =

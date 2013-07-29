@@ -71,14 +71,16 @@ class CrenderTmpl extends item
     public function Render_assoc( &$aR, $obj='', $tmplType='str', $tmpl)
     {
         if(!is_array($aR) || !count($aR) > 0) {
-            return $this->debugMess("Render_array: There are no items <br>");
+            error_log("Render_assoc: There are no items ");
+            return '';
 
         } else {
 
             $content = $this->Get_template($tmpl,'Str', $tmplType);
             if (!$content) {
-               return $this->debugMess("Render_array: Templateul nu a putu fi
-                                         randat , Check logs <br>");
+               error_log("Render_assoc: Templateul nu a putu"
+                        ." fi randat , Check logs ");
+               return '';
 
            } else {
                 return $this->Render_assocTmplContent($aR, $content, $obj);

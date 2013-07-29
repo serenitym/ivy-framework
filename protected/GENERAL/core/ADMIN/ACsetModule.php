@@ -7,13 +7,17 @@ class ACsetModule extends Ccore
     public function Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
     {
         parent::Set_incFiles($modName,$modType,$extension,$folder,$template,'');
-        parent::Set_incFiles($modName,$modType,$extension,$folder,$template,'ADMIN/');
+        if(isset($this->adminMods[$modName])) {
+            parent::Set_incFiles($modName,$modType,$extension,$folder,$template,'ADMIN/');
+        }
     }
 
     public function Module_Fs_configYamlProps(&$mod, $adminPrefix='', $template='')
     {
         parent::Module_Fs_configYamlProps($mod, '', $template);
         parent::Module_Fs_configYamlProps($mod, 'A', $template);
+        /*if(isset($this->adminMods[$mod->modName])) {
+        }*/
     }
 
     public function Module_Build($modName, $modType, $adminFolder='ADMIN/', $adminPrefix='AC')

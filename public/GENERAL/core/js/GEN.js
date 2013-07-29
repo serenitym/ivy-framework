@@ -2,8 +2,6 @@ var procesSCRIPT_file = 'procesSCRIPT.php';                 // intermediaza requ
 //     UTILIZARE:
 // $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } )
 
-/* GENERAL purpuse functions */
-
 //DOCUMENTEAZA URGENT !!!!
 
 //==============================[ jQuery - extensions ]=====================================
@@ -64,106 +62,19 @@ var ivyMods = {
 };
 
 //=============================[ framework related functions ]==============================
-var fmw = function(){
-    // all this functions should be refered from outside as fmw.FunctionName
+var fmw = {};
 
-   function openKCFinder_popUp(callBackFn){
-       window.KCFinder = {
-              callBack: function(url) {
-               //field.value = url;
-               alert(url);
-               if(callBackFn != '')
-               {
+fmw.admin = 0;
+fmw.idT = 0;
+fmw.idC = 0;
+fmw.lg = 'ro';
 
-                   if(typeof callBackFn == 'function')
-                       callBackFn.call(this, url);  // carrousel callback function
-                   else
-                       alert('functia cu numele '+callBackFn+' nu pare sa fie o functie declarata');
+fmw.toggle = function(selection){
+    $(selection).toggle();
+    return false;
+}
 
-               }
-               popUp_remove();
-               window.KCFinder = null;
-           }
-       };
-
-       var popUpKCF = new popUp_call(
-                   { content:
-                       "<div id='kcfinder_div'>" +
-                           '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
-                                   'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
-                       "</div>",
-
-                       widthPop:'900'
-                       ,heightPop : '500'
-                   });
-
-       // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
-
-   }
-
-   function KCFinder_popUp(options){
-           /**
-            * opt= {
-            *     callBackFn,
-            *     jqmod_img
-             *
-            * }
-            * */
-            var defaults = {
-               callBackFn: '',
-               jqmod_img: ''
-           }
-           var opt=$.extend(true,{},defaults, options);
-
-            window.KCFinder = {
-                  callBack: function(url) {
-                       //field.value = url;
-                       alert(url);
-
-
-                       if(typeof opt.callBackFn == 'function')
-                       {
-                           opt.newUrl = url;
-                           opt.callBackFn.call(this, opt);
-                       }  // carrousel callback function
-                       else
-                           alert('functia cu numele '+opt.callBackFn+' nu pare sa fie o functie declarata');
-
-
-                    /*   if(opt.jqmod_img != '')
-                       {
-                           //alert(opt.jqmod_img.attr('src'));
-                           opt.jqmod_img.attr('src',url);
-                       }*/
-
-                       popUp_remove();
-                       window.KCFinder = null;
-               }
-           };
-
-           var popUpKCF = new popUp_call(
-                       { content:
-                           "<div id='kcfinder_div'>" +
-                               '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
-                                       'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
-                           "</div>",
-
-                           widthPop:'900'
-                           ,heightPop : '500'
-                       });
-
-           // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
-
-       }
-
-    /**
-     * RET a confing object for async actions
-     *
-     * @param options
-     * @param callBack
-     * @return {*}
-     */
-   function asyncConf(options, callBack){
+fmw.asyncConf = function(options, callBack){
          /*
          options:
           - parsePOSTfile
@@ -258,22 +169,90 @@ var fmw = function(){
           return $.extend(prop, fns);
 
    }
+fmw.KCFinder_popUp = function(options){
 
+    /**
+     * opt= { callBackFn, jqmod_img }
+     * */
+    var defaults = {
+        callBackFn: '',
+        jqmod_img: ''
+    }
+    var opt=$.extend(true,{},defaults, options);
 
-  //=========================================================================
-    return {
-        asyncConf :asyncConf,
-        openKCFinder_popUp: openKCFinder_popUp,
-        KCFinder_popUp: KCFinder_popUp
+    window.KCFinder = {
+        callBack: function(url) {
+            //field.value = url;
+            console.log("fmw.KCFinder_popUp - "+url);
+            if (typeof opt.callBackFn == 'function') {
+                opt.newUrl = url;
+                opt.callBackFn.call(this, opt);
+            }  else {
+                // carrousel callback function
+                console.log("fmw.KCFinder_popUp - "+'functia cu numele '
+                    +opt.callBackFn+' nu exista'
+                );
+                /*   if(opt.jqmod_img != '')
+                 {
+                 //alert(opt.jqmod_img.attr('src'));
+                 opt.jqmod_img.attr('src',url);
+                 }*/
+                popUp_remove();
+                window.KCFinder = null;
+            }
+        }
     };
 
+    //@todo: schimbat pe noul fmw.popup
+    var popUpKCF = new popUp_call(
+                { content:
+                    "<div id='kcfinder_div'>" +
+                        '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+                                'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
+                    "</div>",
 
-}();
+                    widthPop:'900'
+                    ,heightPop : '500'
+                });
 
-fmw.admin = 0;
-fmw.idT = 0;
-fmw.idC = 0;
-fmw.lg = 'ro';
+    // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+
+}
+fmw.openKCFinder_popUp = function(callBackFn){
+
+    window.KCFinder = {
+           callBack: function(url) {
+            //field.value = url;
+            console.log("fmw.openKCFinder_popUp"+url);
+            if (callBackFn != '') {
+                if (typeof callBackFn == 'function') {
+                    callBackFn.call(this, url);  // carrousel callback function
+
+                } else {
+                    console.log("fmw.openKCFinder_popUp"+' - functia cu numele '
+                        + callBackFn+' nu pare sa fie o functie declarata'
+                    );
+                }
+            }
+            popUp_remove();
+            window.KCFinder = null;
+        }
+    };
+    //@todo: pune pe noul pop-ul al frameworkului
+    var popUpKCF = new popUp_call(
+                { content:
+                    "<div id='kcfinder_div'>" +
+                        '<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+                                'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />'+
+                    "</div>",
+
+                    widthPop:'900'
+                    ,heightPop : '500'
+                });
+
+    // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+
+}
 
 fmw.popUp = {
 
