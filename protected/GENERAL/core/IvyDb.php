@@ -11,7 +11,7 @@ class IvyDb extends MDB2
     public function query($query)
     {
         $res = $this->db->query($query);
-        if (!PEAR::isError($res)) {
+        if (!$this->db->isError($res)) {
             return $res->getResource();
         }
     }
