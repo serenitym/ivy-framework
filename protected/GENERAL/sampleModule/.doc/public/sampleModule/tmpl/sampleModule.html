@@ -60,7 +60,7 @@
 
  -->
 <div>
-    ".$this-> Render_array( $this->someItems, '', 'str',
+    ".$this->Render_array( $this->someItems, '', 'str',
         "<p>{~i}</p>"
     )."
 </div>
@@ -74,34 +74,23 @@
 -->
 
  <div>
-     ".$this->renderDisplay_frommod(
-        $this->modName,
-        '',
+     ".$this->Render_object(
+        $this->modName, '',
         $this->modName->modType.'/'
             .$this->modName->modName.'/'.
             .'tmpl/templateFile.html'
      )."
-
-
-     ".$this->renderDisplay_frommod(
-            $this->modName,
-            '',
-            'MODELS/modName/tmpl/templateFile.html'
-     )."
-
 
  </div>
 
 
 <div>
 
-    ".( $this->admin
-        ?  $this->renderDisplay_frommod(
+    ".( !$this->admin ? '' :
+         $this->Render_object(
              $o,
              '',
             'MODELS/modName/tmpl/templateFile.html')
-
-        : ""
 
     )."
 </div>

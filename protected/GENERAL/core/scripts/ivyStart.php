@@ -30,7 +30,7 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 // Require the HTTP_Session2 PEAR file
 //require_once 'HTTP/Session2.php';
 
-HTTP_Session2::useTransSID(false);
+/*HTTP_Session2::useTransSID(false);
 //HTTP_Session2::useCookies(false);
 
 // enter your DSN
@@ -53,7 +53,11 @@ if (HTTP_Session2::isIdle()) {
     HTTP_Session2::destroy();
 }
 
-HTTP_Session2::updateIdle();
+HTTP_Session2::updateIdle();*/
+
+// =====================================
+// in loc de session2
+session_start();
 // =====================================
 
 

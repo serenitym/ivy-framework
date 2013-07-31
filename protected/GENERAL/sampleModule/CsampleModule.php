@@ -64,5 +64,5 @@ class CsampleModule{
         return 'Acesta ar trebui sa fie un sample';
     }
 
-    function __construct(&$C){}
+
 }

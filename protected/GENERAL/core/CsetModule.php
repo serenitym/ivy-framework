@@ -142,6 +142,7 @@ class CsetModule extends CgenTools
 
         $this->Set_incFiles($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
 
+        //echo "CsetModule - Module_Set_incFiles {$obj->modName} template_file = $obj->template_file <br> ";
         /**
          * daca obiectul are setat un template file atunci se va cauta un
          * path = modType/ modName/ tmpl_tmplName/ js/ js_templateFileName/ ....js

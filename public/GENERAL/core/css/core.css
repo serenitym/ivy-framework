@@ -11,7 +11,7 @@ form{margin: initial;}
 /*==================================================== [ATmpl] =============== */
 
 /* divul pentru ADMIN template */
-.ATmpl, .ATmpl-inline      {display: none; }
+.ATmpl, .ATmpl-inline      {display: none; color: gray;  }
 
 /*  cand ajunge in cadrul unui form se face vizibil  */
 form.addForm .ATmpl,
@@ -30,6 +30,11 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 
 
 /*==================================================[ helpers ]============== */
+/*requierd field use-case: <class='ATmpl req'>FieldName<>*/
+.req {font-style: italic;  font-size: 0.9em; color: gray;}
+.req:before {content: '* '; color: #ff4500;}
+
+
 .clearfix {clear: both;}
 .no-display{ display: none;}
 .hidden, .hiddeHidden {display: none;}
@@ -37,7 +42,7 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 .hidden {visibility: visible !important;}
 */
 
-
+.ivy-block {display: block;}
 .ib { display: inline-block; vertical-align: text-top;}
 .vt {vertical-align: top;}
 .radio-btn {vertical-align: top;}

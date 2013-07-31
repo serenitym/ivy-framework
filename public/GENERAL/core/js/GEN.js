@@ -75,100 +75,102 @@ fmw.toggle = function(selection){
 }
 
 fmw.asyncConf = function(options, callBack){
-         /*
-         options:
-          - parsePOSTfile
-           - modName
-          - methName
-          callBack_fn :  callbackTest
-         * */
-         var defaults = {
-             procesSCRIPT : 'procesSCRIPT.php',
-             restoreCore : 1
-         };
-          var prop = $.extend(true,{},defaults, options,callBack);
-          var fns = {
-                  neApelata : function(apel){
-                      console.log("Aceasta functie nu ar trebui niciodata apelata "+apel);
-                  },
-                  callBackFn_dummy: function(data, func){
-                      console.log('Nu a fost setata sau trimisa nici o functie de callback '+data + ' chemat de '+ func);
-                  },
-                  fnpost:  function(sendData, callBack_fn){
 
-                      console.log("Am apelat functia fnpost");
+  /**
+   * options:
+      - parsePOSTfile
+       - modName
+      - methName
+      callBack_fn :  callbackTest
+     * */
+  var defaults = {
+      procesSCRIPT : 'procesSCRIPT.php',
+      restoreCore : 1
+  };
+  var prop = $.extend(true,{},defaults, options,callBack);
 
-                      $.extend(sendData, defaults,options);
+  var fns = {
+      neApelata : function(apel){
+          console.log("Aceasta functie nu ar trebui niciodata apelata "+apel);
+      },
+      callBackFn_dummy: function(data, func){
+          console.log('Nu a fost setata sau trimisa nici o functie de callback '+data + ' chemat de '+ func);
+      },
+      fnpost:  function(sendData, callBack_fn){
 
-                      $.post(prop.procesSCRIPT, sendData, function(data)
-                      {
-                          if(typeof callBack_fn == 'function')
-                          {
-                              callBack_fn.call(this, data);
-                              console.log("fnpost - a intrat in primul if");
-                          }
+          console.log("Am apelat functia fnpost");
 
-                          else if(typeof prop.callBack_fn == 'function')
-                          {
-                              console.log("fnpost - a intrat in 2 if si "+(callBack_fn.constructor) );
+          $.extend(sendData, defaults,options);
 
-                              if(typeof callBack_fn != 'undefined' && callBack_fn.constructor == Array)
-                              {
-                                  console.log("fnpost - callBack_fn este un array");
-                                  prop.callBack_fn.apply(this, callBack_fn);
-                              }
-                              else
-                              {
-                                 // console.log("fnpost - callBack_fn NU este un array");
-                                  prop.callBack_fn.call(this, data);
-                              }
+          $.post(prop.procesSCRIPT, sendData, function(data)
+          {
+              if(typeof callBack_fn == 'function')
+              {
+                  callBack_fn.call(this, data);
+                  console.log("fnpost - a intrat in primul if");
+              }
 
+              else if(typeof prop.callBack_fn == 'function')
+              {
+                  console.log("fnpost - a intrat in 2 if si "+(callBack_fn.constructor) );
 
-                          }
-
-                          else
-                          {
-                              fns.callBackFn_dummy.call(this, data,"fnpost");
-                          }
-
-                      });
-
-                  },
-                  fnload : function(jQmod, sendData, callBack_fn){
-
-                      console.log("Am apelat functia fnload");
-                      if(typeof jQmod !='undefined')
-                      {
-                          $.extend(sendData,defaults, options);
-
-                          jQmod.load(prop.procesSCRIPT, sendData, function()
-                          {
-                                if(typeof callBack_fn == 'function')
-                                {
-                                    callBack_fn.call();
-                                    console.log("fnload - a intrat in primul if");
-                                }
-
-                                else if(typeof prop.callBack_fn == 'function')
-                                {
-                                    prop.callBack_fn.call();
-                                    console.log("fnload - a intrat in 2 if");
-                                }
-
-                                else
-                                    fns.callBackFn_dummy.call(this, "","fnload");
-
-                          });
-                      }
-                      else{ console.log("Selectorul folosit nu a fost bun"); }
-
+                  if(typeof callBack_fn != 'undefined' && callBack_fn.constructor == Array)
+                  {
+                      console.log("fnpost - callBack_fn este un array");
+                      prop.callBack_fn.apply(this, callBack_fn);
+                  }
+                  else
+                  {
+                     // console.log("fnpost - callBack_fn NU este un array");
+                      prop.callBack_fn.call(this, data);
                   }
 
-              };
 
-          return $.extend(prop, fns);
+              }
 
-   }
+              else
+              {
+                  fns.callBackFn_dummy.call(this, data,"fnpost");
+              }
+
+          });
+
+      },
+      fnload : function(jQmod, sendData, callBack_fn){
+
+          console.log("Am apelat functia fnload");
+          if(typeof jQmod !='undefined')
+          {
+              $.extend(sendData,defaults, options);
+
+              jQmod.load(prop.procesSCRIPT, sendData, function()
+              {
+                    if(typeof callBack_fn == 'function')
+                    {
+                        callBack_fn.call();
+                        console.log("fnload - a intrat in primul if");
+                    }
+
+                    else if(typeof prop.callBack_fn == 'function')
+                    {
+                        prop.callBack_fn.call();
+                        console.log("fnload - a intrat in 2 if");
+                    }
+
+                    else
+                        fns.callBackFn_dummy.call(this, "","fnload");
+
+              });
+          }
+          else{ console.log("Selectorul folosit nu a fost bun"); }
+
+      }
+
+  };
+
+  return $.extend(prop, fns);
+
+}
 fmw.KCFinder_popUp = function(options){
 
     /**
@@ -279,168 +281,150 @@ fmw.popUp = {
      *  })
      * */
 
-     init: function(opt){
-          /*MAN's
-            *
-            * opt.pathLoad
-            * opt.dataSend
-            * opt.procesSCRIPT
-            *
-            * */
+    init: function(opt){
+        /*MAN's
+        *
+        * opt.pathLoad
+        * opt.dataSend
+        * opt.procesSCRIPT
+        *
+        * */
 
-            // properties
-            this.headerName   = opt.headerName;
-            this.widthPop     = opt.widthPop;
-            this.heightPop    = opt.heightPop;
-            this.completeFunc = opt.completeFunc;
+        // properties
+        this.headerName   = opt.headerName;
+        this.widthPop     = opt.widthPop;
+        this.heightPop    = opt.heightPop;
+        this.completeFunc = opt.completeFunc;
+        this.content      = opt.content;
 
+        //this.popUp_loadContent ;//???
 
-            this.content      = opt.content;
+        //______________________________________[ set html TMPL]_________________________________________________
 
-            //this.popUp_loadContent ;//???
+        this.popUp_set_htmlTml();
+         //console.log(this.popUpContent);
+        // ini stuf
+        if (typeof this.content !='undefined') {
+            this.popUp_content();
+            //console.log(this.content);
+        } else {
 
+            //Daca scriptul meu de process este acelasi cu cel default atunci facem aranjamentele necesare
 
-             //______________________________________[ set html TMPL]_________________________________________________
+            this.procesSCRIPT = (typeof opt.procesSCRIPT != 'undefined' || typeof opt.procesSCRIPT == 'null' )
+                                ? opt.procesSCRIPT
+                                : procesSCRIPT_file;
 
-            this.popUp_set_htmlTml();
-            //alert(this.popUpContent);
+            this.dataSend     = opt.dataSend instanceof object
+                                ? opt.dataSend
+                                : {};
 
-            // ini stuf
-            if(typeof this.content !='undefined')
-            {
-                this.popUp_content();
-                //alert(this.content);
-            }
-            else
-            {
-               /**
-                * Daca scriptul meu de process este acelasi cu cel default atunci facem aranjamentele necesare*/
-                this.procesSCRIPT = (typeof opt.procesSCRIPT != 'undefined' || typeof opt.procesSCRIPT == 'null' )
-                                    ? opt.procesSCRIPT
-                                    : procesSCRIPT_file;
+            this.dataSend     = (this.procesSCRIPT == procesSCRIPT_file && typeof opt.pathLoad != 'undefined')
+                                ? jsonConcat(this.dataSend,{parsePOSTfile : opt.pathLoad})
+                                : this.dataSend;
 
-                this.dataSend     = opt.dataSend instanceof object
-                                    ? opt.dataSend
-                                    : {};
-
-                this.dataSend     = (this.procesSCRIPT == procesSCRIPT_file && typeof opt.pathLoad != 'undefined')
-                                    ? jsonConcat(this.dataSend,{parsePOSTfile : opt.pathLoad})
-                                    : this.dataSend;
-
-
-               this.popUp_load();
-            }
-
+            this.popUp_load();
+        }
     }
+    ,
+    popUp_load        : function(){
 
-   , popUp_load        : function(){
+        //_____________________________________[ set load ]__________________________________________________
+        /* console.log('procesSCRIPT '+this.procesSCRIPT
+               + '\n\n dataSend '+this.dataSend
+               + '\n\n pathLoad '+this.pathLoad
+           //  + '\n\n completeFunc '+this.completeFunc + ' length'+this.completeFunc.length
+          //   + '\n\n type '+(typeof this.completeFunc)
+        );*/
 
-         //_____________________________________[ set load ]__________________________________________________
-          /* alert('procesSCRIPT '+this.procesSCRIPT
-                + '\n\n dataSend '+this.dataSend
-                + '\n\n pathLoad '+this.pathLoad
-              //  + '\n\n completeFunc '+this.completeFunc + ' length'+this.completeFunc.length
-             //   + '\n\n type '+(typeof this.completeFunc)
-           );*/
-
-            var mod      = this;
-           // pentru ca this is not in the scope inside setTimeout function
-
-            setTimeout(function(){
-
-                $('#popUp #popUp-content')
-                      .load(
-                          mod.procesSCRIPT,
-                          mod.dataSend,
-                          function(){
-                                mod.popUp_callback();
-                          }
-
-                       );
-            },250);
-           // alert( this.completeFunc);
-    }
-
-   , popUp_content     : function(){
-               $.when($('#popUp #popUp-content').html(this.content))
-                         .then(this.popUp_callback());
-
-               // this.popUp_callback();
-                //aceaasta procedura ar trebui pusa si ea intr-o metoda
-
-                // callback function?
-        }
-
-   , popUp_set_htmlTml : function(){
-                var popUp =
-                $('body').prepend
-                         ("<div id='popUp-canvas'>" +
-                             "<div id='popUp'>" +
-                                "<div id='popUp-header'>" +
-                                    "<span>"+this.headerName+"</span>" +
-                                     "<input  type='button' value='x' id='popUp-close' onclick='fmw.popUp.popUp_remove();' class='close'>" +
-
-                                "</div>" +
-                                "<div id='popUp-content'></div>" +
-                             "</div>" +
-                          "</div>")
-                         .find('#popUp');
-                var popUpContent = popUp.find('#popUp-content');
-              //________________________________________________________________________________________________
-
-
-
-                if(this.widthPop)
-                    popUp.css('width',this.widthPop+'px');
-                if(this.heightPop)
-                    popUp.css('height',this.heightPop+'px');
-
-                // 1
-                var popupContent_height = popUpContent.height() /2;
-                var topPopup = ($(window).height() - popUp.height())/2 -50;
-                var margin_left =  popUp.width()/2;
-
-                popUp.css('top',topPopup+'px');
-                popUp.css('margin-left','-'+margin_left+'px');
-
-
-
-
-              //________________________________________________________________________________________________
-
-                //alert(topPopup);
-                popUpContent.append(
-                    "<img alt='preloader' src='fw/GENERAL/core/css/img/ajax-loader.gif' " +
-                           "style='display: block; margin: 0px auto; padding-top:"+popupContent_height+"px;'>");
-
-
-                popUp.draggable();
-
-
-                //return popUpContent;
-        }
-
-   , popUp_remove      : function(){
-             //alert('in Remove popUp');
-            //alert('Am reusit sa selectez '+$('body #popUP-canvas').attr('id'));
-            $('body #popUp-canvas').remove();
-        }
-   , popUp_callback    : function(){
-            // alert('this is the callBack '+ this.completeFunc);
-            if(typeof this.completeFunc !='undefined' && this.completeFunc.length > 0)
-                  {
-                      if (typeof this.completeFunc == 'string' &&
-                          eval('typeof ' + this.completeFunc) == 'function')
-                      {
-                          //alert('Considera ca s-a gasit o functie');
-                          eval(this.completeFunc+'()');
-
+        // pentru ca this is not in the scope inside setTimeout function
+        var mod      = this;
+        setTimeout(function(){
+            $('#popUp #popUp-content')
+                  .load(
+                      mod.procesSCRIPT,
+                      mod.dataSend,
+                      function(){
+                            mod.popUp_callback();
                       }
+                  );
+        },250);
+       // alert( this.completeFunc);
+    }
+    ,
+    popUp_content     : function(){
+        $.when(
+            $('#popUp #popUp-content')
+                .html(this.content)
+        ).then(
+            this.popUp_callback()
+        );
 
-                      else
-                          alert('there is no function named '+this.completeFunc);
-                  }
+        // this.popUp_callback();
+        //aceaasta procedura ar trebui pusa si ea intr-o metoda
+        // callback function?
+    }
+    ,
+    popUp_set_htmlTml : function(){
+        var popUp =
+        $('body').prepend
+                 ("<div id='popUp-canvas'>" +
+                     "<div id='popUp'>" +
+                        "<div id='popUp-header'>" +
+                            "<span>"+this.headerName+"</span>" +
+                             "<input  type='button' value='x' id='popUp-close' onclick='fmw.popUp.popUp_remove();' class='close'>" +
+
+                        "</div>" +
+                        "<div id='popUp-content'></div>" +
+                     "</div>" +
+                  "</div>")
+                 .find('#popUp');
+        var popUpContent = popUp.find('#popUp-content');
+
+        if (this.widthPop) {
+            popUp.css('width',this.widthPop+'px');
         }
+        if (this.heightPop) {
+            popUp.css('height',this.heightPop+'px');
+        }
+
+        var popupContent_height = popUpContent.height() /2;
+        var topPopup = ($(window).height() - popUp.height())/2 -50;
+        var margin_left =  popUp.width()/2;
+
+        popUp.css('top',topPopup+'px');
+        popUp.css('margin-left','-'+margin_left+'px');
+
+
+        //console.log(topPopup);
+        popUpContent.append(
+            "<img alt='preloader' src='fw/GENERAL/core/css/img/ajax-loader.gif' " +
+                   "style='display: block; margin: 0px auto; padding-top:"+popupContent_height+"px;'>");
+
+        popUp.draggable();
+
+         //return popUpContent;
+    }
+    ,
+    popUp_remove      : function(){
+         //alert('in Remove popUp');
+        //alert('Am reusit sa selectez '+$('body #popUP-canvas').attr('id'));
+        $('body #popUp-canvas').remove();
+    }
+    ,
+    popUp_callback    : function(){
+        // alert('this is the callBack '+ this.completeFunc);
+        if (typeof this.completeFunc !='undefined' && this.completeFunc.length > 0)  {
+            if (typeof this.completeFunc == 'string' &&
+                 eval('typeof ' + this.completeFunc) == 'function'
+            ) {
+               //alert('Considera ca s-a gasit o functie');
+                eval(this.completeFunc+'()');
+            } else {
+                console.log('there is no function named '+this.completeFunc);
+            }
+        }
+    }
 
 };
 

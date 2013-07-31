@@ -128,15 +128,20 @@ class permissions {
                         . " WHERE `{$this->tableNames[0]}`.`gid` IN ({$this->groupsCSV}) ";
 
         //error_log( "[ ivy ] permissions - Set_permissions : query =  $query");
+        //echo  "[ ivy ] permissions - Set_permissions : query =  $query <br>";
         $res = $this->DB->query($query);
         #2 + #3
         if ($res->num_rows >= 1) {
             $this->permissions = $res->fetch_assoc();
+            //echo "perminssions - initial row <br><br>";
+
 
             while($row = $res->fetch_assoc()) {
                 foreach($row AS $permName => $permValue) {
                     $this->permissions[$permName] = $this->permissions[$permName] || $permValue;
+                    //echo "permissions - $permName = ".$this->permissions[$permName]."<br>";
                 }
+                //echo "perminssions - new row <br><br>";
             }
         }
 
@@ -197,8 +202,12 @@ class permissions {
                                ON (auth_map_classes_groups.gid = auth_groups.gid)
                             WHERE auth_map_classes_groups.cid = '{$this->cid}'
                     ) AS T ";
+       // echo "permissions - Set_groups query = $query <br>";
         $groups = $this->DB->query($query);
+
         $this->groupsCSV = $groups->fetch_row()[0];
+        //echo "permissions - Set_groups groupsCSV = {$this->groupsCSV} <br>";
+
         $this->groups    = explode(',', $this->groupsCSV);
     }
 

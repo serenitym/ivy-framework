@@ -325,6 +325,11 @@ class Ccore extends Cunstable
     private function _Set_currentNode()
     {
         $curentNode         =  &$this->tree[$this->idNode];
+        if(!$curentNode) {
+            error_log("[ ivy ] Ccore - _Set_currentNode "
+                    ."Nu s-a gasit nici un node pentru idNode = $this->idNode ");
+            return false;
+        }
         $this->nodeName_ro  =  &$curentNode->name_ro;  /*$this->name_ro*/
         $this->nodeName_en  =  &$curentNode->name_en;  /*$this->name_en*/
 

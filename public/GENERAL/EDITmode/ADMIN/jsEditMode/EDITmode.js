@@ -202,38 +202,46 @@ var iEdit = function(){
 
     function transform(BLOCK,formSelector, elmName){
 
-             BLOCK.find('*[class^=ED]').map(function()
-             {
-                 // selELEM =  $(this).attr('class')+' ';
-                 if($(this).parents('*[class^=allENTS]').length <= 1)
-                 {
+        $('*[classs$=hoverZoomLink]').removeClass('hoverZoomLink');
 
-                     var desc   = ($(this).attr('class')+' ').split(' ');
-                     var EDtype  = desc[0];
-                     /**
-                      * (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca
-                      * pune un elem in plus , nu stiu de ce
-                      * @type {*}
-                      */
-                     var EDname  = desc[desc.length-2];
-                     var EDvalue = ( EDtype=='EDeditor' || EDtype=='EDpic' )
-                                 ? $.trim($(this).html())
-                                 : $.trim($(this).text());
+         BLOCK.find('*[class^=ED]').map(function()
+         {
+              // selELEM =  $(this).attr('class')+' ';
+              if($(this).parents('*[class^=allENTS]').length <= 1)
+              {
+
+                  var EDclass  = $(this).attr('class');
+                  //    EDclass  = $.trim(EDclass);
+
+                   console.log(EDclass);
+                   //var desc   = ($(this).attr('class')+' ').split(' ');
+                   var desc   = (EDclass).split(' ');
+                   var EDtype  = desc[0];
+                    /**
+                     * (-2)  1- este ca sa imi ajunga la 0 si inca 1 pentru ca
+                     * pune un elem in plus , nu stiu de ce
+                     * @type {*}
+                     */
+                   var EDname  = desc[desc.length-1];
+                   var EDvalue = ( EDtype=='EDeditor' || EDtype=='EDpic' )
+                                ? $.trim($(this).html())
+                                : $.trim($(this).text());
 
 
-                     //  alert('EDname '+EDtype+'  EDname '+EDname+' value '+EDvalue);
-                     var EDtag  = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
-                     var jqEDtag = $(EDtag);
+                   console.log('EDtype '+EDtype+'  EDname '+EDname+' value '+EDvalue);
+                   var EDtag  = formSelector + ' *[class^='+EDtype+'][class$='+EDname+']';
+                   var jqEDtag = $(EDtag);
 
-                     if (jqEDtag.length > 0) {
-                         replace(EDtype, EDname, EDvalue,formSelector, jqEDtag);
-                     }  else {
-                         console.log(EDtag);
-                     }
+                  // perform the actual transform of the element
+                   if (jqEDtag.length > 0) {
+                        replace(EDtype, EDname, EDvalue,formSelector, jqEDtag);
+                   }  else {
+                        console.log(EDtag);
+                   }
 
-                 }
+              }
 
-             });
+         });
     }
 
     function replace(EDtype, EDname, EDvalue,formSelector, jqEDtag){
