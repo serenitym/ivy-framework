@@ -34,6 +34,7 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 //HTTP_Session2::useCookies(false);
 
 // enter your DSN
+
 HTTP_Session2::setContainer(
     'MDB2',
     array('dsn' => DSN,
@@ -55,11 +56,10 @@ if (HTTP_Session2::isIdle()) {
 
 HTTP_Session2::updateIdle();*/
 
-// =====================================
-// in loc de session2
 session_start();
 // =====================================
 
+session_start();
 
 // ----------[ unset cookies ]----------
 // sessionManager::unsetCookies();

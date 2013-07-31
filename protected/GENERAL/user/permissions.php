@@ -205,7 +205,8 @@ class permissions {
        // echo "permissions - Set_groups query = $query <br>";
         $groups = $this->DB->query($query);
 
-        $this->groupsCSV = $groups->fetch_row()[0];
+        $this->groupsCSV = $groups->fetch_row();
+        $this->groupsCSV = $this->groupsCSV[0];
         //echo "permissions - Set_groups groupsCSV = {$this->groupsCSV} <br>";
 
         $this->groups    = explode(',', $this->groupsCSV);
