@@ -198,7 +198,8 @@ class permissions {
                             WHERE auth_map_classes_groups.cid = '{$this->cid}'
                     ) AS T ";
         $groups = $this->DB->query($query);
-        $this->groupsCSV = $groups->fetch_row()[0];
+        $this->groupsCSV = $groups->fetch_row();
+        $this->groupsCSV = $this->groupsCSV[0];
         $this->groups    = explode(',', $this->groupsCSV);
     }
 
