@@ -59,7 +59,6 @@ HTTP_Session2::updateIdle();*/
 session_start();
 // =====================================
 
-session_start();
 
 // ----------[ unset cookies ]----------
 // sessionManager::unsetCookies();
