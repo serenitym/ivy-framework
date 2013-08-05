@@ -1,8 +1,8 @@
 <?php
 //var_dump($_REQUEST);
 global $core;
-define('tmpl_inc', PUBLIC_PATH . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/tmpl/");
-define('tmpl_url', PUBLIC_URL . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/");
+define('TMPL_INC', PUBLIC_PATH . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/tmpl/");
+define('TMPL_URL', PUBLIC_URL . "fw/LOCALS/{$core->mainModel}/tmpl_{$core->mainTemplate}/");
 
 
 require_once(FW_PUB_PATH.'GENERAL/core/tmpl/header.php');

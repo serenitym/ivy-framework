@@ -14,7 +14,7 @@
             <script type="text/javascript"  src="assets/jquery/jquery-1.7.2.min.js"></script>';
 
 
-            $header_TMPL = tmpl_inc.'header.php';
+            $header_TMPL = TMPL_INC . 'header.php';
             if(is_file($header_TMPL)) require_once($header_TMPL);
 
            echo  $core->cssInc;
@@ -26,9 +26,14 @@
                    . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
                    . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
                  : '');
-    ?>
 
-    <link rel="icon" type="image/png" href="<?php echo FAV_ICON; ?>">
+    if(defined("FAV_ICON")) {
+        echo '<link rel="icon" type="image/png" href="' . FAV_ICON . '">';
+    } else {
+        echo '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favico.png">';
+    }
+
+    ?>
 
 </head>
 <body >

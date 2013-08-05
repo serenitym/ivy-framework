@@ -1,14 +1,20 @@
 
-<!-- ========================================================================================================= -->
+<!-- ======================================================================= -->
 
 
 
-<!--<script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js" type="text/javascript"></script>
-<script type="text/javascript"  src="fw/GENERAL/core/js/_dep_GEN.js" type="text/javascript"></script>-->
+<!--
+    <script type="text/javascript"
+        src="fw/GENERAL/core/js/GEN.js" type="text/javascript"></script>
+    <script type="text/javascript"
+        src="fw/GENERAL/core/js/_dep_GEN.js" type="text/javascript"></script>
+-->
 
-<!-- <script type="text/javascript"  src="fw/GENERAL/core/js/rect.js"></script>-->
-<!-- <script type="text/javascript"  src="GENERAL/js/kcfinder"></script>-->
-<!-- <script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js"></script>-->
+<!--
+    <script type="text/javascript"  src="fw/GENERAL/core/js/rect.js"></script>
+    <script type="text/javascript"  src="GENERAL/js/kcfinder"></script>
+    <script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js"></script>
+-->
     <script type="text/javascript">
         var ivyMods = {
             set_iEdit:{
@@ -29,12 +35,14 @@
     </script>
 
  <?php
-   echo $core->jsTalk;
-   echo $core->jsInc;
-   $footer_TMPL = tmpl_inc.'footer.php';
-   if(is_file($footer_TMPL)) require_once($footer_TMPL);
+echo $core->jsTalk;
+echo $core->jsInc;
+$footer_TMPL = TMPL_INC.'footer.php';
+if (is_file($footer_TMPL)) {
+    include_once $footer_TMPL;
+}
  ?>
 
-<!-- ========================================================================================================= -->
+<!-- ======================================================================= -->
 </body>
 </html>

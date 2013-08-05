@@ -235,8 +235,8 @@ class Ccore extends Cunstable
           * DataBase connection
          */
          $this->mdb =& MDB2::singleton(DSN)->setCharset('utf8');
-         //$this->DB = new IvyDb(DSN);
-         $this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
+         $this->DB = new IvyDb(DSN);
+         //$this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     }
 
