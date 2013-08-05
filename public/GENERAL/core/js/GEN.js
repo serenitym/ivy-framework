@@ -55,11 +55,15 @@ $.fn.minHeight = function(){
 
 //==============================[ ivyMods ]====================================================
 /* Aici vor sta functiile modulelor */
-var ivyMods = {
-    set_iEdit:{
-        //modName : function(){}
-    }
-};
+// pus in core / footer
+if(typeof ivyMods == 'undefined') {
+
+    var ivyMods = {
+         set_iEdit:{
+         //modName : function(){}
+         }
+     };
+}
 
 //=============================[ framework related functions ]==============================
 var fmw = {};
@@ -69,6 +73,13 @@ fmw.idT = 0;
 fmw.idC = 0;
 fmw.lg = 'ro';
 
+/**
+ * Use case :
+ *  <input type='button'  value='more settings' onclick='fmw.toggle(\"form[id^=EDITform] .admin-extras\"); return false;' />
+ *
+ * @param selection - will toggle the selection requested
+ * @return {Boolean}
+ */
 fmw.toggle = function(selection){
     $(selection).toggle();
     return false;

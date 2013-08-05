@@ -56,27 +56,12 @@ if (HTTP_Session2::isIdle()) {
 
 HTTP_Session2::updateIdle();*/
 
-session_start();
 // =====================================
 
 session_start();
 
 // ----------[ unset cookies ]----------
 // sessionManager::unsetCookies();
-// =====================================
-
-
-// ------[ load environment vars ]------
-// require_once(FW_INC_PATH.'GENERAL/core/Cvars.php');
-// =====================================
-
-
-// ----------[ destroy session ]--------
-if (isset($_GET['logOUT'])) {
-    sessionManager::destroySession();
-    sessionManager::unsetCookies();
-    header("Location: http://".$_SERVER['SERVER_NAME']);
-}
 // =====================================
 
 
@@ -89,9 +74,10 @@ $auth = CauthManager::getInstance();
 
 // ---------[ load the base class ]------
 if (isset($_SESSION['auth'])) {
-    $core = new ACLcore($auth);
+    $core = new ACLcore();
+    //$auth->Set_toolbarButtons($core);
 } else {
-    $core = new CLcore($auth);
+    $core = new CLcore();
 }
 //var_dump($_SESSION);
 

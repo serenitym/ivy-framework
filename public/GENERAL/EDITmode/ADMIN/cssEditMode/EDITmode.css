@@ -111,8 +111,8 @@ form[id^="EDITform"]:hover > .TOOLSem,
 
 
 /*________________________________________________________________________________*/
-    /*.TOOLSem input[type='button'],
-     .TOOLSem input[type=submit],*/
+    .TOOLSem input[type='button'],
+     .TOOLSem input[type=submit],
         /*  .TOOLSem .editModeBTT{*/
           .TOOLSem .editModeBTT{
 
@@ -376,6 +376,6 @@ span.cke_skin_kama {padding: 0px !important;}
 /*
  .content{position: relative;}*/
 
-}
+
 /*===============================[custom]=====================================*/
 input[type='button'][name='exitEditMODE'] {display: none !important;}

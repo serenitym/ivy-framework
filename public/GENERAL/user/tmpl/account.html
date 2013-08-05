@@ -1,0 +1,13 @@
+
+<input type='button' name='account' value='account' onclick = \"fmw.toggle('.toolbar-account-form'); return false;\" >
+<form action='' method='post' class='toolbar-account-form' style='display: none'>
+
+    <input type='hidden' name='uid' value='{$o->uid}'>
+
+    <input type='hidden' name='methName' value='deleteAccount'>
+    <input type='hidden' name='modName' value='user'>
+
+    <input type='submit' name='deleteAccount' value='delete account'>
+    <input type='button' name='changePassword' value='change password'>
+    <input type='button' name='inviteMember' value='invite member'>
+</form>

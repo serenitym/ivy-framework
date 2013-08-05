@@ -5,7 +5,7 @@ ivyMods.set_iEdit.sampleMod = function(){
             'ENTname':
             {
                 modName: 'sampleModule'
-                , edit: {}
+                ,edit: {}
                 ,deleteBt: {status:false, methName: 'sampleModule->deleteMethName'}
                 ,addBt: {
                     atrValue: 'un nume',

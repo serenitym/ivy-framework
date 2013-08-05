@@ -10,6 +10,11 @@
 <!-- <script type="text/javascript"  src="GENERAL/js/kcfinder"></script>-->
 <!-- <script type="text/javascript"  src="fw/GENERAL/core/js/GEN.js"></script>-->
     <script type="text/javascript">
+        var ivyMods = {
+            set_iEdit:{
+                  //modName : function(){}
+              }
+        };
         $(document).ready(function(){
 
             <?php
@@ -24,6 +29,7 @@
     </script>
 
  <?php
+   echo $core->jsTalk;
    echo $core->jsInc;
    $footer_TMPL = tmpl_inc.'footer.php';
    if(is_file($footer_TMPL)) require_once($footer_TMPL);

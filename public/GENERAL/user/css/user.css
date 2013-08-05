@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+.toolbar-account-form {
+    /*width: 300px;*/
+    display: none ;
+    background-color: rgb(57, 59, 71) !important;
+    margin-left: -5px !important;
+}
+.toolbar-account {
+    position: relative;
+}
+
+/*
+.acount-actions {
+    position: absolute;
+}*/

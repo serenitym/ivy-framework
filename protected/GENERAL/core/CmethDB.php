@@ -137,33 +137,38 @@ class CmethDB extends CrenderTmpl {
     }
 
     //sql_query
-    public function Db_query($query, $reset=true, $ANCORA='', $location='',
+    public function Db_query($query, $reset = false, $ANCORA='', $location='',
         $paramAdd='', $errorMessage=''
     ) {
 
         $this->DB->query($query);
+
         //echo $query."<br>";
         // daca se cere reset
-        if ($reset) {
-            $this->reLocate($location,$ANCORA,$paramAdd);
-        } else {
+        if (!$reset) {
             return $errorMessage;
+        } else {
+            $this->reLocate($location,$ANCORA,$paramAdd);
         }
     }
 
     //Db_queryBulk
-    public function Db_queryBulk($queries, $reset=true, $ANCORA='', $location='',
+    public function Db_queryBulk($queries, $reset=false, $ANCORA='', $location='',
         $paramAdd='', $errorMessage=''
     ) {
 
         foreach($queries AS $query){
-            $this->DB->query($query);
+            $res =   $this->DB->query($query);
+            // daca nu reuseste sa faca un query va iesii din loop
+            if(!$res) {
+              break;
+            }
         }
 
-        if ($reset) {
-            $this->reLocate($location,$ANCORA,$paramAdd);
-        } else {
+        if (!$reset) {
             return $errorMessage;
+        } else {
+            $this->reLocate($location,$ANCORA,$paramAdd);
         }
 
     }

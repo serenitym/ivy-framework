@@ -1,4 +1,8 @@
 <?php
+/**
+ * Un user va exista mereu ca guest chiar daca este sau nu cineva efelctiv logat
+ * Class Cuser
+ */
 class Cuser extends permissions
 {
 
@@ -17,6 +21,7 @@ class Cuser extends permissions
     */
     public $uclass = 'guest';
     public $permissions;
+    public $rights;                  // pointer to permissions
 
     //public $classes = array();
     public $sets = array();
@@ -49,6 +54,11 @@ class Cuser extends permissions
         return $url;
     }
 
+    protected function Set_classes()
+    {
+        $query = "SELECT cid, name AS uclass FROM auth_classes";
+        $this->classes = $this->C->Db_Get_rows($query);
+    }
     private function getUserData($uid)
     {
         $detailsTable   = 'auth_user_details';
@@ -76,49 +86,56 @@ class Cuser extends permissions
         $this->stats = $this->DB->query($statsQuery)->fetch_object();
     }
 
+    /**
+     * initiaza un user uatentificat
+     */
+    public function _init_authUser(){
+        // dont realy know why it doesn't work
+        /* foreach ($_SESSION['auth'] AS $dbFields => $dbValue) {
+            $this->$dbFields = $dbValue;
+        }*/
+
+
+       // echo "<b>Cuser _init_</b>";
+        // var_dump($_SESSION['userData']);
+        $userData     = &$_SESSION['userData'];
+        $this->uid    = $userData->uid;
+        $this->cid    = $userData->cid ? $userData->cid  : 0;
+        $this->uname  = $userData->uname;
+        $this->email  = $userData->email;
+        $this->uclass = $userData->uclass;
+        // $this->first_name  = $userData->first_name;
+        // $this->last_name  = $userData->last_name;
+        $this->permissions  = $userData->permissions;
+        $this->rights =& $this->permissions;
+
+        if (!$this->permissions) {
+            $this->_init_permissions();
+            error_log("[ ivy ] Cuser - _init_ : Citim permisiunile din bd");
+            //echo "<br> Cuser _init_ : permissions from db ";
+            //var_dump($this->permissions);
+        } else {
+            $this->permissions =  unserialize($this->permissions);
+            //echo "<br> Cuser _init_ : permissions from serialized ";
+            //var_dump($this->permissions);
+        }
+
+        //buttoane pe toolbar
+        // echo "Cuser - _init_authUser : toolbar buttons";
+        $this->toolbarBtts();
+    }
     public function _init_()
     {
         //$uid = $_SESSION['userData']->uid;
 
         //trigger_error('Debug break!', E_USER_ERROR);
-        if (isset($_SESSION['auth'])/* && count($_SESSION['userData']) > 0*/) {
-
-            // dont realy know why it doesn't work
-            /* foreach ($_SESSION['auth'] AS $dbFields => $dbValue) {
-                $this->$dbFields = $dbValue;
-            }*/
-
-
-            $userData     = &$_SESSION['userData'];
-            $this->uid    = $userData->uid;
-            $this->cid    = $userData->cid ?: 0;
-            $this->uname  = $userData->uname;
-            $this->email  = $userData->email;
-            $this->uclass = $userData->uclass;
-            // $this->first_name  = $userData->first_name;
-            // $this->last_name  = $userData->last_name;
-            $this->permissions  = $userData->permissions;
-            $this->rights =& $this->permissions;
-
-            if (!$this->permissions) {
-                $this->_init_permissions();
-                error_log("[ ivy ] Cuser - _init_ : Citim permisiunile din bd");
-                //echo "<br> Cuser _init_ : permissions from db ";
-                //var_dump($this->permissions);
-
-            } else {
-                $this->permissions =  unserialize($this->permissions);
-                //echo "<br> Cuser _init_ : permissions from serialized ";
-                //var_dump($this->permissions);
-            }
-
-        } else {
+        if (!isset($_SESSION['auth'])) {
             return 0;
+        } else {
+            $this->_init_authUser();
         }
 
         //@todo: $_SESSION['userData'] poate ar trebui facut unset si la el
-        //din moment ce e folosit doar la autentificare
-
         // unset l apermisions
         unset($this->C);
         unset($this->tree);
@@ -128,4 +145,56 @@ class Cuser extends permissions
         //var_dump($this);
     }
 
+    //====================================================
+    public function addGEN_edit()
+    {
+        if($this->rights['perm_manage']) {
+           array_push($this->C->defaultAdmin_GENERAL, 'GEN_edit');
+        }
+    }
+    public function addToolbarAccount()
+    {
+        $buttons = $this->C->Render_objectFromPath($this,
+                        "GENERAL/user/tmpl/account.html");
+
+        array_push($this->toolbarBtts, $buttons);
+    }
+    public function addToolbarLogout()
+    {
+        array_push($this->toolbarBtts,"
+            <a href='index.php?logOUT=1' id='logOUT'>
+                Log out {$this->uname}
+                [ id: {$this->uid} | class: {$this->uclass} ]
+            </a>
+        ");
+
+    }
+    public function toolbarBtts()
+    {
+        $this->toolbarBtts = array();
+        if(isset($this->C->TOOLbar)) {
+            $this->toolbarBtts = &$this->C->TOOLbar->buttons;
+        } else {
+
+            $this->toolbarBtts = &$this->C->toolbarBtts;
+        }
+        $this->addGEN_edit();
+        $this->addToolbarLogout();
+        $this->addToolbarAccount();
+
+    }
+
+    public function afterInit(&$C){
+        /**
+         * ADD GEN_edit to c or not
+         * add profile buttons
+         *  - delete account
+         *  - change password
+         *  - ivite
+         */
+        $C->Module_configCorePointers($this);
+        $C->Module_Set_incFilesJsCss($this);
+        $this->toolbarBtts();
+
+    }
 }

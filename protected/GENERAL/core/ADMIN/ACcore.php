@@ -12,22 +12,23 @@ class ACcore extends ACunstable
     public function mergeArray(){
 
         $this->default_PLUGINS = array_merge($this->default_PLUGINS,$this->defaultAdmin_PLUGINS);
+        $this->default_MODELS  = array_merge($this->default_MODELS,$this->defaultAdmin_MODELS);
+        $this->default_LOCALS  = array_merge($this->default_LOCALS,$this->defaultAdmin_LOCALS);
         $this->default_GENERAL = array_merge($this->default_GENERAL,$this->defaultAdmin_GENERAL);
 
 
     }
 
-    public function _init_modules() {
+    protected function Set_modules() {
 
        // $this->adminFolder = true;
 
         $this->mergeArray();
-        parent::_init_modules();
+        parent::Set_modules();
 
-        $this->display = '';
-       # $this->TOOLbar->ADDbuttons("<a href='".PUBLIC_URL."assets/XOS-IDE/XOSIDE/index_EN.php' target='_blank'> IDE </a>");
-
-
+        // not sure for what is this used
+        //$this->display = '';
+        # $this->TOOLbar->ADDbuttons("<a href='".PUBLIC_URL."assets/XOS-IDE/XOSIDE/index_EN.php' target='_blank'> IDE </a>");
     }
 
 }

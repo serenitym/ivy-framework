@@ -90,9 +90,14 @@ class handlePosts
 
     }
 
+    /**
+     * @param $propName = key-ul array-ului
+     * @param $postName = value array
+     */
     function Set_postStrict(&$propName, &$postName)
     {
-        $postName =  $propName;
+        $propName =  $postName;
+       // echo"postName = $postName ===  propName = $propName<br>";
     }
     function Set_postSelectiv(&$propName, &$postName)
     {
@@ -140,11 +145,18 @@ class handlePosts
         // method like = Get_postNameStrict / Get_postNameSelectiv / Get_postNameDesction
         $postMethod ='Set_post'.(is_numeric($firstPropName)
                                     ? "Strict"
-                                    : is_array($firstPostName)
+                                    :( is_array($firstPostName)
                                         ? "Description"
-                                        : "Selectiv"
+                                        : "Selectiv")
                                 );
-        // echo "postMethod {$postMethod} <br>";
+        /**
+         * echo "handlePosts - Get_postmethod :
+              <b>firstPropName = $firstPropName
+               ".(is_numeric($firstPropName) ? "<b>numeric</b>" : "not numeric")."
+              firstPostName = $firstPostName</b>
+              <br>
+        ";*/
+        // echo "<b>postMethod {$postMethod} </b><br>";
         return $postMethod;
     }
     /**
@@ -168,13 +180,20 @@ class handlePosts
      *
      * @return stdClass
      */
-    static function Get_postsFlexy($expectedPots, $concat='', $notEmpty = false)
+    static function Get_postsFlexy($expectedPosts, $concat='', $notEmpty = false)
     {
-        $postMethod = handlePosts::Get_postMethod($expectedPots);
+
+        $postMethod = handlePosts::Get_postMethod($expectedPosts);
+        /**
+         * echo "handlePosts - Get_postsFlexy: expectedPost <br>";
+        var_dump($expectedPosts);
+        echo "handlePosts - Get_postsFlexy: postMethod = $postMethod <br>";
+        echo "//////////////////////////////////////////////////////////////////////// <br>";*/
+
         $concat     = $concat ? "_".$concat : '';
         $posts      = new stdClass();
 
-        foreach( $expectedPots  AS $propName => $postName ) {
+        foreach( $expectedPosts  AS $propName => $postName ) {
 
            handlePosts::$postMethod($propName, $postName);
            $postValue = isset($_POST[$postName.$concat])

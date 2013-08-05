@@ -49,6 +49,12 @@
  */
 class CsetModule extends CgenTools
 {
+    public $cssInc;
+    //Modulele vor seta aceste jsTalk so the php can communicate with scrips
+    public $jsTalk;
+    public $jsInc;
+    public $toolbarBtts = array();
+
 
     #=============================================[ incHtmlTags ]===============
     # 1
@@ -320,22 +326,24 @@ class CsetModule extends CgenTools
         $mod->admin  =  &$this->admin;
         //$mod->LG     =  &$this->lang;
         $mod->lang   =  &$this->lang;
-        $mod->tree   =  &$this->tree;
 
+        // acelasi lucru cu modName
+        $mod->mgrName =  &$this->mgrName;
+        $mod->mgrType =  &$this->mgrType;
 
+    }
+
+    public function Module_configNodePointers(&$mod)
+    {
         # date ale modulului curent
+        $mod->tree        =  &$this->tree;
         $mod->idNode      =  &$this->idNode;
         $mod->idTree      =  &$this->idTree;
 
         $mod->nodeLevel   =  &$this->nodeLevel;
         $mod->nodeResFile =  &$this->nodeResFile;
-        // acelasi lucru cu modName
-        $mod->mgrName =  &$this->mgrName;
-        $mod->mgrType =  &$this->mgrType;
-
 
     }
-
     public function Module_configAttributes(&$mod,$modType,$modName)
     {
         #date despre acest modul
@@ -401,6 +409,7 @@ class CsetModule extends CgenTools
                                                     $this->lang);*/
 
         $this->Module_configCorePointers($mod);
+        $this->Module_configNodePointers($mod);
         $this->Module_configAttributes($mod,$modType,$modName);
         $this->Module_Fs_configYamlProps($mod);
 
@@ -459,7 +468,6 @@ class CsetModule extends CgenTools
      */
     public function Module_Build($modName, $modType, $adminFolder='', $adminPrefix='C')
     {
-
         #1
         if (isset($this->$modName) && is_object($this->$modName) ) {
             //echo "Obiectul care exista deja $modName <br>";

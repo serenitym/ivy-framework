@@ -1,9 +1,17 @@
 <?php
 class Ccore extends Cunstable
 {
+    //===================[ownProps]=============================================
 
-    public $cssInc;
-    public $jsInc;
+    public $modName      = 'core';
+    public $modType      = 'GENERAL';
+    public $mainTemplate = '';
+    public $mainModel    = '';
+
+    public $DB; //data base pointer
+    //===================[Project Setting]======================================
+    public $tree;
+    //public $tempTree;
 
     public $menus;  //array(idMenu= >'MenuName', ...)
     public $lang;
@@ -12,43 +20,7 @@ class Ccore extends Cunstable
 
     public $dsn = '';
 
-    //===================[ modules ]============================================
-
-    /**
-     *  modulele utilizate  in cadrul proiectului
-     *  retinute serializat in var/ tmp/ serUsedModules.txt
-     * @var array mods['modName']['modType', 'admin', 'default', 'defaultAdmin', ];
-     *
-     */
-    public $mods = array();
-    public $modTypes = array();   // array('LOCATION1', 'LOCATION2', ...);
-    public $adminMods = array();  // array('modName' =>  1, ..);
-
-    public $GENERAL = array();   // array('modName');
-    //public $MODELS = array();
-    //public $PULGINS = array();
-    //public $LOCALS = array();
-
-    public $default_GENERAL = array(); // array('modName');
-    //public $default_MODELS = array();
-    //public $default_PULGINS = array();
-    //public $default_LOCALS = array();
-
-    public $defaultAdmin_GENERAL = array(); // array('modName');
-    //public $defaultAdmin_MODELS = array();
-    //public $defaultAdmin_PULGINS = array();
-    //public $defaultAdmin_LOCALS = array();
-
-    //==========================================================================
-    // public $admin = false;
-
-    public $mainTemplate = '';
-    public $mainModel = '';
-
-    public $tree;
-    //public $tempTree;
-
-    //======================================[ current node ]====================
+    //========================[ current node / current page settings]===========
     public $id;
     public $idTree;
     public $idNode;
@@ -63,368 +35,68 @@ class Ccore extends Cunstable
     public $nodeIdParent;
     public $nodeLevel;
 
-
-    //======================[ Methods ]=========================================
-
-    /**
-    * Instantziaza si seteaza /configureaza modulul curent
-    *  - modulul curent = requested by type/moduleName || idNode=> type
-    */
-    public function Set_currentModule()
-    {
-        //$this->Module_Build($this->mgrName,$this->modType) ;
-        //$this->Module_Build($this->modName,$this->modType) ;
-        $this->Module_Build($this->mgrName, $this->mgrType);
-    }
+//================================================[handle posts ]================
 
     /**
-     * Sets default objects (modules) declared in yml files of core AND tmpl_core
+     * Utila pentru apelarea neautomata a unui controler
+     * @param $mod
+     * @param $methName
+     *
+     * @return string
      */
-    public function Set_defaultModules()
+    public function Handle_post($mod, $methName , $autoRelocate = false)
     {
-        foreach($this->modTypes AS $modType)
-        {
-            foreach($this->{'default_'.$modType} AS $modName)
-            {
-                # error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
-                $this->Module_Build($modName,$modType);
+
+
+        $handlingSupport = true;
+        // ======================================[test handling support]====
+        if(!is_object($mod) || !method_exists($mod,$methName)){
+            /**
+                * poate ca aici ar trebui sa incerc sa instantiez obiectul daca nu exista
+                * deci nu stiu ..hmm..cum imi dau seama de ce modType este
+                */
+            $handlingSupport = false;
+            if (!is_object($mod)) {
+                error_log("[ ivy ] "." Ccore - Handle_post"
+                           ."There is no object ");
             }
-        }
-    }
-
-#=============================================[ set - TREE ]====================
-
-
-    # 1
-    /**
-     * Functie recursiva care creaza un tree al paginilor
-     *
-     * WORKING with
-     *
-     *   TB: ITEMS
-     *      id
-     *      name_ro     - numele paginii in engleza / romana
-     *      name_en
-     *      type        - numele modulului care gestioneaza pagina
-     *      SEO         - array serioalizat cu tagurile de SEO
-     *
-     *   TB: TREE
-     *      Pid         - id-ul parintelui
-     *      Cid         - id-ul copiilor
-     *      poz         - pozitia copilului
-     *
-     *
-     *
-     * LOGISTICS
-     *  - orice pagina care nu are un parinte are un tree serializat
-     *  - orice pagina este un obiect item cu
-     *  - functia este reapelata pentro orice pagina/ item care are copii
-     *
-     *      name        - numele curent bazat pe limba curenta
-     *      name_ro
-     *      name_en
-     *      modName        -
-     *      id
-     *      parentId        - id-ul parintelui
-     *      resFile       - numele fisierului de resursa
-     *      children    = array( [poz] => [Cid],... );
-     *
-     *
-     * @param $children
-     * @param string $parentId
-     */
-    public function Build_Db_tree($children, $idTree, $parentId='', $level=0)
-    {
-        foreach ($children AS $idCh) {
-            $this->tempTree[$idCh] = new item();
-            $node  = &$this->tempTree[$idCh];
-
-            $query = "SELECT name_ro, name_en, type, opt
-                      FROM ITEMS
-                      WHERE id='$idCh' ";
-            $qArr  = $this->DB->query($query)->fetch_assoc();
-
-            $node->name    = $qArr['name_'.$this->langs[0]];
-            $node->name_ro = $qArr['name_ro'];
-            $node->name_en = $qArr['name_en'];
-            // deprecated type
-            $node->modName = $qArr['type'];
-
-            // to be handled by the manager if it choses it to do so...
-            $node->modOpt  = !$qArr['opt'] ? '' : json_decode($qArr['opt']);
-            $node->id      = $idCh;
-            $node->idParent= $parentId;
-
-            // deprecated idT
-            $node->idTree  = $idTree;
-            $node->level   = $level;
-            $node->resFile = str_replace(' ', '_', $node->name);
-
-            //deprecated
-            $node->type    = $qArr['type'];
-            $node->idT     = $idTree;
-
-             // afla modType pentru acest node
-            if (in_array($node->modName, $this->MODELS)) {
-                $node->modType = 'MODELS';
-            } elseif (in_array($node->modName, $this->PLUGINS)) {
-                $node->modType = 'PLUGINS';
-            } elseif (in_array($node->modName, $this->LOCALS)) {
-                 $node->modType = 'LOCALS';
+            if (!method_exists($mod,$methName)) {
+                error_log("[ ivy ] "." Ccore - Handle_post"
+                          . " Object has no method ".$methName);
             }
-
-
-             // retine copii acestui nod
-             $query    = " SELECT Pid,Cid,poz FROM TREE where Pid='$idCh' ORDER BY poz ASC ;";
-             $queryRes = $this->DB->query($query);
-
-             while ($ch_arr = $queryRes->fetch_assoc()) {
-                 $node->children[ $ch_arr['poz'] ] = $ch_arr['Cid'];
-             }
-             //var_dump($node);
-             // pentru fiecare copil al acestui node reapeleaza functia
-             if ($queryRes->num_rows) {
-                 $this->Build_Db_tree($node->children, $idTree, $idCh, $level+1);
-             }
-
-         }
-    }
-
-    # 2
-    /**
-     * Returneaza un vector temporar al tree-ului cerut din BD
-     * @param $pathTree     - calea unde ar trebui sa stea tree-ul
-     * @param $idT          - id-ul treeului
-     * @return mixed
-     */
-    public function Set_Fs_tree($pathTree, $idT)
-    {
-          //try si catch
-          // echo 'ACcore SETtree pt tree-ul '.$idTree;  #var_dump($this->tempTree);
-          $treeSer = serialize($this->tempTree);
-          #umask(0777);
-          $succes  = file_put_contents($pathTree,$treeSer);
-          //$succes  = Toolbox::Fs_writeTo($pathTree, $treeSer);
-
-          //if(defined('UMASK')) umask(UMASK);
-          if (!$succes) {
-              error_log( "[ ivy ]"
-                      . "<b>Core - Set_Fs_tree :  Fail file_put_contents in </b>"
-                      . " $pathTree <br>" );
-          }
-          return $this->tempTree;
-
-      }
-
-    # 3
-    /**
-     * Returneaza un vector deserializat al tree-ului curent
-     *
-     * STEPS:
-     *  - daca se gaseste fisierul cu tree-ul serializat
-     *  - daca nu se preia din BD(care creaza un vector temporar - deaceea trebuie unset)
-     *
-     * @param $idTree - id-ul treeului curent
-     * @return mixed
-     */
-    public function Get_tree($idTree)
-    {
-          $pathTree = FW_RES_TREE.'tree'.$idTree.'.txt';
-
-          if (is_file($pathTree)) {
-              return  unserialize(file_get_contents($pathTree));
-
-          } else {
-	          // Build_Db_tree
-	          // scrie tree-ul in res Set_Fs_tree
-              $this->Build_Db_tree(array($idTree), $idTree);
-              //var_dump($this->tempTree);
-              $tree =  $this->Set_Fs_tree($pathTree, $idTree);
-
-              unset($this->tempTree);
-              return $tree;
-          }
-    }
-
-    # 4
-    /**
-     * Seteaza tree-ul curent bazat pe idTree - requested
-     * @return bool - daca a reusit sau nu sa returneze tree-ul
-     */
-    public function Set_currentTree()
-    {
-        if ($this->idTree) {
-            $this->tree = $this->Get_tree($this->idTree);
-
-            if (is_array($this->tree)) {
-                //echo "Ccore - Set_currentTree() : <br>";var_dump($this->tree);
-                return true;
-
-            } else {
-                $this->tree = array();
-                error_log("[ ivy ] ".'Ccore - Set_currentTree : Nu am reusit sa creez treeul');
-                return false;
-            }
-        } else {
-            error_log("[ ivy ] ".'core - Set_currentTree : Nu am nici un idTree');
-            return false;
+            return '';
         }
 
-    }
 
-#=============================================[ ESETIALS ]======================
-
-    # 1
-    /**
-     * Seteaza modulul curent (manager / mgr ) bazat pe $_REQUEST['mgrName']
-     */
-    private function _Set_currentModName()
-    {
-        // deprecated "modName" should be used instead
-        if (isset($_REQUEST['mgrName'])) {
-            $this->mgrName = $_REQUEST['mgrName'];
-            // afla modType pentru acest node
-            if(    in_array($this->mgrName,$this->MODELS )) $this->mgrType = 'MODELS';
-            elseif(in_array($this->mgrName,$this->PLUGINS)) $this->mgrType = 'PLUGINS';
-            elseif(in_array($this->mgrName,$this->LOCALS))  $this->mgrType = 'LOCALS';
+        /**
+             * Daca exista o metoda care sa parseze posturile
+             *  - exemplu validare , trim-uire
+             *  - aruncarea de erori
+             *
+             * => atunci va fii apelata aceasta metoda intai
+             * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
+             * daca nu se mai intampla nimic
+            */
+        if(method_exists($mod,'_hook_'.$methName)) {
+            $handlingSupport = $mod->{'_hook_'.$methName}();
         }
-    }
-    # 1
-    /**
-     * SET: idTree = primary parent, idNode = id ITEMS / page
-     * @return bool
-     */
-    private function _Set_currentTreeNode()
-    {
-        if (isset($_GET['idT'])) {
-               $this->idTree =   $_GET['idT'];
-               $this->idNode = ( $_GET['idC'] ?  $_GET['idC'] : $this->idTree );
-               error_log("[ ivy ] ".'Ccore - _Set_currentTreeNode :' .
-                       "Se incearca setarea currentNode cu "
-                        ."idTree = {$this->idTree} si idNode = {$this->idNode}"
-               );
-               return true;
+       /* echo "<b>Ccore - Handle_post </b> methName = $methName
+               handlingSupport = ".($handlingSupport ? 'true' : 'false')
+              ."<br>";*/
 
-        } elseif ($this->idNode) {
-            return true;
+        //========================================[ handle request data]========
 
-        } else {
-            error_log("[ ivy ] ".'Ccore - _Set_currentTreeNode :' .
-                       ' Nu am reusit sa identific un node pentru tree');
-            return false;
-        }
+        $relocate = false;
+        if($handlingSupport) {
+           //echo "<b>Ccore - Handle_post </b> methName = $methName <br>";
 
-    }
-    # 1
-    /**
-     * Seteaza nodul curent
-     *
-     * @todo: ma gandesc ca toate aceste proprietati poate ar trebui sa
-     * stea intr-un obiect gen $this->current
-     */
-    private function _Set_currentNode()
-    {
-        $curentNode         =  &$this->tree[$this->idNode];
-        if(!$curentNode) {
-            error_log("[ ivy ] Ccore - _Set_currentNode "
-                    ."Nu s-a gasit nici un node pentru idNode = $this->idNode ");
-            return false;
-        }
-        $this->nodeName_ro  =  &$curentNode->name_ro;  /*$this->name_ro*/
-        $this->nodeName_en  =  &$curentNode->name_en;  /*$this->name_en*/
-
-        $this->nodeName     =  &$curentNode->name;     /*$this->name*/
-        $this->nodeResFile  =  &$curentNode->resFile;  /*$this->nameF*/
-
-
-        $this->nodeChildren =  &$curentNode->children; /*$this->children*/
-        $this->nodeId       =  &$curentNode->id;       /*$this->id*/
-        $this->nodeIdParent =  &$curentNode->idParent; /*$this->idParent*/
-        $this->nodeLevel    =  &$curentNode->level;    /*$this->level*/
-
-        $this->mgrName      =  &$curentNode->modName;
-        error_log("[ ivy ] "."Ccore - _Set_currentNode mgrName = $this->mgrName");
-        $this->mgrType      =  &$curentNode->modType;
-        error_log("[ ivy ] "."Ccore - _Set_currentNode mgrType = $this->mgrType");
-
-    }
-
-#===============================================================================
-    /**
-     * @todo: trebuie sa ma mai gandesc la integrarea ei
-     *
-     * Seteaza vectorul de module utilizare $this->mods
-     * utilizat astfel:
-     *
-     * $this->mods[$modName]->modType
-     * $this->mods[$modName]->admin
-     * $this->mods[$modName]->default       - nu foarte utilizata
-     * $this->mods[$modName]->defaultAdmin  - nu foarte utilizata
-     */
-    private function _Set_Fs_usedModules()
-    {
-        $path =    VAR_PATH.'/tmp/serUsedModules.txt';
-
-        if (file_exists($path)) {
-            $serMods = file_get_contents($path);
-            $this->mods = unserialize($serMods);
-            // daca vectorul nu a fost creat in modul admin => ii lipsesc setarile
-            // din Acore.yml => trebuie recreat
-
-            if ($this->admin && !isset($this->mods['adminYml'])) {
-                unlink($path);
-                $this->mods = array();
-                $this->_Set_Fs_usedModules();
-            }
-
-        } else {
-            // daca suntem in modul admin si nu este creat vectorul $this->mods
-            // atunci in cream si inregistram ca este complet cu partea de admin
-            if ($this->admin) {
-                $this->mods['adminYml'] = true;
-            }
-             // construieste vectorul $mods
-            if (isset($this->modTypes) && is_array($this->modTypes)) {
-                foreach($this->modTypes AS $modType){
-                    //seteaza modulele folosite in proiect
-                    foreach($this->$modType AS $modName){
-                        $this->mods[$modName] = new module($modType);
-
-                        // seteaza daca modulul are sau nu admin
-                        if (isset($this->adminMods[$modName])) {
-                            $this->mods[$modName]->admin = 1;
-                        }
-                    }
-                    // seteaza modulele default
-                    foreach($this->{'default_'.$modType} AS $modName) {
-                        if (isset($this->mods[$modName])) {
-                            $this->mods[$modName]->default = 1;
-                        }
-                    }
-                    foreach($this->{'defaultAdmin_'.$modType} AS $modName) {
-                        if (isset($this->mods[$modName])) {
-                            $this->mods[$modName]->defaultAdmin = 1;
-                        }
-                    }
-                }
-            } else {
-                // cauta in baza de date dupa aceste setari
-                // daca nu reuseste sa gaseasca nimic in BD ar trebui returnat un
-                // error_log cu eroare
-            }
-
-            // scrie vectorul serializat in fisier
-            if (count($this->mods) > 0) {
-                $serMods = serialize($this->mods);
-                $succes = file_put_contents($path, $serMods);
-                if (!$succes) {
-                    error_log("[ ivy ] "."Ccore - _Set_Fs_usedModules :" .
-                            " Nu a putut scrie serializarea modulelor in fisier");
-                }
+            $relocate = $mod->{$methName}();
+            if ($autoRelocate && $relocate) {
+                $this->reLocate();
             }
         }
+        return $relocate;
 
-       // var_dump($this->mods);
     }
 
     /**
@@ -438,126 +110,102 @@ class Ccore extends Cunstable
 
             $modName    = $_POST['modName'];
             $methName   = $_POST['methName'];
+
             // oricum cred ca face relocate in CmethDb
             //$relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : false ;
-
-            // ======================================[test handling support]====
-
-            $handlingSupport = true;
-            if(is_object($this->$modName) && method_exists($this->$modName,$methName)){
-
-                $mod = &$this->$modName;
-                /**
-                 * Daca exista o metoda care sa parseze posturile
-                 *  - exemplu validare , trim-uire
-                 *  - aruncarea de erori
-                 *
-                 * => atunci va fii apelata aceasta metoda intai
-                 * daca returneaza true => datele sunt valide si se poate procesa introducerea lor
-                 * daca nu se mai intampla nimic
-                */
-                if(method_exists($mod,'_hook_'.$methName)) {
-                    $handlingSupport = $mod->{'_hook_'.$methName}();
-                }
-
+            $mod = &$this->$modName;
+            if(!is_object($mod)){
+                error_log("[ ivy ] "." Ccore - Handle_post"
+                          ."There is no object $modName");
+                return '';
+            }
+            // se pot trimite mai multe metode de handling despartite prin virgula
+            $methNames = explode(',', $methName);
+            // pentru ca nu trebuie sa faca relocate decat dupa ce executa
+            // toate metodele din lista
+            // daca e o singura metoda in lista relocateul va fi automat
+            $autoRelocate = count($methNames) == 1 ? true : false;
+            foreach($methNames AS $methName)
+            {
+                // daca exista obiectul
+                $methName = trim($methName);
+                //echo "<b>Ccore - Handle_postRequest </b> modName = $modName && methName = $methName <br>";
+                $relocate = $this->Handle_post($mod, $methName, $autoRelocate);
+            }
+            // $relocateul final va fi dat de ultima metodata apelata
+            if ($relocate || !$autoRelocate) {
+                $this->reLocate();
             } else {
-                $handlingSupport = false;
-                if (!is_object($this->$modName)) {
-                    error_log("[ ivy ] "." Ccore - Handle_postRequest"
-                            ."There is no object ".$modName);
-                }
-                if (!method_exists($this->$modName,$methName)) {
-                    error_log("[ ivy ] "." Ccore - Handle_postRequest"
-                            . " Object has no method ".$methName);
-                }
+                /*echo "Ccore - Handle_postRequest : autoRelocate = $relocate";
+                var_dump($_POST);*/
             }
-
-            //========================================[ handle request data]====
-            if($handlingSupport) {
-                $relocate = $mod->{$methName}();
-                if ($relocate) {
-                    $this->reLocate();
-                }
-            }
-
         }
 
     }
+//===============================================================================
 
-    #1  - A | use:
-    /**
-     *LOGISTICS
-     *
-       *
-       *  - try to set the type property
-       *  - if idTree & idC exists => a tree[idTree].txt should exist in /public/GENERAL/core/RES_TREE
-       *  - from that tree we should be albe to determine the current item with all of its properties
-       *
-       *  - if a type is set - set requested module
-       *
-       *  - sets the default mod.'s     => le instantiaza obiectele si seteaza tagurile  js/css aferente ;
-      */
-    public function _init_modules()
+    protected function Set_currentPage()
     {
-
-        #================[ set current tree & module ]==========================
-        if ($this->_Set_currentTreeNode() &&  $this->Set_currentTree()) {
-            $this->_Set_currentNode();
-        } else {
-            // pentru a initia un modul putem trimite "modName"
-            //nu neapara idC || idTree
-            $this->_Set_currentModName();
-        }
-
-
-        #================[ init All ]============================================
-
-        $this->Set_defaultModules();
-        #pus aici pentru ca intai trebuie initializata limba
-        $this->SET_HISTORY($this->idNode);
-        if ($this->mgrName) {
-            //echo "Ccore - _init_modules : Current ModuleName is $this->mgrName <br>";
-            $this->Set_currentModule();
-        } else {
-            error_log("[ ivy ] "."Ccore - _init_modules : "
-                    . " Atentie nu este definit nici un modul manager!!!");
-        }
-        //var_dump($this->cssInc);
-        //var_dump($this->jsInc);
-       // var_dump($_POST);
-        $this->Handle_postRequest();
-
-    }
-
-#===============================================================================
-
-    function _init_($userData=NULL)
-    {
-        if(PROFILER == 1)
-            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
-
-       /**
-         * DataBase connection
-        */
-
-        $this->mdb =& MDB2::singleton(DSN)
-            ->setCharset('utf8');
-
-        $this->DB = new IvyDb(DSN);
-
-        //$this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-
+        //REQUESTS :
         /**
-         * GENERAL settings
+         * $_REQUEST['mgrName']
+         * $_GET['idT']
+         * $_GET['idC']
          */
-        #atentie daca nu are template o sa includa tot din core/js si core/css
-        $this->modName = 'core';
-        $this->modType = 'GENERAL';
-        $this->Module_Fs_configYamlProps($this);          #seteaza variabilele personalizate
-        $this->Module_Set_incFilesJsCss($this);
-        //var_dump($this);
+        $idTree = isset($_GET['idT']) ? $_GET['idT'] : '';
+        $idNode = isset($_GET['idC']) ? $_GET['idC'] : '';
 
+        // echo "Ccore - Set_currentPage REQUEST";
+        //var_dump($_REQUEST);
+        /**
+         * Daca s-a reusit sa se steze atat idTree cat si idNode
+         * - are sens sa  culegem un tree
+         * - sa se setam nodul curent
+         *
+         * Daca nu , incercam sa vedem daca s-a cerut un manager
+         * pentru pagina
+        */
+        if ($this->Set_currentTreeNode($idTree, $idNode)) {
+            if($this->Set_currentTree()) {
+                $this->Set_currentNode();
+            }
+
+        } else {
+            /**
+             * pentru a initia un modul putem trimite "mgrName"
+             * nu neapara idC || idTree
+             */
+            if(isset($_REQUEST['mgrName']))
+            $this->Set_currentManager($_REQUEST['mgrName']);
+        }
+
+    }
+
+    #1.4
+    protected function addModuleUser()
+    {
+        // var_dump($userData);
+        /**
+         * Set modul user
+         * pentru ca obiectul nu este instantiat de core deci
+         * nu are proprietatile necesare pentru templatind
+         * modName, modType
+        */
+        //$this->user = &$userData->user;
+        if (isset($_SESSION['user'])) {
+            error_log("[ ivy ] Ccore - _init_ exista SESSION['user']");
+            $this->user = $_SESSION['user'];
+            $this->user->afterInit($this);
+            //echo "User prin session";
+        } else {
+            array_push($this->default_GENERAL,'user');
+            //$this->Module_Build('user','GENERAL');
+        }
+
+    }
+    #1.3
+    protected function Set_mainModule()
+    {
         /**
          * Local project settings
          */
@@ -567,34 +215,51 @@ class Ccore extends Cunstable
             $this->Set_incFiles($this->mainModel, 'LOCALS', 'js','',  $this->mainTemplate);
        }
 
+    }
+    #1.2
+    protected function Set_core()
+    {
+        #atentie daca nu are template o sa includa tot din core/js si core/css
+        // declarate la inceputul clasei ca proprietati
+        //$this->modName = 'core';
+        //$this->modType = 'GENERAL';
+        $this->Module_Fs_configYamlProps($this);          #seteaza variabilele personalizate
+        $this->Module_Set_incFilesJsCss($this);
+        //var_dump($this);
 
-
+    }
+    #1.1
+    public function Set_db()
+    {
         /**
-         * Set modul user
-         * pentru ca obiectul nu este instantiat de core deci
-         * nu are proprietatile necesare pentru templatind
-         * modName, modType
-        */
-       if ($userData) {
-            //$this->user = &$userData->user;
-            if (isset($_SESSION['user'])) {
-                error_log("[ ivy ] Ccore - _init_ exista SESSION['user']");
-                $this->user = $_SESSION['user'];
-                //echo "User prin session";
-            } else {
-                array_push($this->default_GENERAL,'user');
-                //$this->Module_Build('user','GENERAL');
-            }
+          * DataBase connection
+         */
+         $this->mdb =& MDB2::singleton(DSN)->setCharset('utf8');
+         //$this->DB = new IvyDb(DSN);
+         $this->DB = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+    }
+
+    function _init_()
+    {
+        if(defined(PROFILER) && PROFILER == 1) {
+            $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
         }
 
+        $this->Set_db();
+        $this->Set_core();
+        $this->Set_mainModule();
+        $this->addModuleUser();
 
+        $this->Set_currentPage();
         // instantiaza modulele default + current
-        $this->_init_modules();
-
+        $this->Set_modules();
+       // var_dump($_POST);
+        // handling post request based on "methName & modName Posts"
+        $this->Handle_postRequest();
 
         // set vectorul de module utilizate
-        $this->_Set_Fs_usedModules();
+        $this->Set_Fs_usedModules();
         //var_dump($_SESSION['userData']);
         //var_dump($_SESSION['user']);
 
@@ -605,9 +270,9 @@ class Ccore extends Cunstable
 
     }
     # COMMENT THIS!!!
-    function __construct($userData=NULL)
+    function __construct()
     {
-        $this->_init_($userData);
+        $this->_init_();
 
     }
 
@@ -637,7 +302,6 @@ class Ccore extends Cunstable
            // echo "A fost apelat core -> DB_reConnect este connectat <br>";
         }
 
-
     }
     public function wakeup()
     {
@@ -647,9 +311,10 @@ class Ccore extends Cunstable
     }
     public function __destruct()
     {
-        if(PROFILER == 1)
+        if(defined(PROFILER) && PROFILER == 1)
             $this->profiler->display($this->DB);
     }
-    public function __clone  ()
-    { }
+    /**
+     * public function __clone  ()
+    { }*/
 }

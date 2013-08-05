@@ -77,6 +77,8 @@ class CauthManager extends authCommon implements Serializable {
     }
     /* }}} */
 
+    //==========================================================================
+    // not sure where is this used
     protected function getAllLoginDetails($loginName='', $type='email') {
         //TODO: docblock
         $loginQ = ( $type == 'email'
@@ -187,30 +189,55 @@ class CauthManager extends authCommon implements Serializable {
     }
     /* }}} */
 
+    /*public  function Set_toolbarButtons(&$C)
+    {
+        array_push($C->TOOLbar->buttons,"
+            <a href='index.php?logOUT=1' id='logOUT'>
+                Log out {$C->user->uname}
+                [ id: {$C->user->uid} | class: {$C->user->uclass} ]
+            </a>
+        ");
+    }*/
+
+    protected function login()
+    {
+        // true / false - autentificat sau nu
+        $authStatus = $this->authCheck( $_POST['loginName'], $_POST['password']);
+
+        if ($authStatus) {
+
+            $_SESSION['userData'] = $this->userData;
+            // daca userul este autentificat
+            $_SESSION['auth']     = true;
+
+            // --------[ set session cookie ]-------
+            sessionManager::setSessionCookie($this->userData, 3600);
+            sessionManager::sessionToSQL(3600);
+        } else {
+            // Return 0, this means the check returned a Guest account
+            unset($_SESSION['auth']);
+            unset($_SESSION['userData']);
+        }
+        //Toolbox::clearSubmit();
+
+    }
+    protected function logout()
+    {
+        sessionManager::destroySession();
+        sessionManager::unsetCookies();
+        header("Location: http://".$_SERVER['SERVER_NAME']);
+    }
+
+    /**
+     * Metoda apelate direct din Singleton
+    */
     /* {{{ protected init  */
-    protected function init () {
-
-
+    protected function init ()
+    {
         if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
-
-            // true / false - autentificat sau nu
-            $authStatus = $this->authCheck( $_POST['loginName'], $_POST['password']);
-
-            if ($authStatus) {
-
-                $_SESSION['userData'] = $this->userData;
-                // daca userul este autentificat
-                $_SESSION['auth']     = true;
-
-                // --------[ set session cookie ]-------
-                sessionManager::setSessionCookie($this->userData, 3600);
-                sessionManager::sessionToSQL(3600);
-            } else {
-                // Return 0, this means the check returned a Guest account
-                unset($_SESSION['auth']);
-                unset($_SESSION['userData']);
-            }
-            //Toolbox::clearSubmit();
+            $this->login();
+        } elseif (isset($_GET['logOUT'])) {
+            $this->logout();
         }
 
     }

@@ -23,6 +23,7 @@ class ACEDITmode
      */
     function activate()
     {
+        //echo "ACEDITmode - activate : tring to activate live-edit";
         $_SESSION['activeEdit'] =  true;
         $this->C->reLocate();
     }
@@ -40,6 +41,7 @@ class ACEDITmode
      */
     function setStatus()
     {
+        //var_dump($_SESSION);
          if(isset($_SESSION['activeEdit'])) {
              $activeValue = "stop live edit";
              $activeMeth = "deactivate" ;
@@ -48,8 +50,8 @@ class ACEDITmode
              $activeValue = "start live edit";
              $activeMeth = "activate" ;
          }
-         isset($_SESSION['activeEdit']) ?  : "start live edit";
-         isset($_SESSION['activeEdit']) ? "deactivate" : "activate";
+        // isset($_SESSION['activeEdit']) ? "stop live edit" : "start live edit";
+         //isset($_SESSION['activeEdit']) ? "deactivate" : "activate";
 
          $this->C->TOOLbar->ADDbuttons(
             "<span>

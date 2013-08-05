@@ -4,7 +4,7 @@
  * - metodele "staging" din cadrul claselor din core
  * nestandardizate, nesigure dar generale
  */
-class Cunstable extends CsetModule{
+class Cunstable extends Ctree{
 
 
     // Get_path methods
@@ -44,7 +44,7 @@ class Cunstable extends CsetModule{
     {
         if (!$resName) {
            // daca modulul este managerul curent al paginii
-           // see Ccore->_Set_currentNode()
+           // see Ccore->Set_currentNode()
             //if ($this->mgrName == $mod->modName)
             $resName = $this->mgrName == $mod->modName
                      ? $this->nodeResFile
