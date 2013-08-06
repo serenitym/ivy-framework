@@ -50,7 +50,11 @@ class ClassLoader {
             //echo "trying class list.\n<br>";
             $this->refreshClassList();
         }
-        include_once $this->classList[$className] ;
+        if (substr($this->classList[$className], -4, 4) === ".php") {
+            include_once $this->classList[$className] ;
+        } else {
+            return false;
+        }
     }
 
     private function initClassList()

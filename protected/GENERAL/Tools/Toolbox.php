@@ -261,10 +261,14 @@ class Toolbox extends LibToolbox
 
     static function curURL()
     {/*{{{*/
-        $https = strlen(strval($_SERVER['HTTPS'])) == 0
-                ? 'http://'
-                : 'https://';
-        return $https.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+        $http = 'https://';
+
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
+            || $_SERVER['SERVER_PORT'] == 443) {
+                $http = 'https://';
+            }
+
+        return $http.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
     }/*}}}*/
 
 }

@@ -16,7 +16,7 @@
             ';
 
 
-            $header_TMPL = tmpl_inc.'header.php';
+            $header_TMPL = TMPL_INC . 'header.php';
             if(is_file($header_TMPL)) require_once($header_TMPL);
 
            echo  $core->cssInc;
@@ -30,7 +30,13 @@
       );
     ?>
 
-    <link rel="icon" type="image/png" href="<?php echo FAV_ICON; ?>">
+    if(defined("FAV_ICON")) {
+        echo '<link rel="icon" type="image/png" href="' . FAV_ICON . '">';
+    } else {
+        echo '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favico.png">';
+    }
+
+    ?>
 
 </head>
 <body>

@@ -10,7 +10,7 @@
 
     <?php
 
-    $content_TMPL = tmpl_inc.'content.php';
+    $content_TMPL = TMPL_INC.'content.php';
 
     if(is_file($content_TMPL)) require_once($content_TMPL);
     else
