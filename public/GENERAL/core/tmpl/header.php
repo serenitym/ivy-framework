@@ -28,7 +28,6 @@
                    . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
                    . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
       );
-    ?>
 
     if(defined("FAV_ICON")) {
         echo '<link rel="icon" type="image/png" href="' . FAV_ICON . '">';
