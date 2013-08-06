@@ -1,3 +1,5 @@
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `auth_users`
 --
@@ -24,6 +26,7 @@ ALTER TABLE `auth_users`
   ADD CONSTRAINT `auth_users_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `auth_classes` (`cid`) ON UPDATE CASCADE;
 
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `auth_user_details`
@@ -47,3 +50,68 @@ CREATE TABLE IF NOT EXISTS `auth_user_details` (
   UNIQUE KEY `uid` (`uid`),
   KEY `sid_details` (`last_login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `auth_user_details`
+--
+ALTER TABLE `auth_user_details`
+  ADD CONSTRAINT `auth_user_details_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `auth_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_user_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `auth_user_stats` (
+  `uid` int(4) NOT NULL COMMENT 'User id (FK)',
+  `age` int(6) DEFAULT NULL COMMENT 'Age on site (days)',
+  `failed_logins` tinyint(1) DEFAULT NULL,
+  `comments_count` int(6) DEFAULT NULL COMMENT 'Comments counter',
+  `articles_count` int(6) DEFAULT NULL COMMENT 'Articles counter',
+  `warn_count` int(2) DEFAULT NULL COMMENT 'Warns count',
+  `permissions` text,
+  UNIQUE KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `auth_user_stats`
+--
+ALTER TABLE `auth_user_stats`
+  ADD CONSTRAINT `auth_user_stats_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `auth_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_sessions`
+--
+
+CREATE TABLE IF NOT EXISTS `auth_sessions` (
+  `sid` char(32) NOT NULL COMMENT 'PHP session ID',
+  `uid` int(4) NOT NULL COMMENT 'User ID',
+  `address` char(39) NOT NULL COMMENT 'IP address',
+  `agent` text NOT NULL COMMENT 'User agent',
+  `time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT 'Time started',
+  `expires` int(10) unsigned DEFAULT NULL COMMENT 'Lifetime',
+  PRIMARY KEY (`sid`),
+  KEY `uid_sid` (`uid`),
+  KEY `fk_auth_sessions_1` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `auth_sessions`
+--
+ALTER TABLE `auth_sessions`
+  ADD CONSTRAINT `fk_auth_sessions_1` FOREIGN KEY (`uid`) REFERENCES `auth_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE;

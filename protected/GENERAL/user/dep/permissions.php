@@ -4,7 +4,7 @@
  * Aceaste metode vor fi utilizate doar daca vectorul 'permissions'
  * nu a fost inca setat din bd - auth_user_stats
  */
-class permissions extends Auser {
+class Dep_Permissions extends Auser {
 
     // comming from $_SESSION['userData'] & seted by CauthManager
     public $uid = 0;
@@ -130,8 +130,21 @@ class permissions extends Auser {
         // error_log( "[ ivy ] permissions - Set_permissions : query =  $query");
         // echo  "[ ivy ] permissions - Set_permissions : query =  $query <br>";
         $res = $this->DB->query($query);
-        $this->permissions = $res->fetch_assoc();
-        var_dump($this->permissions);
+
+        #2 + #3
+        if ($res->num_rows >= 1) {
+            $this->permissions = $res->fetch_assoc();
+
+            // echo "<b>perminssions - initial row</b> <br><br>";
+            // var_dump($this->permissions);
+            while($row = $res->fetch_assoc()) {
+                foreach($row AS $permName => $permValue) {
+                    $this->permissions[$permName] = $this->permissions[$permName] || $permValue;
+                    //echo "permissions - $permName = ".$this->permissions[$permName]."<br>";
+                }
+                //echo "perminssions - new row <br><br>";
+            }
+        }
 
     }
 
@@ -164,6 +177,43 @@ class permissions extends Auser {
     }
 
     /**
+     * Seteaza id-urile grupurilor de permisiunui atribituite unui user
+     * si deasemenea concatendarea acestora
+     *  - $this->groups
+     *  - $this->grpupsCSV
+     *
+     *  oldName: getUserGroups
+     * @param     $uid
+     * @param int $cid
+     */
+    private function Set_groups ($uid, $cid = 0)
+    {
+        $query = "SELECT group_concat(g) AS groups
+                    FROM (SELECT auth_map_users_groups.gid AS g
+                            FROM auth_map_users_groups
+                            JOIN auth_groups
+                              ON (auth_groups.gid = auth_map_users_groups.gid)
+                            WHERE auth_map_users_groups.uid = '{$this->uid}'
+
+                            UNION
+
+                           sELECT auth_map_classes_groups.gid AS g
+                              FROM auth_map_classes_groups
+                              JOIN auth_groups
+                               ON (auth_map_classes_groups.gid = auth_groups.gid)
+                            WHERE auth_map_classes_groups.cid = '{$this->cid}'
+                    ) AS T ";
+        //echo "<b>permissions - Set_groups query</b> = $query <br>";
+        $groups = $this->DB->query($query);
+
+        $this->groupsCSV = $groups->fetch_row();
+        $this->groupsCSV = $this->groupsCSV[0];
+        //echo "permissions - Set_groups groupsCSV = {$this->groupsCSV} <br>";
+
+        $this->groups    = explode(',', $this->groupsCSV);
+    }
+
+    /**
      *  Seteaza urmatoarele:
      *  1. $this->goups & $this->groupsCSV
      *  2. $this->tableNames
@@ -176,14 +226,21 @@ class permissions extends Auser {
         $this->jsonFile = VAR_PATH.'tmp/' . $this->jsonFile;
 
         #1
-        $this->Set_tableNames();
+        $this->Set_groups($this->uid, $this->cid);
         #2
-        $this->Set_permissions($this->cid);
+        $this->Set_tableNames();
         #3
-        $this->Set_permissionSets();
+        $this->Set_permissions($this->cid);
         #4
+        $this->Set_permissionSets();
+        #5
         $this->Set_Db_permissions();
 
-
+        //Toolbox::dump($this->permissions, 'Permissions');
+        /*foreach($this->groups as $gid) {
+            $this->markPermissions($gid);
+        }*/
+        //echo "permissions - setPermission ";
+        //var_dump($this->permissions);
     }
 }

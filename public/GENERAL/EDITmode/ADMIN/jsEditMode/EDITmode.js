@@ -60,8 +60,9 @@ var iEdit = function(){
      *            deleteBt : {methName:'', status : 1, atrName:"delete_"+Name, atrValue: 'd' },
                   saveBt : {methName:'',status : 1, atrName:"save_"+Name, atrValue: 's' },
 
-                  // pentru partea de add
-                  extraBts:
+                  // butoane extra pentru elements
+                  // atentie allEnts trebuie sa isi declare singura extraButtons
+                  extraButtons:
                   {
                       manageGroup: {
                           callBack: "ivyMods.team.showManageGroups();",
@@ -77,8 +78,6 @@ var iEdit = function(){
                           class: ''
                       }
                   }
-                  // pentru orice element, trebuie un refactoring aici
-                  extraButtons: { same as above},
 
                   // adaugare de html direct in TOOLS
                   extraHtml: ['htmlConetnt ',
@@ -414,60 +413,75 @@ var iEdit = function(){
 
     }
     // for addElement
-    function get_elementToAdd(firstENT){
-        var classes         = firstENT.attr('class');
-        var TYPEarr         = classes.split(' ');
-        var cls             = classes.replace('ENT','');   //ENT || SING - restul claselor fara denumirea de ENT sau SING
-        var nameENT         = TYPEarr[TYPEarr.length - 1]; //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
-        var BTT             = getBtt(nameENT, {});
-        var BTTadd          = {status : 1, style : '', atrValue: '+', methName: '' };
+    function get_elementToAdd(firstENT, allEnts){
+        var elD = {};
 
-        if (typeof BTT.addBt !='undefined') {
-            $.extend(BTTadd, BTT.addBt);
-        }
+        if(firstENT.length != 0) {
 
-        return {
-            FORM_content    : firstENT.find('.ELMcontent').html(),
-            FORM_class      : cls+" addForm",
-            nameENT         : nameENT,
-            FORM_id         : "new_"+nameENT+'_'+LG,
-            html_extraBTTS  : function(){
+            elD.classes      = firstENT.attr('class');
+            elD.TYPEarr      = classes.split(' ');
+            //ENT || SING - restul claselor fara denumirea de ENT sau SING
+            elD.cls          = classes.replace('ENT','');
+            //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
+            elD.nameENT      = TYPEarr[TYPEarr.length - 1];
+            elD.FORM_content = firstENT.find('.ELMcontent').html();
+            elD.FORM_class   = cls+" addForm";
+            elD.FORM_id      = "new_"+nameENT+'_'+LG;
+            // buttons settings
+            elD.BTT          = getBtt(nameENT, {});
+            elD.BTTadd       = {status : 1, style : '', atrValue: '+', methName: '' };
 
-                if( BTT.extraBts =='undefined') {
-                    console.log('get_elementToAdd - NU Avem extra butoane');
-                    return '';
-                } else {
+            if (typeof elD.BTT.addBt !='undefined') {
+                $.extend(elD.BTTadd, elD.BTT.addBt);
+            }
 
-                    console.log('get_elementToAdd - Avem extra butoane');
+            elD.html_ctrlAction = function(){
 
-                    var htmlButtons = '';
-                    for(var key in BTT.extraBts){
-
-                        var extraBtt = { callBack : '',atrValue : key,
-                                         atrName: key,  atrType:  'button'};
-                        $.extend(extraBtt, BTT.extraBts[key]);
-                        htmlButtons += templates.get_extraButtons(extraBtt);
-                    }
-
-                    return htmlButtons;
-                }
-
-            }(),
-            /**
-             * nu prea e ok pusa aici ( din cauza numelui addNew nu putem apela
-             * automat ivyMethod_actionBind
-             */
-            html_ctrlAction : function(){
-                 if (BTT.modName != 'undefined') {
-                     return  "<input type='hidden' name='modName' value='"+BTT.modName+"' />" +
-                             "<input type='hidden' name='methName' value='"+BTTadd.methName+"' />";
+                 if (elD.BTT.modName != 'undefined') {
+                     return  "<input type='hidden' name='modName' value='"+elD.BTT.modName+"' />" +
+                             "<input type='hidden' name='methName' value='"+elD.BTTadd.methName+"' />";
 
                  }
                  return '';
-            }(),
-            BTT             : BTT,
-            BTTadd          : BTTadd
-        };
+            }();
+
+        } else {
+            elD.BTT             = {status: false};
+        }
+
+
+
+        var allEntsClss = allEnts.attr('class').split(' ');
+        var allEntsName = allEntsClss[allEntsClss.length - 1];
+        //console.log('allEntsName = '+ allEntsName);
+
+        elD.BTTall = getBtt(allEntsName, {});
+
+        elD.html_extraBTTS = function(){
+
+            if( elD.BTTall.extraButtons =='undefined') {
+                console.log('get_elementToAdd - NU Avem extra butoane');
+                return '';
+            } else {
+
+                console.log('get_elementToAdd - Avem extra butoane');
+
+                var htmlButtons = '';
+                for(var key in elD.BTTall.extraButtons){
+
+                    var extraBtt = { callBack : '',atrValue : key,
+                                     atrName: key,  atrType:  'button'};
+
+                    $.extend(extraBtt, elD.BTTall.extraButtons[key]);
+
+                    htmlButtons += templates.get_extraButtons(extraBtt);
+                }
+                //console.log('extra butoanele sunt = ' + htmlButtons);
+                return htmlButtons;
+            }
+        }();
+
+        return elD;
 
     }
     // for init:tools
@@ -954,39 +968,21 @@ extraBts
 
             },
             tools_addEnt : function(){
-                /**
-               * UTILIZARE GENERALA EDITmode.js
-               *
-               * < * class='allENTS [otherClasses] [entSName]' id = '[entSName]_[LG]' >
-               *     - add new ent
-               *
-               *     <class='ENT [otherClasses] [entName]' id = '[entName]_[id]_[LG]' >
-               *
-               *  - delete
-               *  - edit
-               *  - save
-               *  - exit edit (cancel)
-               *
-               *  < * class='SING [otherClasses] [singName]' id = '[singName]_[id]_[LG]' >
-               *      - edit
-               *      - save
-               *      - exit edit (cancel)
-               */
 
-                function Prepare_addForm(elD, addForm){
-                       // *** ATENTIE trebuie golita si imaginea
-                       /**
+                function prepare_addForm(elD, addForm){
+                      // *** ATENTIE trebuie golita si imaginea
+                      /**
                        * Se golesc toate fieldurile editabile
                        * apoi se pune o alta clasa fieldurilor editabile - cu CKeditor pentru a
                        * nu mai trebui sa distrug instantele de CKeditor pentru add-uri
+                       *
                        * */
-                        // probabil ca cele 2 ar trebuii inlantuite
+                      // probabil ca cele 2 ar trebuii inlantuite
 
                       addForm
                       .find('*[class^=ED]')
                       .empty();
                        //  .find('*[class^=ED]').not('*[class=EDpic]').empty();
-
 
                       addForm
                       .find('*[class^=EDeditor]')
@@ -1039,41 +1035,34 @@ extraBts
                 // cu this
                 $('*[class^=allENTS]').map(function()
                 {
-                      var allENTS   = $(this);
-                      var firstENT  = $(this).find('*[class^=ENT]:first');
+                    var allENTS   = $(this);
+                    var firstENT  = $(this).find('*[class^=ENT]:first');
+                    var elD       = get_elementToAdd(firstENT, allENTS); //from element Details
+                    var tools     =  templates.get_addTools(elD);
+                    var addForm   =  $("#"+elD.FORM_id);
 
-                     // daca sunt elemente in cadrul allENTS
-                      if(firstENT.length != 0)
-                      {
-                          var elD = get_elementToAdd(firstENT); //from element Details
-                          var tools =  templates.get_addTools(elD);
-                          //console.log('addEnt tools = '+tools);
-                          allENTS.prepend(tools);
-                          //alert(BTTstatus);
-                           if(elD.BTTadd.status)
-                           {
-                                firstENT.before(templates.get_addForm(elD));
-                                var addForm =  $("#"+elD.FORM_id);
-                                Prepare_addForm(elD, addForm);
-                                transform(addForm,'form[class$=addForm]', elD.nameENT);
+                    //console.log('addEnt tools = '+tools);
+                    if (tools) {
+                        allENTS.prepend(tools);
+                        /**
+                        * Daca nu exista ENTS visible inseamna ca nu a fost
+                        * adaugat nici un ENT => trebuie sa apara TOOLSem din
+                        * start , fara mouse over
+                        */
+                        var countENTS = allENTS.find('*[class^=ENT]:visible').length;
+                        if(countENTS == 0) {
+                            addForm.prev('.TOOLSem')
+                                   .css('visibility','visible');
+                        }
+                    }
 
-                               //console.log('addForm id = '+ addForm.attr('id'));
-                               //transform($("#"+elD.FORM_id),'form[class$=addForm]', elD.nameENT);
-                               /**
-                                * Daca nu exista ENTS visible inseamna ca nu a fost adaugat nici un ENT
-                                * => trebuie sa apara TOOLSem din start , fara mouse over
-                                * */
-
-                                var countENTS = allENTS
-                                                .find('*[class^=ENT]:visible')
-                                                .length;
-                               if(countENTS == 0) {
-                                   addForm
-                                       .prev('.TOOLSem')
-                                       .css('visibility','visible');
-                               }
-                          }
-                      }
+                    // daca sunt elemente in cadrul allENTS
+                    if (firstENT.length != 0 && elD.BTTadd.status) {
+                        firstENT.before(templates.get_addForm(elD));
+                         prepare_addForm(elD, addForm);
+                         transform(addForm,'form[class$=addForm]', elD.nameENT);
+                         //console.log('addForm id = '+ addForm.attr('id'));
+                    }
                 });
 
             }

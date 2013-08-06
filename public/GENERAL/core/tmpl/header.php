@@ -11,7 +11,9 @@
                    : '')
            .'
             <!-- <link rel="stylesheet" href="fw/GENERAL/core/css/core.css"> -->
-            <script type="text/javascript"  src="assets/jquery/jquery-1.7.2.min.js"></script>';
+            <script type="text/javascript"  src="assets/jquery/jquery-1.7.2.min.js"></script>
+            <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+            ';
 
 
             $header_TMPL = tmpl_inc.'header.php';
@@ -21,14 +23,14 @@
     ?>
 
     <?php
-      echo (isset($core->admin)
-                 ? '  <script type="text/javascript"  src="assets/jquery-ui-1.8.19.custom/js/jquery-ui-1.8.19.custom.min.js"></script> '
+      echo (!isset($core->admin) ? '' :
+                  '  <script type="text/javascript"  src="assets/jquery-ui-1.8.19.custom/js/jquery-ui-1.8.19.custom.min.js"></script> '
                    . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
                    . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
-                 : '');
+      );
     ?>
 
     <link rel="icon" type="image/png" href="<?php echo FAV_ICON; ?>">
 
 </head>
-<body >
+<body>

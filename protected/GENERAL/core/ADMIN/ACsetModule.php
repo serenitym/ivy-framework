@@ -2,7 +2,7 @@
 /**
  *  Overwriteuri la functile din CinitModule pentru varianta de admin
  */
-class ACsetModule extends Ccore
+class ACsetModule extends CLcore
 {
     public function Set_incFiles($modName,$modType,$extension,$folder='',$template='',$adminFolder='')
     {
