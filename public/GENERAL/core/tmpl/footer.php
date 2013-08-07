@@ -24,10 +24,13 @@
         $(document).ready(function(){
 
             <?php
-                if(isset($core->admin) && $core->admin)
+                if(isset($core->admin) && $core->admin) {
                     echo "fmw.admin = 1;";
+                }
                  echo "fmw.idC = $core->idNode;
                        fmw.idT = $core->idTree;";
+
+                 echo $core->jsTalk;
             ?>
         });
 
@@ -35,7 +38,7 @@
     </script>
 
  <?php
-echo $core->jsTalk;
+
 echo $core->jsInc;
 $footer_TMPL = TMPL_INC.'footer.php';
 if (is_file($footer_TMPL)) {

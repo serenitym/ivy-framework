@@ -42,4 +42,19 @@ assetsInc_tmplFileName:
        - "/assets/...css"
        - "/assets/...css"
 
+# scripturi externe de inclus pentru un modul
+# sau pentru un template anume
+
+assetsExtern:
+  js: >
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+  css: >
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+    <!--[if lte IE 8]>
+       <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+    <![endif]-->
+
+assetsExtern_tmplFileName:
+  js: ''
+  css: ''
 

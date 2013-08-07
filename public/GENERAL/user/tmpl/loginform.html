@@ -1,10 +1,29 @@
-<form class='form-horizontal pull-right' action='' method='post'>
-    <div class='control-group'>
-      <div class='controls'>
-        <input class='loginInput input-small' name='loginName' type='text' id='inputEmail' placeholder='Email' />
-        <input class='loginInput input-small' name='password' type='password' id='inputPassword' placeholder='Password' />
-        <input name='login' type='hidden' value='CauthManager' />
-        <input type='submit' class='btn btn-mini topbarBtn' value='Sign in' />
-      </div>
-    </div>
-</form>
+ <div id='loginPopup' style='text-align: center;'>
+     <!-- Form Login  -->
+
+    <form id='loginForm' action='/' method='post'>
+        <input name='loginName' placeholder='Username' type='text'  class='ivy-light'  />
+        <br>
+        <input name='password' placeholder='Password' type='password' class='ivy-light'  />
+        <br>
+        <br>
+        <input type='hidden' name='login' value='CauthManager' />
+
+        <input type='button' name='forgotPassword' value='forgot password' class='ivy'
+                onclick=' ivyMods.user.forgotPassword(); return false;'  />
+        <input type='submit' name='logSubm' value='login' class='ivy' />
+
+    </form>
+     <!-- Form Recover password -->
+     <form action='' method='post' id='recover-pass' class='hidden' >
+         <br>
+         <input type='button' name='login' value='login' class='ivy'
+                        onclick=' ivyMods.user.loginForm(); return false;'  />
+         <input type='submit' name='forgotPassword' value='forgot password' class='ivy' />
+
+
+         <input type='hidden' name='modName' value='user' />
+         <input type='hidden' name='methName' value='forgotPassword' />
+         <input type='text' name='email' value='' placeholder='email' class='ivy-light'>
+     </form>
+</div>

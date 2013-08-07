@@ -199,6 +199,7 @@ class Ccore extends Cunstable
             //echo "User prin session";
         } else {
             array_push($this->default_GENERAL,'user');
+            //echo "Ccore - addModuleUser - default_GENERAL";
             //$this->Module_Build('user','GENERAL');
         }
 

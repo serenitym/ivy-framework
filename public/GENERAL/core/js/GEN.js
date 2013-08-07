@@ -80,8 +80,32 @@ fmw.lg = 'ro';
  * @param selection - will toggle the selection requested
  * @return {Boolean}
  */
-fmw.toggle = function(selection){
+fmw.toggle = function(selection, opt){
+    /**
+     * opt : {
+     *  caller : '',
+     *  class: [classClick,  class ],
+     *  value: [valueClick, valueDef]
+     *  }
+     */
+
     $(selection).toggle();
+
+
+    if(typeof opt != 'undefined' && typeof opt.caller != 'undefined') {
+        var visible = $(selection).is(":visible");
+        //console.log("element is "+ (visible ? "visible" : "notvisible"));
+
+        if(typeof opt.class != 'undefined') {
+            opt.caller.attr('class', (visible ? opt.class[1]: opt.class[0]));
+            //console.log( opt.selector.attr('class') + " "+ opt.class[1]);
+        }
+
+        if(typeof opt.value != 'undefined') {
+            opt.caller.attr('class', (visible ? opt.value[1]: opt.value[0]));
+        }
+
+    }
     return false;
 }
 
@@ -277,6 +301,7 @@ fmw.popUp = {
      *
      *     // optional
      *
+     *      pathGet
      *       pathLoad: ''
      *       dataSend: ''
      *       procesSCRIPT : ''
@@ -295,9 +320,19 @@ fmw.popUp = {
     init: function(opt){
         /*MAN's
         *
+        * // un template care are nevoie de o randare complexa
+        * // ex: acces la alte module, la BD etc...
+        * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
+        *
         * opt.pathLoad
         * opt.dataSend
         * opt.procesSCRIPT
+        *
+        * //un template care trebuie sa ii fie luat asa cum este
+        * // ii se poate trimite si un dataSend
+        *
+        * opt.pathGet
+        * opt.dataSend
         *
         * */
 
@@ -316,8 +351,18 @@ fmw.popUp = {
          //console.log(this.popUpContent);
         // ini stuf
         if (typeof this.content !='undefined') {
-            this.popUp_content();
+            this.popUp_content(this.content);
             //console.log(this.content);
+        } else if(typeof opt.pathGet != 'undefined') {
+
+            var dataSend = typeof opt.dataSend == 'undefined' ? '' :
+                           opt.dataSend;
+            //console.log('GEN.js - Datele trimise'+ dataSend);
+
+            $.get(opt.pathGet , dataSend, function(data) {
+                fmw.popUp.popUp_content(data);
+            });
+
         } else {
 
             //Daca scriptul meu de process este acelasi cu cel default atunci facem aranjamentele necesare
@@ -363,10 +408,10 @@ fmw.popUp = {
        // alert( this.completeFunc);
     }
     ,
-    popUp_content     : function(){
+    popUp_content     : function(content){
         $.when(
             $('#popUp #popUp-content')
-                .html(this.content)
+                .html(content)
         ).then(
             this.popUp_callback()
         );
@@ -383,7 +428,7 @@ fmw.popUp = {
                      "<div id='popUp'>" +
                         "<div id='popUp-header'>" +
                             "<span>"+this.headerName+"</span>" +
-                             "<input  type='button' value='x' id='popUp-close' onclick='fmw.popUp.popUp_remove();' class='close'>" +
+                             "<input  type='button' value='x' id='popUp-close' onclick='fmw.popUp.popUp_remove();' class='close ivy'>" +
 
                         "</div>" +
                         "<div id='popUp-content'></div>" +

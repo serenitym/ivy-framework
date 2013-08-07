@@ -70,14 +70,28 @@ input[type="button"].ivy,
 button.ivy{
     cursor: pointer;
     border-radius: 4px;
-    background: rgba(150,150,150,0.5);
     border: 1px outset rgba(200,200,200,0.3);
+    background: rgba(150,150,150,0.5);
+
 }
 
 input[type="submit"].ivy:hover,
 input[type="reset"].ivy:hover,
 input[type="button"].ivy:hover,
-button.ivy:hover{
+button.ivy:hover
+{
+    background: rgba(150,150,150,0.3);
+
+}
+
+input[type="submit"].ivy-hover,
+input[type="reset"].ivy-hover,
+input[type="button"].ivy-hover,
+button.ivy:hover
+{
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px outset rgba(200,200,200,0.3);
     background: rgba(150,150,150,0.3);
 
 }
@@ -169,7 +183,7 @@ textarea.ivy-light:focus{
                  float: right;
              }
         #popUp-content{
-            min-height: 200px;
+            min-height: 100px;
         }
 
 /*============================================================================*/

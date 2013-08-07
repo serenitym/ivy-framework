@@ -129,6 +129,8 @@ class Cuser extends permissions
         //$uid = $_SESSION['userData']->uid;
 
         //trigger_error('Debug break!', E_USER_ERROR);
+        $this->_init_second();
+
         if (!isset($_SESSION['auth'])) {
             return 0;
         } else {
@@ -183,7 +185,17 @@ class Cuser extends permissions
         $this->addToolbarAccount();
 
     }
+    // set popup
+    public function _init_second()
+    {
 
+        if(isset($_GET['login'])) {
+
+            $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'loginForm' , 'Login'); ";
+        }
+    }
+
+    // daca userul este luat din SESSION se refac anumite propritati
     public function afterInit(&$C){
         /**
          * ADD GEN_edit to c or not
@@ -194,7 +206,9 @@ class Cuser extends permissions
          */
         $C->Module_configCorePointers($this);
         $C->Module_Set_incFilesJsCss($this);
+        $this->_init_second();
         $this->toolbarBtts();
+
 
     }
 }
