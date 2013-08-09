@@ -103,5 +103,7 @@ class ACsampleModule extends CsampleModule{
      */
     function methName(){
 
+        $posts = &$this->posts;
+        //$post->postaName;
     }
 }

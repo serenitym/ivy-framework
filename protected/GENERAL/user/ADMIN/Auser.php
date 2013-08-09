@@ -59,4 +59,19 @@ class Auser
         $query = "DELETE from auth_users WHERE uid = '$uid' ";
         $this->DB->query($query);
     }
+
+    function _hook_inviteUser()
+    {
+
+        $this->posts = handlePosts::Get_postsFlexy(array('email'));
+        $this->posts->email;
+
+        return false;
+
+    }
+    function inviteUser()
+    {
+        return false;
+        //return true;
+    }
 }
