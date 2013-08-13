@@ -242,13 +242,19 @@ class Ccore extends Cunstable
 
     }
 
-    function _init_()
+    function _init_($dbLink)
     {
         if(defined(PROFILER) && PROFILER == 1) {
             $this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
         }
 
-        $this->Set_db();
+        if ($dbLink == NULL) {
+            die ('Database connection not established!');
+        } else {
+            $this->DB = $dbLink;
+        }
+
+        //$this->Set_db();
         $this->Set_core();
         $this->Set_mainModule();
         $this->addModuleUser();
@@ -272,9 +278,9 @@ class Ccore extends Cunstable
 
     }
     # COMMENT THIS!!!
-    function __construct()
+    function __construct(& $dbLink)
     {
-        $this->_init_();
+        $this->_init_($dbLink);
 
     }
 

@@ -131,7 +131,7 @@ class permissions extends Auser {
         // echo  "[ ivy ] permissions - Set_permissions : query =  $query <br>";
         $res = $this->DB->query($query);
         $this->permissions = $res->fetch_assoc();
-        var_dump($this->permissions);
+        //var_dump($this->permissions);
 
     }
 
