@@ -1,0 +1,3 @@
+[submodule "protected/GENERAL/Tools/Zebra_Session"]
+	path = protected/GENERAL/Tools/Zebra_Session
+	url = git@github.com:nightsh/Zebra_Session.git

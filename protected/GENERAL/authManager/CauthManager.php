@@ -110,6 +110,7 @@ class CauthManager extends authCommon implements Serializable {
 
     //==========================================================================
     // not sure where is this used
+    /* {{{ protected getAllLoginDetails($loginName='', $type='email') */
     protected function getAllLoginDetails($loginName='', $type='email') {
         //TODO: docblock
         $loginQ = ( $type == 'email'
@@ -140,6 +141,7 @@ class CauthManager extends authCommon implements Serializable {
 
 
     }
+    /* }}} */
 
     /**
      * Get basic data for user
@@ -148,6 +150,7 @@ class CauthManager extends authCommon implements Serializable {
      * @return mixed
      */
     //old: getLoginDetails
+    /* {{{ protected Get_loginDetails($loginName) */
     protected function Get_loginDetails($loginName) {
 
         $loginQ = filter_var($loginName, FILTER_VALIDATE_EMAIL) != false
@@ -184,6 +187,7 @@ class CauthManager extends authCommon implements Serializable {
 
         return $result;
     }
+    /* }}} */
 
     /* {{{ public authCheck($loginName='', $password='')  */
     /**
@@ -230,10 +234,17 @@ class CauthManager extends authCommon implements Serializable {
         ");
     }*/
 
+    /* {{{ protected login() */
+    /**
+     * login
+     *
+     * @access protected
+     * @return void
+     */
     protected function login()
     {
         // true / false - autentificat sau nu
-        $authStatus = $this->authCheck( $_POST['loginName'], $_POST['password']);
+        $authStatus = $this->authCheck($_POST['loginName'], $_POST['password']);
 
         if ($authStatus) {
 
@@ -242,8 +253,8 @@ class CauthManager extends authCommon implements Serializable {
             $_SESSION['auth']     = true;
 
             // --------[ set session cookie ]-------
-            sessionManager::setSessionCookie($this->userData, 3600);
-            sessionManager::sessionToSQL(3600);
+            //sessionManager::setSessionCookie($this->userData, 3600);
+            //sessionManager::sessionToSQL(3600);
         } else {
             // Return 0, this means the check returned a Guest account
             unset($_SESSION['auth']);
@@ -252,16 +263,24 @@ class CauthManager extends authCommon implements Serializable {
         //Toolbox::clearSubmit();
 
     }
+    /* }}} */
+
+    /* {{{ protected logout() */
+    /**
+     * logout
+     *
+     * @access protected
+     * @return void
+     */
     protected function logout()
     {
         sessionManager::destroySession();
         sessionManager::unsetCookies();
         header("Location: http://".$_SERVER['SERVER_NAME']);
     }
+    /* }}} */
 
-    /**
-     * Metoda apelate direct din Singleton
-    */
+    /* Metoda apelate direct din Singleton */
     /* {{{ protected init  */
     protected function init ()
     {

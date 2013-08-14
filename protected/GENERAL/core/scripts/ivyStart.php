@@ -14,51 +14,27 @@
  * @link
  *     http://redmine.usr.sh/projects/ivy-framework/wiki/Authentication_system
  * }}}
- */
-
+*/
 
 // ------[ get the class loader ]-------
 require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 // =====================================
 
-// ----[ look for the login cookie ] ---
-// if(isset($_COOKIE['auth']))
-    // sessionManager::attemptCookieLogin();
 
-    // ----[ or just go as usual ] -----
+$dbLink = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$dbLink->set_charset('utf8');
 
-// Require the HTTP_Session2 PEAR file
-//require_once 'HTTP/Session2.php';
+ini_set("session.gc_probability", 100);
+ini_set("session.gc_divisor", 100);
+ini_set("session.gc_maxlifetime", 1440);
 
-/*HTTP_Session2::useTransSID(false);
-//HTTP_Session2::useCookies(false);
+$session = new Zebra_Session($dbLink);
+//session_start();
 
-// enter your DSN
-
-HTTP_Session2::setContainer(
-    'MDB2',
-    array('dsn' => DSN,
-        'table' => 'sessiondata')
-);
-
-// --------[ start the session ]--------
-HTTP_Session2::start('s');
-HTTP_Session2::setExpire(time() + 60); // set expire to 60 seconds
-HTTP_Session2::setIdle(time() + 5);    // set idle to 5 seconds
-
-if (HTTP_Session2::isExpired()) {
-    HTTP_Session2::destroy();
-}
-
-if (HTTP_Session2::isIdle()) {
-    HTTP_Session2::destroy();
-}
-
-HTTP_Session2::updateIdle();*/
-
-// =====================================
-
-session_start();
+// print_r('<pre><strong>Current session settings:</strong><br><br>');
+// print_r($session->get_settings());
+// print_r('</pre>');
+// exit();
 
 // ----------[ unset cookies ]----------
 // sessionManager::unsetCookies();
@@ -74,10 +50,10 @@ $auth = CauthManager::getInstance();
 
 // ---------[ load the base class ]------
 if (isset($_SESSION['auth'])) {
-    $core = new ACLcore();
+    $core = new ACLcore($dbLink);
     //$auth->Set_toolbarButtons($core);
 } else {
-    $core = new CLcore();
+    $core = new CLcore($dbLink);
 }
 //var_dump($_SESSION);
 
@@ -92,7 +68,10 @@ if (isset($_SESSION['auth'])) {
 $sercore     = serialize($core);
 // $serSESSION = session_encode();
 
-file_put_contents(VAR_PATH.'tmp/sercore.txt', $sercore);
+Toolbox::Fs_writeTo(
+    VAR_PATH.'tmp/sessions/' . session_id() . '/sercore.txt',
+    $sercore
+);
 // file_put_contents(FW_PUB_PATH.'GENERAL/core/RES/serSESSION.txt', $serSESSION);
 
 // var_dump(Toolbox::http_response_code('http://google.ro'));
