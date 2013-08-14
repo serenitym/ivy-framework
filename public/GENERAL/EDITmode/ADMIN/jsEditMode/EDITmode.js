@@ -1,26 +1,4 @@
-/**
- * UTILIZARE GENERALA EDITmode.js
- *
- * < * class='allENTS [otherClasses] [entSName]' id = '[entSName]_[LG]' >
- *     - add new ent
- *
- *     <class='ENT [otherClasses] [entName]' id = '[entName]_[id]_[LG]' >
- *
- *  - delete
- *  - edit
- *  - save
- *  - exit edit (cancel)
- *
- *  // adaugarea de butoane noi
- * <div class='addTOOLSbtn'>
- *     <input type='button' class='ATmpl' value='more settings' onclick='fmw.toggle(\"form[id^=EDITform] .admin-extras\"); return false;' />
- * </div>
- *
- *  < * class='SING [otherClasses] [singName]' id = '[singName]_[id]_[LG]' >
- *      - edit
- *      - save
- *      - exit edit (cancel)
- */
+
 /**
  *  UTILIZARE:
    $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } )
@@ -419,16 +397,16 @@ var iEdit = function(){
         if(firstENT.length != 0) {
 
             elD.classes      = firstENT.attr('class');
-            elD.TYPEarr      = classes.split(' ');
+            elD.TYPEarr      =  elD.classes.split(' ');
             //ENT || SING - restul claselor fara denumirea de ENT sau SING
-            elD.cls          = classes.replace('ENT','');
+            elD.cls          =  elD.classes.replace('ENT','');
             //ENTname || SINGname - numele ENT-ului se afla la pus ca ultima clasa a Elementului
-            elD.nameENT      = TYPEarr[TYPEarr.length - 1];
+            elD.nameENT      =  elD.TYPEarr[ elD.TYPEarr.length - 1];
             elD.FORM_content = firstENT.find('.ELMcontent').html();
-            elD.FORM_class   = cls+" addForm";
-            elD.FORM_id      = "new_"+nameENT+'_'+LG;
+            elD.FORM_class   =  elD.cls+" addForm";
+            elD.FORM_id      = "new_"+ elD.nameENT+'_'+LG;
             // buttons settings
-            elD.BTT          = getBtt(nameENT, {});
+            elD.BTT          = getBtt( elD.nameENT, {});
             elD.BTTadd       = {status : 1, style : '', atrValue: '+', methName: '' };
 
             if (typeof elD.BTT.addBt !='undefined') {

@@ -37,7 +37,6 @@ class ACsampleModule extends CsampleModule{
      * Used by core:
      * -------------------
      *
-     *  if $_POST['methName'] && $_POST['modName']
      *  then try to call first:
      *    $core->$_POST['modName']->{'_hook_'.$_POST['methName']}()
      *
@@ -77,7 +76,8 @@ class ACsampleModule extends CsampleModule{
      * add to posts for later use
      *
      */
-    function _hook_methName(){
+    function _hook_methName()
+    {
 
        #1
        $this->posts = handlePosts::Get_postsFlexy($this->expectedPosts);

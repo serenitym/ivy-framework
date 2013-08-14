@@ -22,9 +22,9 @@ ivyMods.set_iEdit.sampleMod = function(){
                                 })
                     }
                 ,saveBt:  {methName: 'sampleModule->updateMethName'}
-                  // pentru partea de add
-                  ,extraBts:
-                  {
+                  // butoane extra pentru toolbarul elementului editabil
+                ,extraButtons:
+                {
                       manageGroup: {
                           callBack: "ivyMods.team.showManageGroups();",
                           attrValue: 'manage Groups',
@@ -37,9 +37,20 @@ ivyMods.set_iEdit.sampleMod = function(){
                           atrValue: 'show all Members',
                           class: ''
                       }
-                  }
-                // pentru orice element, trebuie un refactoring aici
-                ,extraButtons: {}
+                }
+                , extraHtml : ['htmlConetnt ',
+                              "<span>" +
+                                  "<input type='hidden' name='action_modName' value='user' >" +
+                                  "<input type='hidden' name='action_methName' value='deactivateProfile [, other methods]' >" +
+                                  "<input type='submit' name='deactivate' value='deactivate' >" +
+                              "</span>",
+                              '']
+
+
+            },
+            allENTSName : {
+                extraButtons: {}
+
             },
             'SINGname':
             {

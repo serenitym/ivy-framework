@@ -52,6 +52,10 @@ $.fn.minHeight = function(){
     return min;
 }
 
+$.fn.exists = function () {
+    return this.length !== 0;
+}
+
 
 //==============================[ ivyMods ]====================================================
 /* Aici vor sta functiile modulelor */

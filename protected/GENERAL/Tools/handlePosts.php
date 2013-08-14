@@ -2,7 +2,7 @@
 
 /**
  * BASED ON:
- * - expectedPots is an array that can take many forms
+ * - expectedPosts is an array that can take many forms
  * - elemente trebuie sa fie declarate totusi in acelasi fel
  * - iata cateva exemple de combinatii
  *
@@ -11,7 +11,7 @@
  *--------------------------------------------------------------------------
  *
  * ** array-ul furnizat **
- * expectedPots :
+ * expectedPosts :
  *   propName1 :
  *       postName: 'someValue'
  *       [fbk_something: {type: 'error, warning, mess'}]
@@ -39,7 +39,7 @@
  *
  * ** array-ul furnizat **
  *
- * expectedPots :
+ * expectedPosts :
  *   propName1: 'postName1'
  *   propName2: ''
  *
@@ -132,15 +132,16 @@ class handlePosts
      *              => metodata = Selective
 
      *
-     * @param $expectedPots
+     * @param $expectedPosts
      *
      * @return string - numele metodei de determinare a propName & postName
      */
-    static function Get_postMethod($expectedPots)
+    static function Get_postMethod($expectedPosts)
     {
-        reset($expectedPots);
-        $firstPropName = key($expectedPots);
-        $firstPostName = current($expectedPots);
+
+        reset($expectedPosts);
+        $firstPropName = key($expectedPosts);
+        $firstPostName = current($expectedPosts);
 
         // method like = Get_postNameStrict / Get_postNameSelectiv / Get_postNameDesction
         $postMethod ='Set_post'.(is_numeric($firstPropName)
@@ -162,8 +163,13 @@ class handlePosts
     /**
      * ## Stepts - Get_postsFlexy
      *--------------------------------------------------------------------------
+     * #1
+     * + daca nu expectedPOsts nu este un string atunci
+     *      + seteaza numele metodei de determinare a propName & postName
+     *      + altfel inseamna ca numele posturilor au fost delimitate de ", "
+     *         metoda este "Strict" & expectedPost este facut array
      *
-     * + seteaza numele metodei de determinare a propName & postName
+     * #2
      * + Apelare metoda asociata tipului de array pentru fiecare element in parte
      * + daca avem concat => vom concatena postName si testa daca exista asa
      *                  , daca nu testam direct cu postName
@@ -174,7 +180,7 @@ class handlePosts
      * + la starsit returnam obiectul de posts
      *
      *
-     * @param        $expectedPots
+     * @param        $expectedPosts
      * @param string $concat
      * @param bool   $notEmpty
      *
@@ -182,14 +188,20 @@ class handlePosts
      */
     static function Get_postsFlexy($expectedPosts, $concat='', $notEmpty = false)
     {
-
-        $postMethod = handlePosts::Get_postMethod($expectedPosts);
+        //#1
+        if(!is_string($expectedPosts)) {
+            $postMethod = handlePosts::Get_postMethod($expectedPosts);
+        } else {
+            $postMethod    = "Strict";
+            $expectedPosts = explode(', ', $expectedPosts);
+        }
         /**
          * echo "handlePosts - Get_postsFlexy: expectedPost <br>";
         var_dump($expectedPosts);
         echo "handlePosts - Get_postsFlexy: postMethod = $postMethod <br>";
         echo "//////////////////////////////////////////////////////////////////////// <br>";*/
 
+        //#2
         $concat     = $concat ? "_".$concat : '';
         $posts      = new stdClass();
 
@@ -211,4 +223,27 @@ class handlePosts
 
         return $posts;
     }
+
+    // db helpers
+    static function Db_Get_setString($objPosts, $strPosts, $notEmpty = true)
+    {
+        $sets = array();
+        $arrPosts = explode(',', $strPosts);
+
+        foreach($arrPosts AS $postName) {
+            $postName  = trim($postName);
+            //$postValue = $objPosts->$postName;
+            // daca exista valoarea sau nu este nevoie sa existe
+            if((isset($objPosts->$postName) && $objPosts->$postName)
+                || !$notEmpty
+            ) {
+                array_push($sets, "$postName = '".$objPosts->$postName."'");
+            }
+        }
+
+        $set = implode(', ', $sets);
+        return $set;
+
+    }
+
 }
