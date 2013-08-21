@@ -220,12 +220,12 @@ class Auser
             return false;
         }
 
-        $this->post->password   = mysql_real_escape_string($this->post->password);
-        $this->post->loginName  = mysql_real_escape_string($this->post->loginName);
-        $this->post->first_name = mysql_real_escape_string($this->post->first_name);
-        $this->post->last_name  = mysql_real_escape_string($this->post->last_name);
-        $this->post->title      = mysql_real_escape_string($this->post->title);
-        $this->post->email      = mysql_real_escape_string($_GET['email']);
+        $this->post->password   = $this->DB->real_escape_string($this->post->password);
+        $this->post->loginName  = $this->DB->real_escape_string($this->post->loginName);
+        $this->post->first_name = $this->DB->real_escape_string($this->post->first_name);
+        $this->post->last_name  = $this->DB->real_escape_string($this->post->last_name);
+        $this->post->title      = $this->DB->real_escape_string($this->post->title);
+        $this->post->email      = $this->DB->real_escape_string($_GET['email']);
 
         return true;
     }
