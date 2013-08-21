@@ -26,9 +26,9 @@ $dbLink->set_charset('utf8');
 
 ini_set("session.gc_probability", 100);
 ini_set("session.gc_divisor", 100);
-ini_set("session.gc_maxlifetime", 1440);
+ini_set("session.gc_maxlifetime", 14400);
 
-$session = new Zebra_Session($dbLink);
+$session = new Zebra_Session($dbLink, 'JbBJSvgtAdZY');
 //session_start();
 
 // print_r('<pre><strong>Current session settings:</strong><br><br>');
@@ -88,3 +88,5 @@ Toolbox::Fs_writeTo(
 // Console::logMemory();
 
 // file_put_contents('serial.txt', serialize($core));
+
+//var_dump($_POST);

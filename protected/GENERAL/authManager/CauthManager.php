@@ -1,6 +1,5 @@
 <?php
-
-/** {{{ Documentation
+/**
  * CauthManager
  *
  * PHP Version 5.4
@@ -12,7 +11,6 @@
  * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
  * @version   0.1.2
  */
-/* }}} */
 
 class CauthManager extends authCommon implements Serializable {
 
@@ -20,6 +18,7 @@ class CauthManager extends authCommon implements Serializable {
     protected $password;
 
     protected static $instance;
+
     final public static function getInstance() {
         return isset(static::$instance)
             ? static::$instance
@@ -50,10 +49,11 @@ class CauthManager extends authCommon implements Serializable {
 
     }
 
-    final private function __wakeup() {}
-    final private function __clone() {}
+    final private function __wakeup()
+    {}
+    final private function __clone()
+    {}
 
-    /* {{{ public _render_() */
     /**
      * _render_
      *
@@ -75,21 +75,15 @@ class CauthManager extends authCommon implements Serializable {
         ';
         return $display;
     }
-    /* }}} */
 
-    /* {{{ __tostring */
     public function __tostring() {
         return $this->loginName;
     }
-    /* }}} */
 
-    /* {{{ public function serialize() */
     public function serialize() {
         return serialize(get_object_vars($this));
     }
-    /* }}} */
 
-    /* {{{ public function unserialize($data) */
     public function unserialize($data) {
         self::getInstance();
 
@@ -100,17 +94,11 @@ class CauthManager extends authCommon implements Serializable {
             }
         }
     }
-    /* }}} */
 
-    /* {{{ private sanitizeLogin() */
     protected function sanitize ($var) {
         return $this->rodb->real_escape_string($var);
     }
-    /* }}} */
 
-    //==========================================================================
-    // not sure where is this used
-    /* {{{ protected getAllLoginDetails($loginName='', $type='email') */
     protected function getAllLoginDetails($loginName='', $type='email') {
         //TODO: docblock
         $loginQ = ( $type == 'email'
@@ -141,16 +129,15 @@ class CauthManager extends authCommon implements Serializable {
 
 
     }
-    /* }}} */
 
-    /**
-     * Get basic data for user
-     * @param $loginName
-     *
-     * @return mixed
-     */
-    //old: getLoginDetails
-    /* {{{ protected Get_loginDetails($loginName) */
+   /**
+    * Get basic data for user
+    * @param $loginName
+    *
+    * @return mixed
+    *
+    * old: getLoginDetails
+    */
     protected function Get_loginDetails($loginName) {
 
         $loginQ = filter_var($loginName, FILTER_VALIDATE_EMAIL) != false
@@ -164,6 +151,7 @@ class CauthManager extends authCommon implements Serializable {
                          auth_users.cid,
                          auth_users.password,
                          auth_users.email,
+                         auth_users.active,
 
                          auth_user_stats.permissions,
 
@@ -187,9 +175,7 @@ class CauthManager extends authCommon implements Serializable {
 
         return $result;
     }
-    /* }}} */
 
-    /* {{{ public authCheck($loginName='', $password='')  */
     /**
      * authCheck
      *
@@ -216,13 +202,16 @@ class CauthManager extends authCommon implements Serializable {
         $resUserData    = $this->Get_loginDetails($loginName);
         $this->userData = $resUserData->fetch_object();
 
-        if ($password !== $this->userData->password) {
+        if ($this->userData->active != 1) {
+            trigger_error("Inactive $loginName tried to log in", E_USER_NOTICE);
+            return false;
+        } elseif ($password !== $this->userData->password) {
+            trigger_error("Wrong password for $loginName", E_USER_NOTICE);
             return false;
         }
         return true;
 
     }
-    /* }}} */
 
     /*public  function Set_toolbarButtons(&$C)
     {
@@ -234,7 +223,6 @@ class CauthManager extends authCommon implements Serializable {
         ");
     }*/
 
-    /* {{{ protected login() */
     /**
      * login
      *
@@ -263,9 +251,7 @@ class CauthManager extends authCommon implements Serializable {
         //Toolbox::clearSubmit();
 
     }
-    /* }}} */
 
-    /* {{{ protected logout() */
     /**
      * logout
      *
@@ -274,14 +260,13 @@ class CauthManager extends authCommon implements Serializable {
      */
     protected function logout()
     {
-        sessionManager::destroySession();
-        sessionManager::unsetCookies();
-        header("Location: http://".$_SERVER['SERVER_NAME']);
+        //sessionManager::destroySession();
+        //sessionManager::unsetCookies();
+        global $session;
+        $session->stop();
+        Toolbox::relocate('/');
     }
-    /* }}} */
 
-    /* Metoda apelate direct din Singleton */
-    /* {{{ protected init  */
     protected function init ()
     {
         if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
@@ -291,5 +276,4 @@ class CauthManager extends authCommon implements Serializable {
         }
 
     }
-    /* }}} */
 }

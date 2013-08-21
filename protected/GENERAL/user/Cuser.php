@@ -147,6 +147,7 @@ class Cuser extends permissions
         //var_dump($this);
     }
 
+
     //====================================================
     public function addGEN_edit()
     {
@@ -189,9 +190,14 @@ class Cuser extends permissions
     public function _init_second()
     {
 
-        if(isset($_GET['login'])) {
+        if (isset($_GET['login'])) {
 
             $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'loginForm' , 'Login'); ";
+            return true;
+        }
+
+        if (isset($_GET['route']) && $_GET['route'] == 'invite') {
+            $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'inviteConfirm' , 'Register account (invitation)'); ";
         }
     }
 
