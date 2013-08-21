@@ -28,7 +28,9 @@
                     echo "fmw.admin = 1;";
                 }
                  echo "fmw.idC = $core->idNode;
-                       fmw.idT = $core->idTree;";
+                       fmw.idT = $core->idTree;
+                       fmw.pubUrl = '".FW_PUB_PATH."';
+                       ";
 
                  echo $core->jsTalk;
             ?>

@@ -192,16 +192,18 @@ class Ccore extends Cunstable
          * modName, modType
         */
         //$this->user = &$userData->user;
+
         if (isset($_SESSION['user'])) {
             error_log("[ ivy ] Ccore - _init_ exista SESSION['user']");
-            $this->user = $_SESSION['user'];
+            $this->user = unserialize($_SESSION['user']);
             $this->user->afterInit($this);
-            //echo "User prin session";
+
+            //echo "Ccore - addModuleUser : User prin session<br>";
         } else {
             array_push($this->default_GENERAL,'user');
-            //echo "Ccore - addModuleUser - default_GENERAL";
-            //$this->Module_Build('user','GENERAL');
+            //echo "Ccore - addModuleUser - default_GENERAL <br>";
         }
+
 
     }
     #1.3
@@ -272,7 +274,7 @@ class Ccore extends Cunstable
         //var_dump($_SESSION['user']);
 
         #echo 'Ccore: __construct';
-        #var_dump($this);
+        //var_dump($this);
 
 
 
@@ -304,7 +306,8 @@ class Ccore extends Cunstable
 
             $this->DB = '';
             $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-            #echo "A fost apelat core wakeup si DB NU este connectat <br>";
+           /* echo "A fost apelat core wakeup si DB NU este connectat <br>".
+                ($this->DB->ping() ? '<b>Dar acum este </b>' : ' TOT nu este conectat ');*/
 
         } else {
            // echo "A fost apelat core -> DB_reConnect este connectat <br>";
@@ -315,7 +318,7 @@ class Ccore extends Cunstable
     {
        // echo "wakeup core ";
         $this->DB_reConnect();
-        $this->Handle_postRequest(false);
+        $this->Handle_postRequest();
     }
     public function __destruct()
     {

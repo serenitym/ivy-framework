@@ -2,6 +2,11 @@
 Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
+$(document).ready( function(){
+if(typeof CKEDITOR.editorConfig == 'undefined') {
+
+console.log('config.js - A luat CKEditor din locals');
+
 CKEDITOR.editorConfig = function( config )
 {
 	// Define changes to default configuration here. For example:
@@ -42,7 +47,7 @@ CKEDITOR.editorConfig = function( config )
 									'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
 	{ name: 'colors', items : [ 'TextColor','BGColor' ] }
 ];
-    config.toolbar_EXTRAsmallTOOL =
+    config.toolbar_defaultSmall =
       [
 
 
@@ -54,10 +59,8 @@ CKEDITOR.editorConfig = function( config )
 
       ];
 
-    config.toolbar_smallTOOL =
+    config.toolbar_default =
     [
-
-
         { name: 'styles', items : [ 'FontSize' ] },
         { name: 'links', items : [ 'Link','Unlink'] },
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','RemoveFormat' ] },
@@ -90,6 +93,8 @@ config.toolbar_Full =
 
 
 };
+} //if
+}); //document ready
 /*
 CKEDITOR.on('dialogDefinition', function(ev) {
       // Take the dialog name and its definition from the event data

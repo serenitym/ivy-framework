@@ -24,6 +24,7 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 $dbLink = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $dbLink->set_charset('utf8');
 
+// config???
 ini_set("session.gc_probability", 100);
 ini_set("session.gc_divisor", 100);
 ini_set("session.gc_maxlifetime", 14400);

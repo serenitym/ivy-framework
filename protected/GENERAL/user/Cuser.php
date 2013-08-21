@@ -86,6 +86,7 @@ class Cuser extends permissions
         $this->stats = $this->DB->query($statsQuery)->fetch_object();
     }
 
+
     /**
      * initiaza un user uatentificat
      */
@@ -132,17 +133,21 @@ class Cuser extends permissions
         $this->_init_second();
 
         if (!isset($_SESSION['auth'])) {
-            return 0;
+            //echo "Cuser - _init_second: Delogat user <br>";
+            return ;
+
         } else {
+            //echo "Cuser - _init_second: <b>Prima initiere</b> <br>";
             $this->_init_authUser();
+            unset($this->C);
+            unset($this->tree);
+            unset($this->DB);
+            $_SESSION['user'] = serialize($this);
         }
 
         //@todo: $_SESSION['userData'] poate ar trebui facut unset si la el
         // unset l apermisions
-        unset($this->C);
-        unset($this->tree);
-        unset($this->DB);
-        $_SESSION['user'] = $this;
+
         //echo "<br> Cuser - _init_ :";
         //var_dump($this);
     }
@@ -153,6 +158,8 @@ class Cuser extends permissions
     {
         if($this->rights['perm_manage']) {
            array_push($this->C->defaultAdmin_GENERAL, 'GEN_edit');
+           // echo "Cuser - addGEN_edit ";
+            //var_dump($this->C->defaultAdmin_GENERAL);
         }
     }
     public function addToolbarAccount()
@@ -172,6 +179,7 @@ class Cuser extends permissions
         ");
 
     }
+    // please document this
     public function toolbarBtts()
     {
         $this->toolbarBtts = array();
