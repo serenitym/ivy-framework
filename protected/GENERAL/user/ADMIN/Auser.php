@@ -137,7 +137,7 @@ class Auser
         $existingQ = "SELECT uid FROM auth_users
             WHERE email = '{$this->post->email}';";
 
-        if (boolval($this->post->email) === false) {
+        if ($this->post->email === false) {
             echo ' <script type="text/javascript">
                 alert("I cannot understand that, are you sure is a valid email address?\nPlease try again and send a report if anything seems broken.")
                 </script> ';
@@ -160,7 +160,7 @@ class Auser
     {
         $mail = ivyMailer::build();
 
-        $mail->setFrom('noreply@serenitymedia.ro', 'Serenity Media');
+        $mail->setFrom('noreply@serenitymedia.ro', 'The Black Sea mailer');
         $mail->AddTo($this->post->email);
 
         $mail->subject = 'Your invitation on ' . SITE_NAME;
