@@ -241,6 +241,7 @@ class Ctree extends Cmodules
           $pathTree = FW_RES_TREE.'tree'.$idTree.'.txt';
 
           if (is_file($pathTree)) {
+              //echo "Ctree - Get_tree : $pathTree<br>";
               return  unserialize(file_get_contents($pathTree));
 
           } else {

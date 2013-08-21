@@ -160,7 +160,7 @@ textarea.ivy-light:focus{
     margin-top: -31px;
 }
     #popUp{
-        padding: 10px 15px;
+        /*padding: 10px 15px;*/
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         border-radius: 7px;
         z-index: 9000;
@@ -176,7 +176,8 @@ textarea.ivy-light:focus{
             font-weight: bold;
             border-bottom: 1px solid #CCC;
             height: 30px;
-            margin-bottom: 15px;
+            margin: 10px 15px 15px 15px;
+
         }
 
              #popUp-header .close{
@@ -187,6 +188,10 @@ textarea.ivy-light:focus{
         #popUp-content{
             min-height: 100px;
         }
+        #popUp-content > *{
+            margin: 10px 15px;
+        }
+
 
 /*============================================================================*/
 

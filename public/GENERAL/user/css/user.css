@@ -2,6 +2,7 @@
 
 .toolbar-account-form {
     /*width: 300px;*/
+    color: #9DA1AA !important;
     display: none ;
     background-color: rgb(57, 59, 71) !important;
     margin-left: -5px !important;
@@ -15,8 +16,9 @@
     position: absolute;
 }*/
 
-#popUp {
-    padding: 15px 0px 0px 0px !important;
+#popUp #popUp-content #loginPopup{
+    margin: 15px 0px 0px 0px !important;
+
 }
 
 #popUp-header {

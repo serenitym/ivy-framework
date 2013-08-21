@@ -204,11 +204,16 @@ class CsetModule extends CgenTools
         if ( isset($mod->template_file)
          && isset($mod->{'assetsInc_'.$mod->template_file})
         ) {
-            $tmplFile_assets = &$mod->{'assetsInc_'.$mod->template_file};
+            /*echo "[ivy]Module_Set_incFilesAssets modName = ".$mod->modName
+                        ." template_file = ".$mod->template_file."<br>";*/
+
+            $tmplFile_assets = $mod->{'assetsInc_'.$mod->template_file};
 
             foreach($tmplFile_assets AS $extension => $paths) {
                 foreach($paths AS $srcPath) {
                     $this->Module_Set_incFilesHard($extension, $srcPath);
+                    /*echo "[ivy]Module_Set_incFilesAssets extenstion = ". $extension
+                          ." srcPath = ".$srcPath."<br>";*/
                 }
             }
         }
@@ -290,7 +295,7 @@ class CsetModule extends CgenTools
                                  && count($mod->$var_name) > 0 );
 
                 $mod->$var_name = $notEmptyArray
-                                  ? array_merge($mod->$var_name,$var_value)
+                                  ? array_merge_recursive($mod->$var_name,$var_value)
                                   : $var_value;
             }
 

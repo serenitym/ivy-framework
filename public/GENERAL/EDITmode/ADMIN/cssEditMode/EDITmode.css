@@ -1,5 +1,16 @@
 @charset "UTF-8";
 
+/*Butonul de pe toolbar pentru stop/start live-edit*/
+.iedit-toolbarBtt{
+    color: #9DA1AA !important;
+    background-color: rgb(57, 59, 71) !important;
+
+
+}
+
+.ELMcontent {padding-top: 0px !important;}
+
+
 .addTOOLSbtn {display: none;}
 
 /*TREBUIE SA REDENUMESC */
@@ -25,7 +36,6 @@ form[id^="EDITform"]
     background-color: rgba(200,200,200,0.13);
 }
 
-
 /*
 
 .SING:hover > .TOOLSem,
@@ -37,38 +47,32 @@ form[id^="EDITform"]:hover > .TOOLSem,
 */
 
 
-.ELMcontent {padding-top: 20px;}
+/*
 
+iedit-tools
+iedit-tools-edit
+iedit-tools-add
 
+*/
 
 /*.TOOLSem {float: right; text-align: right;}*/
-.TOOLSem {position: absolute;
-          top:0px;
-          right: 0px;
-         /* background-color: #E8EDF0;*/
+.TOOLSem {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    padding-left: 20px;
+    height: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+    background-color:   rgba(200,200,200,0.8);
+    box-shadow: -1px 1px 3px rgba(100,100,100,0.2);
+    border-radius: 0px 0px 0px 4px;
+    z-index: 99;
+}
 
-         /* background-color: #ABBAC4;
-          width: 100%;*/
-          padding-left: 20px;
-          height: 20px;
-          /*border-radius: 2px 2px 0px 0px;*/
-          border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-          border-left: 1px solid rgba(255, 255, 255, 0.7);
-          /*visibility: hidden;*/
-    }
- /*===================[ TEsting ]=========================*/
-.ELMcontent {padding-top: 0px !important;}
-
- .TOOLSem {
-     background-color:   rgba(200,200,200,0.8);
-
-     box-shadow: -1px 1px 3px rgba(100,100,100,0.2);
-     border-radius: 0px 0px 0px 4px;
-
-     z-index: 99;
- }
-
- form .TOOLSem{
+ form .TOOLSem,
+ .iedit-tools-edit
+ {
      top: -23px;
      height: 21px;
      border-radius: 0px ;
@@ -91,7 +95,9 @@ form[id^="EDITform"]:hover > .TOOLSem,
            left: -10px;
            float: right; }
 
-.allENTS > .TOOLSem {
+.allENTS > .TOOLSem ,
+.iedit-tools-add
+{
          height: 18px;
          padding-top: 3px;
         /* height: 30px;*/
@@ -101,11 +107,10 @@ form[id^="EDITform"]:hover > .TOOLSem,
          background: rgba(100,100,100,0.2);
          box-shadow: none;
          border-radius: 4px;
+        visibility: hidden;
         }
 
-/** testing */
 
-.allENTS > .TOOLSem { visibility: hidden;}
 
 .allENTS:hover > .TOOLSem { visibility: visible;}
 

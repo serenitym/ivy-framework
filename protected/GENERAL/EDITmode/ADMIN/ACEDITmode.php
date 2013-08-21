@@ -54,7 +54,7 @@ class ACEDITmode
          //isset($_SESSION['activeEdit']) ? "deactivate" : "activate";
 
          $this->C->TOOLbar->ADDbuttons(
-            "<span>
+            "<span class='iedit-toolbarBtt'>
                  <form method='post' action=''>
                     <input type='hidden' name='methName' value='{$activeMeth}'>
                     <input type='hidden' name='modName' value='EDITmode'>
