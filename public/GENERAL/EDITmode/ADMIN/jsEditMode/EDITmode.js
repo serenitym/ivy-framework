@@ -213,7 +213,7 @@ var iEdit = function(){
            if(!fmw.isset(btt)) {
                console.log('butonul nu exista');
            }
-           console.log('numele butonului ' + btt.attrName);
+          // console.log('numele butonului ' + btt.attrName);
 
            var methName = this.get_ivyMethRef(btt);
            var callback ;
@@ -255,7 +255,7 @@ var iEdit = function(){
         },
 
         get_editTools:    function(elD){
-         return  "<div class='TOOLSem' style='display: none;'>" +
+         return  "<div class='TOOLSem iedit-tools' style='display: none;'>" +
                    "<div class='TOOLSbtn'>" +
                          templates.get_button(elD.BTT.edit);
                    /*"   <span>" +
@@ -278,7 +278,7 @@ var iEdit = function(){
                      (!fmw.isset(elD.BTT.modName) ? ''
                         : templates.get_bindIvyModule(elD.BTT))+
 
-                     "<div class='TOOLSem'>" +
+                     "<div class='TOOLSem iedit-tools-edit'>" +
                           "<div class='TOOLSbtn'>" +
                                  elD.EXTRA_tags +
                                 (!fmw.isset(elD.BTT.extraButtons) ? ''
@@ -311,7 +311,7 @@ var iEdit = function(){
 
 
             var toolsEm =  buttons == '' ? '' :
-                            "<div class='TOOLSem'>" +
+                            "<div class='TOOLSem iedit-tools-add'>" +
                                "<div class='TOOLSbtn'>" +
                                   buttons +
 
@@ -533,7 +533,7 @@ var iEdit = function(){
 
         elD.Name    =  desc[0];
         elD.id =  desc[1];
-        elD.TYPE = TYPEarr;
+        elD.TYPE = TYPEarr[0];
         elD.cls = classes.replace(elD.TYPE,'');
 
         elD.BTT = getBtt(elD.Name, elD);
@@ -1101,20 +1101,11 @@ extraBts
                     var elD       = get_elementToAdd(firstENT, allENTS); //from element Details
                     var tools     =  templates.get_addTools(elD);
 
-                    console.log('addForm selector = '+context+" #"+elD.FORM_id);
+                   // console.log('addForm selector = '+context+" #"+elD.FORM_id);
 
                     if (tools) {
                         allENTS.prepend(tools);
-                        /**
-                        * Daca nu exista ENTS visible inseamna ca nu a fost
-                        * adaugat nici un ENT => trebuie sa apara TOOLSem din
-                        * start , fara mouse over
-                        */
-                        var countENTS = allENTS.find('*[class^=ENT]:visible').length;
-                        if(countENTS == 0) {
-                            addForm.prev('.TOOLSem')
-                                   .css('visibility','visible');
-                        }
+
                     } else {
                         console.log("Atentie nu exista tools pt add");
                     }
@@ -1124,7 +1115,18 @@ extraBts
                         $.when(
                             firstENT.before(templates.get_addForm(elD))
                         ).then( function(){
+
                             var addForm   =  $(context+" #"+elD.FORM_id);
+                            /**
+                            * Daca nu exista ENTS visible inseamna ca nu a fost
+                            * adaugat nici un ENT => trebuie sa apara TOOLSem din
+                            * start , fara mouse over
+                            */
+                            var countENTS = allENTS.find('*[class^=ENT]:visible').length;
+                            if(countENTS == 0) {
+                                addForm.prev('.TOOLSem')
+                                       .css('visibility','visible');
+                            }
 
                             prepare_addForm(elD, addForm);
                             transform(addForm,'form[class$=addForm]', elD.nameENT);
