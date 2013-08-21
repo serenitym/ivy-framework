@@ -33,7 +33,7 @@
     if(defined("FAV_ICON")) {
         echo '<link rel="icon" type="image/png" href="' . FAV_ICON . '">';
     } else {
-        echo '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favico.png">';
+        echo '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
     }
 
     ?>

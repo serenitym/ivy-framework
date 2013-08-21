@@ -126,14 +126,7 @@ class CmethDB extends CrenderTmpl {
     //relocare remote ...sunt situatii cand e nevoie
     public function reLocate($location='', $ANCORA='',$paramAdd='')
     {
-         unset($_POST);
-         $location = ($location=='' ? $_SERVER['REQUEST_URI'] :$location);
-
-         //header("Location: ".$location.$paramAdd.$ANCORA);
-
-         echo "<script type='text/javascript'>window.location = '$location';</script>";
-         echo "<a href='$location'>Click here if the browser does not redirect you automatically</a>";
-         exit;
+        Toolbox::relocate($location, $ANCORA, $paramAdd);
     }
 
     //sql_query

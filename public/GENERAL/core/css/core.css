@@ -38,6 +38,8 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 .clearfix {clear: both;}
 .no-display{ display: none;}
 .hidden, .hiddeHidden {display: none;}
+.pull-left {float: left;}
+.pull-right {float: right;}
 /*
 .hidden {visibility: visible !important;}
 */

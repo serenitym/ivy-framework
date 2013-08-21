@@ -406,7 +406,7 @@ div.atclear {
 }
 
 .at300bs:hover {
-    background-image: url(widget013_32x32_top_hover.gif) !important;
+    background-image: url(widget013_32x32_top_hover.png) !important;
 }
 
 .addthis_20x20_style .dummy .at300bs,.addthis_20x20_style .at300bs,.addthis_20x20_style .at15t {
@@ -419,7 +419,7 @@ div.atclear {
 }
 
 .addthis_32x32_style .dummy .at300bs,.addthis_32x32_style .at300bs,.addthis_32x32_style .at15t {
-    background: url(/assets/addthis/widget013_32x32_top.gif) no-repeat left;
+    background: url(/assets/addthis/widget013_32x32_top.png) no-repeat left;
     overflow: hidden;
     display: block;
     height: 32px!important;

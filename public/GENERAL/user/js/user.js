@@ -1,22 +1,29 @@
 ivyMods.user = {
     templates :{
-        loginForm : "GENERAL/user/tmpl/loginform.html",
-        changePass: "GENERAL/user/tmpl/changePassword.html",
-        inviteMember: "GENERAL/user/tmpl/inviteMember.html"
+        deactivate   : "GENERAL/user/tmpl/deactivateAccount.php",
+        loginForm    : "GENERAL/user/tmpl/loginform.html",
+        changePass   : "GENERAL/user/tmpl/changePassword.php",
+        inviteMember : "GENERAL/user/tmpl/inviteMember.html",
+        inviteConfirm: "GENERAL/user/tmpl/inviteConfirm.php"
     },
     forgotPassword : function(){
         fmw.toggle('#recover-pass');
         fmw.toggle("#loginForm");
+        fmw.toggle("#p-login");
+        fmw.toggle("#p-recover");
     },
     loginForm : function(){
         fmw.toggle('#recover-pass');
         fmw.toggle("#loginForm");
+        fmw.toggle("#p-login");
+        fmw.toggle("#p-recover");
     },
-    popup :function(pubUrl,template,  headerName) {
+    popup :function(pubUrl,template,  headerName, uid) {
         fmw.popUp.init({
             pathGet: pubUrl + this.templates[template],
             headerName: headerName,
-            widthPop: 300
+            widthPop: 400,
+            dataSend: {uid: uid}
         });
     }
 };
