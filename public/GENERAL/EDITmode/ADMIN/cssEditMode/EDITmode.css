@@ -1,5 +1,13 @@
 @charset "UTF-8";
 
+/*Butonul de pe toolbar pentru stop/start live-edit*/
+.iedit-toolbarBtt{
+    color: #9DA1AA !important;
+    background-color: rgb(57, 59, 71) !important;
+
+
+}
+
 .ELMcontent {padding-top: 0px !important;}
 
 

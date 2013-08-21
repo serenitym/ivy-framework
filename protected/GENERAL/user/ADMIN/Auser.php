@@ -139,7 +139,8 @@ class Auser
 
         if ($this->post->email === false) {
             echo ' <script type="text/javascript">
-                alert("I cannot understand that, are you sure is a valid email address?\nPlease try again and send a report if anything seems broken.")
+                alert("I cannot understand that, are you sure is a valid email address?"+
+                "\nPlease try again and send a report if anything seems broken.")
                 </script> ';
             return false;
         } elseif ($this->DB->query($existingQ)->fetch_row()) {

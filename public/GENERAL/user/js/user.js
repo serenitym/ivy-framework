@@ -6,6 +6,13 @@ ivyMods.user = {
         inviteMember : "GENERAL/user/tmpl/inviteMember.html",
         inviteConfirm: "GENERAL/user/tmpl/inviteConfirm.php"
     },
+    popupwidth: {
+        deactivate: '350',
+        loginForm: '400',
+        changePass: '300',
+        inviteMember: '250',
+        inviteConfirm: '400'
+    },
     forgotPassword : function(){
         fmw.toggle('#recover-pass');
         fmw.toggle("#loginForm");
@@ -22,7 +29,7 @@ ivyMods.user = {
         fmw.popUp.init({
             pathGet: pubUrl + this.templates[template],
             headerName: headerName,
-            widthPop: 400,
+            widthPop: this.popupwidth[template],
             dataSend: {uid: uid}
         });
     }
