@@ -219,6 +219,7 @@ textarea.ivy-light:focus{
 .width25 {width: 25px;}
 .width50 {width: 50px;}
 .width100{width: 100px;}
+.width150{width: 150px;}
 .width200{width: 200px;}
 .width300{width: 300px;}
 .width400{width: 400px;}
@@ -237,35 +238,39 @@ textarea.ivy-light:focus{
 .height600{height: 600px;}
 
 
-.pt8{font-size: 8pt;}
-.pt9{font-size: 9pt;}
-.pt7{font-size: 7pt;}
+.font-pt8, .pt8{font-size: 8pt;}
+.font-pt9, .pt9{font-size: 9pt;}
+.font-pt7, .pt7{font-size: 7pt;}
 
-.m0 {margin: 0px !important;}
+.margin-0,.m0 {margin: 0px !important;}
+.margin-5  {margin: 5px; }
+.margin-10 {margin: 10px;}
+.margin-20 {margin: 20px;}
+.margin-35 {margin: 35px;}
+.margin-50 {margin: 50px;}
 
-.l5 {margin-left: 5px;}
-.l10 {margin-left: 10px;}
-.l20 {margin-left: 20px;}
-.l35 {margin-left: 35px;}
-.l50 {margin-left: 50px;}
-
-.r5  {margin-right: 5px;}
-.r10 {margin-right: 10px;}
-.r20 {margin-right: 20px;}
-.r50 {margin-right: 50px;}
-
-.t5  {margin-top: 5px; }
-.t10 {margin-top: 10px;}
-.t20 {margin-top: 20px;}
-.t50 {margin-top: 50px;}
+.margin-l5 , .l5  {margin-left: 5px; }  .margin-r5 , .r5  {margin-right: 5px; }
+.margin-l10, .l10 {margin-left: 10px;}  .margin-r10, .r10 {margin-right: 10px;}
+.margin-l20, .l20 {margin-left: 20px;}  .margin-r20, .r20 {margin-right: 20px;}
+.margin-l35, .l35 {margin-left: 35px;}  .margin-r35, .r35 {margin-right: 35px;}
+.margin-l50, .l50 {margin-left: 50px;}  .margin-r50, .r50 {margin-right: 50px;}
 
 
-.b0  {margin-bottom: 0px;}
-.b5  {margin-bottom: 5px;}
-.b10 {margin-bottom: 10px;}
-.b20 {margin-bottom: 20px;}
-.b40 {margin-bottom: 40px;}
-.b50 {margin-bottom: 50px;}
+.margin-lr5 , .lr5  {margin-left: 5px;  margin-right: 5px;}
+.margin-lr10, .lr10 {margin-left: 10px; margin-right: 10px;}
+.margin-lr20, .lr20 {margin-left: 20px; margin-right: 20px;}
+.margin-lr35, .lr35 {margin-left: 35px; margin-right: 20px;}
+.margin-lr50, .lr50 {margin-left: 50px; margin-right: 50px;}
+
+
+
+.margin-t0 , .t0  {margin-top: 0px; }  .margin-b0 , .b0  {margin-bottom: 0px;}
+.margin-t5 , .t5  {margin-top: 5px; }  .margin-b5 , .b5  {margin-bottom: 5px;}
+.margin-t10, .t10 {margin-top: 10px;}  .margin-b10, .b10 {margin-bottom: 10px;}
+.margin-t20, .t20 {margin-top: 20px;}  .margin-b20, .b20 {margin-bottom: 20px;}
+.margin-t40, .t40 {margin-top: 40px;}  .margin-b40, .b40 {margin-bottom: 40px;}
+.margin-t50, .t50 {margin-top: 50px;}  .margin-b50, .b50 {margin-bottom: 50px;}
+
 
 .tb0  {margin-bottom: 0px;  margin-top: 0px;  }
 .tb5  {margin-bottom: 5px;  margin-top: 5px;  }
@@ -274,11 +279,12 @@ textarea.ivy-light:focus{
 .tb50 {margin-bottom: 50px; margin-top: 50px; }
 /*===============================================================================*/
 
-.p0  {padding: 0px;}
-.p5  {padding: 5px;}
-.p10 {padding: 10px;}
-.p20 {padding: 20px;}
-.p50 {padding: 50px;}
+.padding-0 , .p0  {padding: 0px;}
+.padding-3 , .p3  {padding: 3px;}
+.padding-5 , .p5  {padding: 5px;}
+.padding-10, .p10 {padding: 10px;}
+.padding-20, .p20 {padding: 20px;}
+.padding-50, .p50 {padding: 50px;}
 
 
 .pb5  {padding-bottom: 5px;}

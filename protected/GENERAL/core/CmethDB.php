@@ -196,7 +196,4 @@ class CmethDB extends CrenderTmpl {
         return $set;
     }
 
-
-
-
 }

@@ -213,7 +213,7 @@ dupa citirea configurilor un element editabil se va transforma astfel
                   elD.SAVE_tag +
                   elD.DELETE_tag+
                  "<span>" +
-                 "   <input type='button'  class='editModeBTT editM-exit' " +
+                 "   <input type='button'  class='iedit-btt editM-exit' " +
                              "name='EXIT' value='x'" +
                               " onclick=\"iEdit.evCallback.exitEditContent_byName('"+elD.Name+"','"+elD.id+"')\">" +
                  "    <i>Exit</i>" +

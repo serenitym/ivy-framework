@@ -74,20 +74,17 @@ class CauthManager extends authCommon implements Serializable {
           </form>
         ';
         return $display;
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ __tostring */
     public function __tostring() {
         return $this->loginName;
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ public function serialize() */
     public function serialize() {
         return serialize(get_object_vars($this));
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ public function unserialize($data) */
     public function unserialize($data) {
@@ -99,14 +96,12 @@ class CauthManager extends authCommon implements Serializable {
                 $this->$k = $v;
             }
         }
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ private sanitizeLogin() */
     protected function sanitize ($var) {
         return $this->rodb->real_escape_string($var);
-    }
-    /* }}} */
+    }/* }}} */
 
     //==========================================================================
     // not sure where is this used
@@ -140,8 +135,7 @@ class CauthManager extends authCommon implements Serializable {
         return $result;
 
 
-    }
-    /* }}} */
+    }/* }}} */
 
     /**
      * Get basic data for user
@@ -186,8 +180,7 @@ class CauthManager extends authCommon implements Serializable {
                     or die('Query failed: ' . $this->rodb->error);
 
         return $result;
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ public authCheck($loginName='', $password='')  */
     /**
@@ -221,8 +214,7 @@ class CauthManager extends authCommon implements Serializable {
         }
         return true;
 
-    }
-    /* }}} */
+    }/* }}} */
 
     /*public  function Set_toolbarButtons(&$C)
     {
@@ -257,13 +249,13 @@ class CauthManager extends authCommon implements Serializable {
             //sessionManager::sessionToSQL(3600);
         } else {
             // Return 0, this means the check returned a Guest account
+            //echo "CauthManager - login fail <br>";
             unset($_SESSION['auth']);
             unset($_SESSION['userData']);
         }
         //Toolbox::clearSubmit();
 
-    }
-    /* }}} */
+    }/* }}} */
 
     /* {{{ protected logout() */
     /**
@@ -277,19 +269,19 @@ class CauthManager extends authCommon implements Serializable {
         sessionManager::destroySession();
         sessionManager::unsetCookies();
         header("Location: http://".$_SERVER['SERVER_NAME']);
-    }
-    /* }}} */
+    }/* }}} */
 
     /* Metoda apelate direct din Singleton */
     /* {{{ protected init  */
     protected function init ()
     {
+
         if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
             $this->login();
         } elseif (isset($_GET['logOUT'])) {
+
             $this->logout();
         }
 
-    }
-    /* }}} */
+    }/* }}} */
 }

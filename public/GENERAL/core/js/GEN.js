@@ -76,6 +76,8 @@ fmw.admin = 0;
 fmw.idT = 0;
 fmw.idC = 0;
 fmw.lg = 'ro';
+fmw.ajaxProxy = 'procesSCRIPT.php';
+fmw.ajaxReqFile = 'ajaxReqFile';
 
 /**
  * Use case :
@@ -92,25 +94,52 @@ fmw.toggle = function(selection, opt){
      *  value: [valueClick, valueDef]
      *  }
      */
+    opt = fmw.isset(opt) ? opt : {};
+    var defaults = {
+        caller: '',
+        class : ['', ''],
+        value : ['', '']
+
+    };
+
 
     $(selection).toggle();
+    $.extend(true, opt, defaults);
 
-
-    if(typeof opt != 'undefined' && typeof opt.caller != 'undefined') {
+    if(opt.caller != '') {
         var visible = $(selection).is(":visible");
         //console.log("element is "+ (visible ? "visible" : "notvisible"));
 
-        if(typeof opt.class != 'undefined') {
+        if(opt.class != '') {
             opt.caller.attr('class', (visible ? opt.class[1]: opt.class[0]));
             //console.log( opt.selector.attr('class') + " "+ opt.class[1]);
         }
 
-        if(typeof opt.value != 'undefined') {
+        if(opt.value != '') {
             opt.caller.attr('class', (visible ? opt.value[1]: opt.value[0]));
         }
 
     }
     return false;
+}
+fmw.isset = function(variable) {
+    if(typeof  variable == 'undefined') {
+        return false;
+    } else {
+
+        return true;
+    }
+}
+
+// not working good dont know yet why
+fmw.notempty = function(variable) {
+    if(!fmw.isset(variable)) {
+        return false;
+    }
+    if(variable == 0 || variable == '') {
+        return false;
+    }
+    return true;
 }
 
 fmw.asyncConf = function(options, callBack){
@@ -329,8 +358,8 @@ fmw.popUp = {
         * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
         *
         * opt.pathLoad
-        * opt.dataSend
-        * opt.procesSCRIPT
+        * opt.dataSend {ajaxReqFile : '', alteVars: '', modName: '', methName: ''}
+        * opt.ajaxProxy
         *
         * //un template care trebuie sa ii fie luat asa cum este
         * // ii se poate trimite si un dataSend
@@ -338,22 +367,36 @@ fmw.popUp = {
         * opt.pathGet
         * opt.dataSend
         *
+        * opt.callbackFn: {
+        *   fn: 'functia',
+        *   context: 'obiectul in care sa fie cotextul',
+        *   args: 'lista/ array cu argumentele trimise catre functie'
+        *   }
+        *
         * */
 
         // properties
+/*
         this.headerName   = opt.headerName;
         this.widthPop     = opt.widthPop;
         this.heightPop    = opt.heightPop;
-        this.completeFunc = opt.completeFunc;
+        this.callbackFn  = opt.callbackFn;
         this.content      = opt.content;
+*/
 
         //this.popUp_loadContent ;//???
+        // defaults
+        this.ajaxProxy = fmw.ajaxProxy;
+        this.dataSend = { sessionId : $.cookie("PHPSESSID")};
+
+        // incorporate options
+        $.extend(true, this, opt);
 
         //______________________________________[ set html TMPL]_________________________________________________
 
         this.popUp_set_htmlTml();
          //console.log(this.popUpContent);
-        // ini stuf
+        // ini stuff
         if (typeof this.content !='undefined') {
             this.popUp_content(this.content);
             //console.log(this.content);
@@ -370,18 +413,18 @@ fmw.popUp = {
         } else {
 
             //Daca scriptul meu de process este acelasi cu cel default atunci facem aranjamentele necesare
+             /*  this.ajaxProxy = (typeof opt.ajaxProxy != 'undefined' || typeof opt.ajaxProxy == 'null' )
+                                ? opt.ajaxProxy
+                                : fmw.ajaxProxy;
 
-            this.procesSCRIPT = (typeof opt.procesSCRIPT != 'undefined' || typeof opt.procesSCRIPT == 'null' )
-                                ? opt.procesSCRIPT
-                                : procesSCRIPT_file;
-
+            this.dataSend = { sessionId : $.cookie("PHPSESSID")};
             this.dataSend     = opt.dataSend instanceof object
                                 ? opt.dataSend
                                 : {};
 
-            this.dataSend     = (this.procesSCRIPT == procesSCRIPT_file && typeof opt.pathLoad != 'undefined')
-                                ? jsonConcat(this.dataSend,{parsePOSTfile : opt.pathLoad})
-                                : this.dataSend;
+            this.dataSend     = (this.ajaxProxy == fmw.ajaxProxy && typeof opt.ajaxReqFile != 'undefined')
+                                ? $.extend(this.dataSend, {ajaxReqFile : opt.ajaxReqFile})
+                                : this.dataSend;*/
 
             this.popUp_load();
         }
@@ -389,10 +432,14 @@ fmw.popUp = {
     ,
     popUp_load        : function(){
 
+       /* var testSendData = '';
+        for(var i in this.dataSend) {
+            testSendData += " name = "+ i + "value = "+ this.dataSend[i] + '\n';
+        }*/
         //_____________________________________[ set load ]__________________________________________________
-        /* console.log('procesSCRIPT '+this.procesSCRIPT
-               + '\n\n dataSend '+this.dataSend
-               + '\n\n pathLoad '+this.pathLoad
+        /* console.log('ajaxProxy '+this.ajaxProxy
+               + '\n\n dataSend '+ testSendData
+               + '\n\n ajaxReqFile '+this.ajaxReqFile
            //  + '\n\n completeFunc '+this.completeFunc + ' length'+this.completeFunc.length
           //   + '\n\n type '+(typeof this.completeFunc)
         );*/
@@ -402,7 +449,7 @@ fmw.popUp = {
         setTimeout(function(){
             $('#popUp #popUp-content')
                   .load(
-                      mod.procesSCRIPT,
+                      mod.ajaxProxy,
                       mod.dataSend,
                       function(){
                             mod.popUp_callback();
@@ -474,15 +521,19 @@ fmw.popUp = {
     ,
     popUp_callback    : function(){
         // alert('this is the callBack '+ this.completeFunc);
-        if (typeof this.completeFunc !='undefined' && this.completeFunc.length > 0)  {
-            if (typeof this.completeFunc == 'string' &&
-                 eval('typeof ' + this.completeFunc) == 'function'
-            ) {
-               //alert('Considera ca s-a gasit o functie');
-                eval(this.completeFunc+'()');
-            } else {
-                console.log('there is no function named '+this.completeFunc);
+        if (typeof this.callbackFn !='undefined'
+            && typeof this.callbackFn.fn == 'function')  {
+            var context = this;
+            var args = [];
+            if(typeof this.callbackFn.context != 'undefined') {
+                context = this.callbackFn.context;
             }
+            if(typeof this.callbackFn.args != 'undefined') {
+                args = this.callbackFn.args;
+            }
+
+
+            this.callbackFn.fn.apply(context, args);
         }
     }
 

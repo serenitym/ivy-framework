@@ -113,8 +113,8 @@ form[id^="EDITform"]:hover > .TOOLSem,
 /*________________________________________________________________________________*/
     .TOOLSem input[type='button'],
      .TOOLSem input[type=submit],
-        /*  .TOOLSem .editModeBTT{*/
-          .TOOLSem .editModeBTT{
+        /*  .TOOLSem .iedit-btt{*/
+          .TOOLSem .iedit-btt{
 
               color: rgba(0, 0, 0, 0.65);
               line-height: 11px;
@@ -131,8 +131,8 @@ form[id^="EDITform"]:hover > .TOOLSem,
  .TOOLSem input[type='button']:hover,
  .TOOLSem input[type=submit]:hover{ cursor: pointer; }
 
- .TOOLSem input.editModeBTT{ background: #e7e8f1 ;}
- .TOOLSem input.editModeBTT:hover{ background:  #F4F5FA ;}
+ .TOOLSem input.iedit-btt{ background: #e7e8f1 ;}
+ .TOOLSem input.iedit-btt:hover{ background:  #F4F5FA ;}
 
 /*________________________[edit button]________________________________________*/
  .TOOLSem .editM-edit{ background: #b6fff5 !important; margin-top: 3px;/*nu stiu de ce e nevoie de asta*/}

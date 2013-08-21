@@ -263,7 +263,10 @@ $html .="
          $this->lang2 = &$this->C->lang2;
          $this->langs = &$this->C->langs;
 
-        $this->C->TOOLbar->ADDbuttons("<input type='button'  value='General Edit' onclick=\"activatePOPUPedit('GEN_edit','GENERAL')\" >");
+
+        //$this->C->TOOLbar->ADDbuttons();
+        array_push($this->C->TOOLbar->buttons,
+            "<input type='button'  value='General Edit' onclick=\"activatePOPUPedit('GEN_edit','GENERAL')\" >");
 
         $this->POSTparser();
         $this->set_DISPLAY();

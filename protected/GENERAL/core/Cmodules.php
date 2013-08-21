@@ -91,7 +91,7 @@ class Cmodules extends CsetModule
         {
             foreach($this->{'default_'.$modType} AS $modName)
             {
-                # error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
+                 error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
                 $this->Module_Build($modName,$modType);
             }
         }
