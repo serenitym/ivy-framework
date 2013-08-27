@@ -205,7 +205,7 @@ var iEdit = function(){
             return methRef;
 
         },
-        get_button:  function(btt){
+        get_button:       function(btt){
            /**
             *  callbackFull : functie declarata in full
             *  callback: functie declarata pe parti
@@ -302,7 +302,7 @@ var iEdit = function(){
                      "</div>"+
                 "</form>";
         },
-        get_addTools: function(elD){
+        get_addTools:     function(elD){
 
             var buttons  = (!fmw.isset(elD.BTTall.extraButtons) ? ''
                            : templates.get_extraButtons(elD.BTTall.extraButtons)) ;
@@ -319,7 +319,7 @@ var iEdit = function(){
                             "</div>";
             return toolsEm;
         },
-        get_addForm:  function(elD){
+        get_addForm:      function(elD){
 
             return "<form action='' method='post' class='"+elD.FORM_class+"'   id='"+elD.FORM_id+"' style='display: none;'>" +
                          elD.html_ctrlAction+
@@ -686,6 +686,7 @@ var iEdit = function(){
         var EDtag_height =jqEDtag.height();
         var EDtag_width  =jqEDtag.width();
 
+        var jqEDinput = {}; // selectorul inputului cu care s-a facut replaceul
 
         var EDreplace ={
             EDtxtp   : function (){
@@ -696,13 +697,14 @@ var iEdit = function(){
                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclasses+"' value='"+EDvalue+"' />";},
             EDdate   : function (){
                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclasses+"' value='"+EDvalue+"' />";},
-            EDtags   : function (){
+            EDtxtauto   : function (){
+
                        return "<input type='text' name='"+INPUTname+"'  class='"+INPUTclass+"' value='"+EDvalue+"' />";},
 
             EDtxa    : function (){
                      return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"' >"+EDvalue+"</textarea>"; },
             EDeditor : function (){
-                     return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"'  id='editor_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
+                 return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"'  id='editor_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
             EDaddEditor : function (){
                      return "<textarea   name='"+INPUTname+"'  class='"+INPUTclasses+"'  id='editorAdd_"+EDname+'_'+LG+"' >"+EDvalue+"</textarea>";},
             EDpic    : function (){
@@ -783,14 +785,15 @@ var iEdit = function(){
         var EDcallback = {
             /**
              * work with elements like:
-             * <* class= 'EDeditor name'  data-editorToolbar = 'numele toolbarului ales'></*>
+             *
+             * <* class= 'EDeditor name'  data-iedit-cketoolbar = 'numele toolbarului ales'></*>
              * @constructor
              */
              EDeditor : function(){
 
 
                     // daca elementul are un toolbar declarat
-                   var toolbarName = jqEDtag.data('editorToolbar');
+                   var toolbarName = jqEDtag.data('ieditCketoolbar');
                    if(typeof  toolbarName == 'undefined' || toolbarName == '') {
 
                        toolbarName = (EDtag_width < 500 ? 'defaultSmall' : 'default' );
@@ -800,7 +803,8 @@ var iEdit = function(){
                                              toolbar : toolbarName,
                                              height : EDtag_height+'px'
                                            ,width : EDtag_width
-                                         });
+                                         }
+                                   );
                                  //$("textarea[id=editor_"+EDname+'_'+LG+"]").ckeditor();
 
              },
@@ -821,119 +825,58 @@ var iEdit = function(){
              EDdate   : function(){
                             $(formSelector+' input[name='+INPUTname+']').datepicker({dateFormat: 'yy-mm-dd'});
              },
-             EDtags   : function(){
-             //Alt exemplu cu array predefinit
-            /*$('input[name='+INPUTname+']')
-         // don't navigate away from the field on tab when selecting an item
-           .bind( "keydown", function( event ) {
-               if ( event.keyCode === $.ui.keyCode.TAB &&
-                       $( this ).data( "autocomplete" ).menu.active ) {
-                   event.preventDefault();
-               }
-           })
-           .autocomplete({
-               minLength: 0,
-               source: function( request, response ) {
-                   // delegate back to autocomplete, but extract the last term
-                   response( $.ui.autocomplete.filter(
-                       availableTags, extractLast( request.term ) ) );
-               },
-               focus: function() {
-                   // prevent value inserted on focus
-                   return false;
-               },
-               select: function( event, ui ) {
-                   var terms = split( this.value );
-                   // remove the current input
-                   terms.pop();
-                   // add the selected item
-                   terms.push( ui.item.value );
-                   // add placeholder to get the comma-and-space at the end
-                   terms.push( "" );
-                   this.value = terms.join( ", " );
-                   return false;
-               }
-           });*/
+             EDtxtauto   : function(){
 
-                    $('input[name='+INPUTname+']')
-                   // don't navigate away from the field on tab when selecting an item
-                     .bind( "keydown", function( event ) {
-                         if ( event.keyCode === $.ui.keyCode.TAB &&
-                                 $( this ).data( "autocomplete" ).menu.active ) {
-                             event.preventDefault();
-                         }
-                     })
-                     .autocomplete
-                     ({
-                         minLength: 0,
-                         /*source:
-                                function( request, response )
-                                {
-                                    $.post(
-                                        procesSCRIPT_file,
-                                        {parsePOSTfile : parsePOSTfile_getTags},
-                                         function(data)
-                                         {
-                                             // delegate back to autocomplete, but extract the last term
-                                               response( $.ui.autocomplete.filter(
-                                                   data, extractLast( request.term ) ) );
-                                         },
-                                        "json"
-                                    );
-extraBts
-                                },*/
-                         source:
-                                function( request, response )
-                                {
-                                    // wwant to do it like this
-                                   /* if(typeof bttConf[elmName] !='undefinder' &&  typeof bttConf[elmName].EDs[EDname] !='undefinder' ){
+                /**
+                 * Work with:
+                 *<* class="EDtxtauto otherClasses elmName"
+                        data-iedit-source = '{}'
+                        data-iedit-select = 'multiple / key'
+                        data-iedit-path = 'pathName'
+                        data-iedit-minln = 'min characters'
 
-                                        var jsonPath = bttConf[elmName].EDs[EDname].getJson;
-                                        $.getJSON(jsonPath, function(data) {
-                                             response( $.ui.autocomplete.filter(
-                                             data, extractLast( request.term ) ) );
-                                        });
-                                    }*/
-                                    $.post(
-                                        procesSCRIPT_file,
-                                        {parsePOSTfile : parsePOSTfile_getTags},
-                                         function(data)
-                                         {
-                                             // delegate back to autocomplete, but extract the last term
-                                               response( $.ui.autocomplete.filter(
-                                                   data, extractLast( request.term ) ) );
-                                         },
-                                        "json"
-                                    );
-                                },
+                     >
+                         content
+                     </*>
+                 * @type {*}
+                 */
+                var minLength    = jqEDtag.data('ieditMinln');
+                var path         = jqEDtag.data('ieditPath');
+                var source       = jqEDtag.data('ieditSource');
+                var select       = jqEDtag.data('ieditSelect');
 
-                         focus:
-                                function() { return false; /* prevent value inserted on focus */},
 
-                         select:
-                                function( event, ui )
-                                {
-                                    var terms = split( this.value );
-                                    // remove the current input
-                                    terms.pop();
-                                    // add the selected item
-                                    terms.push( ui.item.value );
-                                    // add placeholder to get the comma-and-space at the end
-                                    terms.push( "" );
-                                    this.value = terms.join( ", " );
-                                    return false;
-                                }
-                     });
-              }
+                // daca sursa este o cale
+                if( typeof path != 'undefined') {
+                     source = {
+                         scriptPath: fmw.ajaxProxy,
+                         sendData :  {ajaxReqFile : path}
+                     };
+                }
+
+                // daca am reusit sa determinam o sursa pentru autocomplete
+                 if(typeof source == 'object') {
+                     $('input[name='+INPUTname+']')
+                         .ivyAutocomplete(source, minLength, select);
+                 } else {
+                     console.log("EDITmode - EDtxta : Nici o sursa nu a fost preluata "
+                      + typeof  source
+                     );
+                 }
+
+
+             }
         };
 
-        //alert(typeof EDtags[EDtype]);
-        if( eval('typeof ' +EDreplace[EDtype]) == 'function' )
-        {
+        //alert(typeof EDtxtauto[EDtype]);
+        if( eval('typeof ' +EDreplace[EDtype]) == 'function' ) {
 
            jqEDtag.replaceWith( EDreplace[EDtype]() );
-            if(eval('typeof ' +EDcallback[EDtype]) == 'function')
-            EDcallback[EDtype]();
+           jqEDinput =  $('input[name='+INPUTname+']');
+
+           if(eval('typeof ' +EDcallback[EDtype]) == 'function') {
+                EDcallback[EDtype]();
+            }
 
         }  else {
             alert('EDITmode nu s-a gasit functie pentru EDtype '+EDtype+'\n EDname = '+EDname);

@@ -78,6 +78,19 @@ class CmethDB extends CrenderTmpl {
         return $allRecords;
 
     }
+    public function Db_Get_procRow(&$mod,$processResMethod, $query)
+    {
+        $row = $this->Db_Get_queryRes($query)->fetch_assoc();
+
+        if($row) {
+            $row = $mod->{$processResMethod}($row);
+            if($row) {
+                return $row;
+            }
+        }
+        return false;
+    }
+
     public function Db_Get_rows($query, $method = 'fetch_assoc')
     {
         $queryRes = $this->Db_Get_queryRes($query);
@@ -120,7 +133,7 @@ class CmethDB extends CrenderTmpl {
         }
     }
 
-   #=============================[ update / Insert ]==============================
+   #=============================[ update / Insert ]============================
 
 
     //relocare remote ...sunt situatii cand e nevoie
@@ -187,6 +200,120 @@ class CmethDB extends CrenderTmpl {
 
         $set = implode(', ', $sets);
         return $set;
+    }
+
+    #==============================[ query strings ]============================
+    public function Db_Get_filters($obj, $filters)
+    {
+        //filterList
+        $filtersStrs = array();
+
+        // check for requested filter
+        if (isset($_REQUEST['filterName']) && isset($_REQUEST['filterValue'])) {
+           $filters[$_REQUEST['filterName']] =  $_REQUEST['filterValue'];
+        }
+
+        // pentru mai multe filtre ( idee neimplementata inca)
+        /*if(isset($_REQUEST['filters'])) {
+            $filters = array_merge($filters, $_REQUEST['filters']);
+        }*/
+
+        if (count($filters)) {
+
+            foreach ($filters AS $filterName => $filterValue) {
+                //test if method exists
+                if (!method_exists($obj, 'Get_Filter_'.$filterName)) {
+                    error_log("[ ivy ] CmethDb - Db_handled_filters :"
+                              ." Sorry the filter $filterName has no method handler "
+                    );
+                } else {
+                    $filter = $obj->{'Get_Filter_'.$filterName}($filterValue);
+                    array_push($filtersStrs, $filter);
+                }
+            }
+        }
+
+        return $filtersStrs;
+
+
+    }
+
+    /**
+     * @param $obj
+     * @param $queryAdds = array('funcName' = >array(parameters for function))
+     *
+     * @return array
+     *
+     */
+    public function Db_Get_queryAdds($obj, $queryAdds)
+    {
+         $queryJoins = array();
+         if (count($queryAdds)) {
+
+            foreach ($queryAdds AS $queryAddFn => $queryFnArgs) {
+
+                if(!method_exists($obj, $queryAddFn)) {
+                    error_log("[ ivy ] CmethDb - Db_handled_filters :"
+                              ." Sorry the method $queryAddFn does not exists "
+                    );
+                } else {
+                    $join = call_user_func(array($obj, $queryAddFn), $queryFnArgs);
+                    array($queryJoins, $join);
+                }
+
+            }
+         }
+
+        return $queryJoins;
+    }
+
+    /**
+     * based on Get_Filter_[filterName]
+     *
+     * @param $obj
+     * @param $queryBase
+     *      - poate sa fie numele undei functii sau chiar queryul in sine
+     *      - daca sa zicem dimensiunea stringului este < 30 este posibil sa fie o metoda
+     *        a obiectului deci poate fi testata intai caatare si apoi considerata
+     *        fix un query
+     * @param array $queryAdds = array('fnNames');
+     * @param array $filters
+     *      - filtrele default
+     *      = array('filterName' = > 'filterValue')
+     *
+     * @return stdClass
+     *      ->parts[query, join, joins = array(), where, wheres = array()]
+     *      -> fullQuery
+     */
+    public function Db_Get_queryParts($obj, $queryBase,  $filters = array(), $queryAdds = array())
+    {
+        $sql = new stdClass();
+
+        $queryBaseLn = strlen($queryBase);
+
+        $sql->parts['query'] = $queryBaseLn < 30
+                             ? method_exists($obj, $queryBase)
+                                    ? $obj->{$queryBase}()
+                                    : $queryBase
+                             : $queryBase;
+
+        $sql->parts['joins'] = $this->Db_Get_queryAdds($obj, $queryAdds);
+        $sql->parts['join']  = implode(' ', $sql->parts['joins']);
+
+        $sql->parts['wheres'] = $this->Db_Get_filters($obj, $filters);
+        $sql->parts['where']  = (count($sql->parts['wheres']) == 0 ? ''
+                                  : ' WHERE '.implode(' AND ', $sql->parts['wheres'])
+                                );
+
+
+        $sql->query       = $sql->parts['query']
+                               .$sql->parts['join']
+                               .$sql->parts['where'];
+
+        error_log("[ ivy ] CMethDb - Db_Get_queryParts : "
+                         .preg_replace('/\s+/', ' ', $sql->query));
+
+        return $sql;
     }
 
 }
