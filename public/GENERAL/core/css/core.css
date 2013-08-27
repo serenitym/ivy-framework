@@ -140,6 +140,16 @@ textarea.ivy-light{
 
 }
 
+input[type="text"].ivy-padded,
+input[type="password"].ivy-padded,
+textarea.ivy-padded{
+
+    cursor: text !important;
+    padding: 4px 3px;
+    margin: 3px;
+
+}
+
 input[type="text"].ivy-light:focus,
 input[type="password"].ivy-light:focus,
 textarea.ivy-light:focus{
