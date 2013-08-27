@@ -56,7 +56,8 @@ if (isset($_SESSION['auth'])) {
 } else {
     $core = new CLcore($dbLink);
 }
-//var_dump($_SESSION);
+
+$core->Set_lastURL();
 
 // $_SESSION['core'] = &$core;
 // ======================================

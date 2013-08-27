@@ -1,9 +1,9 @@
 ivyMods.user = {
-    templates :{
+    templates: {
         deactivate   : "GENERAL/user/tmpl/deactivateAccount.php",
         loginForm    : "GENERAL/user/tmpl/loginform.html",
         changePass   : "GENERAL/user/tmpl/changePassword.php",
-        inviteMember : "GENERAL/user/tmpl/inviteMember.html",
+        inviteMember : "GENERAL/user/tmpl/inviteMember.php?sessionId="+$.cookie('PHPSESSID'),
         inviteConfirm: "GENERAL/user/tmpl/inviteConfirm.php"
     },
     popupwidth: {
@@ -27,7 +27,7 @@ ivyMods.user = {
     },
     popup :function(pubUrl,template,  headerName, uid) {
         fmw.popUp.init({
-            pathGet: pubUrl + this.templates[template],
+            pathLoad: pubUrl + this.templates[template],
             headerName: headerName,
             widthPop: this.popupwidth[template],
             dataSend: {uid: uid}

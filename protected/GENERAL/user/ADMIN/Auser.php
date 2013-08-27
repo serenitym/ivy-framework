@@ -5,6 +5,64 @@
  */
 class Auser
 {
+    static function generate_token($uid=0, $email='')
+    {
+        $token = ''
+            . base64_encode($uid)
+            . base64_encode(microtime())
+            . base64_encode($email)
+            . Toolbox::randomString(10);
+        return $token = md5($token);
+    }
+
+    protected function Db_storeToken($uid, $token = null)
+    {
+        if ($token === null) {
+            $token = $this->generate_token($uid);
+        }
+
+        $stmt = $this->DB->prepare(
+            "UPDATE auth_users SET token = ? WHERE uid = '$uid'"
+        ) or trigger_error(
+            "[ivy] User token storage error: " . $stmt->error(),
+            E_USER_WARNING
+        );
+
+        $stmt->bindParam("s", $token);
+        $stmt->execute();
+
+            if ($stmt->errno) {
+                trigger_error(
+                    "[ivy] User token storag error: " . $stmt->error(),
+                    E_USER_WARNING
+                );
+            }
+
+
+    }
+
+    public function Db_getToken($id, $token = '')
+    {
+        // Prepare the query: if $id is integer, select from existing users.
+        // Otherwise, $id refers to a pending invitation, identified by
+        // email addresses.
+        $id   = filter_var($id, FILTER_SANITIZE_STRING); // Clean it up a little
+
+        if (intval($id) > 0) {
+            $query = "SELECT token FROM auth_users WHERE uid = '$id'";
+        } else {
+            $query = "SELECT token FROM auth_invitations WHERE email = '$id'";
+        }
+
+        // If database connection is still with us, get the token
+        if (isset($this->DB)) {
+            return $this->DB->query($query)->fetch_object()->token;
+        } else {
+            trigger_error("[ivy] User: No database connection!", E_USER_WARNING);
+        }
+
+    }
+
     /**
      * valid_uname
      *
@@ -127,12 +185,15 @@ class Auser
     function _hook_inviteUser()
     {
 
-        $this->post = handlePosts::Get_postsFlexy(array('email'));
+        $this->post = handlePosts::Get_postsFlexy(array('email', 'cid'));
         $this->post->email = filter_var(
             filter_var(
                 $this->post->email, FILTER_SANITIZE_EMAIL
             ), FILTER_VALIDATE_EMAIL
         ); // this should be false if it fails the sanitize / validate combo test
+        $this->post->cid = filter_var(
+            $this->post->cid, FILTER_SANITIZE_NUMBER_INT
+        );
 
         $existingQ = "SELECT uid FROM auth_users
             WHERE email = '{$this->post->email}';";
@@ -157,25 +218,60 @@ class Auser
         return true;
 
     }
+    /**
+     * Add a pending invitation to the database and send a notification email
+     * to the invited user. It expects sanitized data from a hook and halts
+     * execution if the insert statement fails.
+     *
+     * Returns true if succeeded, else return false and trigger a
+     * E_USER_WARNING error.
+     *
+     * @access public
+     * @return bool
+     */
     function inviteUser()
     {
+        // Create a unique token for the invitation
+
+        $email =& $this->post->email;
+        $cid   =& $this->post->cid;
+        $token =  $this->generate_token(0, $this->post->email);
+
+        // Prepare query to store invitation
+
+        $stmt = $this->DB->prepare(
+            "REPLACE INTO auth_invitations VALUES (?, ?, ?)"
+        );
+        $stmt->bind_param('sis', $email, $cid, $token);
+
+        // If query fails, get out of here and log a user warning
+
+        $stmt->execute();
+        if ($stmt->errno) {
+            trigger_error(
+                "[ivy] User: Invitation error: " . $stmt->error(),
+                E_USER_WARNING
+            );
+            return false;
+        }
+        $stmt->close();
+
+        // If we reached this point, we can safely send the invitation via email
+
         $mail = ivyMailer::build();
 
-        $mail->setFrom('noreply@serenitymedia.ro', 'The Black Sea mailer');
+        $mail->setFrom(SMTP_USER, "The Black Sea mailer");
         $mail->AddTo($this->post->email);
-
         $mail->subject = 'Your invitation on ' . SITE_NAME;
         $mail->defineText(
             PUBLIC_URL
             //. '?token=' . Toolbox::randomString(24)
-            . '?token=' . $this->mktoken($this->post->email)
+            //. '?token=' . $this->mktoken($this->post->email)
+            . '?token=' . $token
             . '&ref=' . $this->uid
             . '&email=' . $this->post->email
             . '&route=invite'
         );
-
-        //var_dump($mail);
-        //die('Invited: ' . $this->post->email);
 
         $mail->send();
 
@@ -194,7 +290,8 @@ class Auser
         $uniqueUserQ = "SELECT uid from auth_users
             WHERE name = '".strval($this->post->loginName)."';";
 
-        if ($this->mktoken(filter_var($_GET['email'], FILTER_SANITIZE_EMAIL)) != strval($_GET['token'])
+
+        if ($this->Db_getToken(filter_var($_GET['email'], FILTER_SANITIZE_EMAIL)) != strval($_GET['token'])
         ) {
             $this->C->jsTalk .= "alert('Wrong security token, good bye!');";
             $this->C->jsTalk .= 'window.location = "/";';
@@ -232,9 +329,14 @@ class Auser
     }
     public function inviteConfirm()
     {
+        $inviteQ = "SELECT * FROM auth_invitations WHERE email = '"
+            . $this->post->email . "'";
+        $invite = $this->DB->query($inviteQ)->fetch_object();
+
+
         $newUserQ = "INSERT INTO auth_users (cid, name, active, email, password)
-            VALUES ('4', '{$this->post->loginName}', '1', '{$this->post->email}',
-                    '{$this->post->password}');";
+            VALUES ('{$invite->cid}', '{$this->post->loginName}', '1',
+                    '{$invite->email}', '{$this->post->password}');";
 
         if (!$this->DB->query($newUserQ)) {
             $this->C->jsTalk .= "alert('Something went wrong, please contact us ASAP');";

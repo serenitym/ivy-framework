@@ -17,7 +17,7 @@ if ($_POST['sessionId'] ) {
 
     $sercorePath = VAR_PATH.'tmp/sessions/'.$_POST['sessionId'].'/sercore.txt' ;
 
-    if(file_exists($sercorePath)) {
+    if (file_exists($sercorePath)) {
         //echo "Sunt incerc sa preiau core din ".$sercorePath;
         //var_dump($_POST);
 
@@ -29,7 +29,7 @@ if ($_POST['sessionId'] ) {
     }
 
 } else {
-   error_log( "Nu se cere Restore Core ");
+    error_log( "Nu se cere Restore Core ");
 }
 
 //=========================================================================

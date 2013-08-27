@@ -113,6 +113,7 @@ class Cuser extends permissions
         if (!$this->permissions) {
             $this->_init_permissions();
             error_log("[ ivy ] Cuser - _init_ : Citim permisiunile din bd");
+
             //echo "<br> Cuser _init_ : permissions from db ";
             //var_dump($this->permissions);
         } else {
@@ -200,6 +201,7 @@ class Cuser extends permissions
 
         if (isset($_GET['login'])) {
 
+            $_SESSION['postLoginURL'] = $_SESSION['lastURL'];
             $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'loginForm' , 'Login'); ";
             return true;
         }
