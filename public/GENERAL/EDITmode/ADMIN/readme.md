@@ -225,3 +225,136 @@ dupa citirea configurilor un element editabil se va transforma astfel
       "</div>"+
    "</form>";
 ```
+
+
+#Editable types
+--------------------------------------------------
+
+```
+    <* class="EDtype otherClasses elmName"> content </*>
+```
+
+* Legnda : jqElm - selectorul elmentului editabil*
+
+
+Orice element are urmatoarele proprietati:
+
++ jqEDtag        - selectorul elementului editabil
++ INPUTname    - numele inpututului final
++ INPUTclasses - clasele inputului
++ EDtag_width
++ EDtag_height
+
+
+EDtype poate sa ia urmatoarele valori:
+
++ EDtxtp
++ EDtxt
++ EDdate
++ EDtxtauto
++ EDtxa
++ EDeditor
++ EDaddEditor
++ EDpic
++ EDaddPic
++ EDsel
+
+
+###**EDtxt**
+
+```
+    <* class="EDtxt otherClasses elmName"> content </*>
+
+    replace with
+    <input type='text' name='elmName'  class='otherClasses elmName' value='content' />
+```
+
+###**EDdate**
+
+```
+    <* class="EDdate otherClasses elmName"> content </*>
+
+    replace with
+    <input type='text' name='elmName'  class='otherClasses elmName' value='content' />
+```
+
+*callback* - jqEDtag.datepicker();
+
+
+###**EDsel + *.data-iedit-options***
+
+```
+  <* class="EDsel otherClasses elmName"
+      data-iedit-options='{{value:'value option1', name: {name option 1}},{},{}}' >
+    content
+  </*>
+
+  replace with
+  <select name='elmName'  class='otherClasses elmName'  />
+        <option value='value' [selected]>name</option>
+  </select>
+```
+
+###**EDeditor +.data-iedit-CKEtoolbar**
+
+```
+    <* class= 'EDeditor name'  data-iedit-CKEtoolbar = 'numele toolbarului ales'></*>
+
+    replace with
+    "<textarea   name='elmName'  class='otherClasses elmName'  id='editor_elmName_LG' >
+        content
+    </textarea>"
+```
+
+*callback* - va aplica CKEditor pe textarea cu 2 vaiante de toolbar
+
++ 'defaultSmall'  daca EDtag_width < 500
++ 'default'       daca EDtag_width > 500
+
+
+###**EDtxtauto**
+
+```
+    <* class="EDtxtauto otherClasses elmName"
+       data-iedit-source = '{}'
+       data-iedit-select = 'multiple / key'
+       data-iedit-path = 'pathName'
+       data-iedit-minln = 'min characters'
+
+    >
+        content
+    </*>
+
+    replace with
+      <input type='text' name='elmName'  class='otherClasses elmName' value='content' />
+```
+
+***callback***  - va apela pe obiect extensia de jquery.ivyAutocomplete(source, minLength, select)
+see GEN.js
+
+***configurari posibile***
+
+>**data-iedit_source** [ {'label': 'calatorii', 'value': '1'},{}] sau ['item1', 'item2']
+>
+>- sursa directa de date
+>
+>**data-iedit-path** string *MODELS/blog/script.php*
+>
+>- script care sa returneze o sursa json_encode(array()) ( este relativ la public )
+>- scriptul va primi $_POST['searchTerm']  - termenul cautat. astfel se poate scrie
+>un<br> *query = "SELECT x from table WHERE x LIKE '%".$_POST['searchTerm']."%' "*;
+
+>**data-iedit-minln** integer
+
+> - minimul de caractere pe care utilizatorul trebuie sa insereze pentru a incepe
+>autocompleteul
+>
+>**data-iedit-select** string [key / multiple]
+>
+>- *multiple* utilizatorul poate alege mai multe valori
+>( acestea vor fi despartite prin virgula )
+>- *key* - se refera la un source cu perechi label / value , submitul se va face pe value.
+>este util pentru simularea unui tag ```<select>```
+><br> acest tip de selectie va adauga un input hidden care sa retina valorile
+>
+

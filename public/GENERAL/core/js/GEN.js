@@ -56,8 +56,185 @@ $.fn.exists = function () {
     return this.length !== 0;
 }
 
+/**
+ * source can be:
+ * --------------------
+ *
+ * - object
+ * 1. source = [ {'label': 'calatorii', 'value': '1'},{}];
+ *
+ * 2. source = [ "calatorii", "caravana"];
+ *
+ * 3. source = {scriptPath: fwm.ajaxProxy,
+ *              sendData: {ajaxReqFile: '', otherData}
+ *             }
+ * - string
+ * 4. source = 'path to return json'
+ *
+ *
+ * select can be:
+ * ----------------------
+ *
+ *  multiple - source is a plain json
+ *
+ *  key => source = [{value: '', lable: ''}, {}, {}]
+ *
+ *  multipleKey - to be done ( like multiple + key );
 
-//==============================[ ivyMods ]====================================================
+ */
+$.fn.ivyAutocomplete = function(source,  minLength, select){
+    //console.log('constructor this ' +this.constructor);
+
+    var jqThis = this;
+
+    //======================================[ source ]==========================
+    function split( val )        {
+        return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+        return split( term ).pop();
+    }
+    function sourceRemote( request, response ) {
+
+        var searchTerm = extractLast( request.term );
+        //console.log('sourceRemote request.term = '+request.term);
+
+        // daca termentul cautat are cel putin caracterele necesare cerute
+        if(searchTerm.length >= optAutocomplete.minLength)
+        {
+            $.post(
+               source.scriptPath,
+               $.extend(source.sendData, {searchTerm : searchTerm}),
+               function(data)
+               {
+                   // delegate back to autocomplete, but extract the last term
+                   if(data) {
+                       response( $.ui.autocomplete.filter( data, searchTerm ) );
+                   } else {
+                       console.log('sourceRemote nu s-a primit nici un json pt autocomplete' +
+                       "s-a apelat scitptul "+ source.scriptPath +
+                       'sendData.ajaxReqFile' + source.sendData.ajaxReqFile
+                       );
+                   }
+               },
+              "json"
+            );
+        }
+    }
+
+    function _handle_source(){
+
+        //console.log('ivyAutocomplete sursa este '+ typeof source + ' si este  =  '+ source);
+        if(typeof source == 'string'){
+           return source;
+        }
+        if(typeof source == 'object'){
+
+            if(typeof source.scriptPath != 'undefined'
+               || typeof source.sendData != 'undefined'
+            ){
+                var defSource = {path: fmw.ajaxProxy, sendData: {}};
+                $.extend(true, source, defSource);
+                return sourceRemote;
+
+            } else {
+               return source;
+            }
+        }
+        console.log("_handle_source : Nu s-a gasit o sursa");
+        return false;
+    }
+
+    //=======================================[ select ]=========================
+    function selectMultiple( event, ui )    {
+        var terms = split( this.value );
+        // remove the current input
+        terms.pop();
+        // add the selected item
+        terms.push( ui.item.value );
+        // add placeholder to get the comma-and-space at the end
+        terms.push( "" );
+        this.value = terms.join( ", " );
+        return false;
+
+    }
+
+    function prepareSelectKey()    {
+        //console.log('constructor jqThis ' +jqThis.constructor);
+        var inputName = jqThis.attr('name');
+        var inputValue = jqThis.attr('value');
+        jqThis.after(
+            "<input type='hidden' value='' name='"+inputName+"'>"
+        );
+        jqThis.attr('name', inputName+"_dummy");
+
+    }
+    function selectKey( event, ui ){
+        this.value = ui.item.label;
+        var inputName = this.name.replace('_dummy', '');
+        $('input[type=hidden][name='+inputName+']').val( ui.item.value);
+
+        return false;
+    }
+
+    function _handle_select(){
+        if(typeof select == 'undefined') {
+            return false;
+        }
+        if(select == 'multiple') {
+            return selectMultiple;
+        }
+        if(select == 'key') {
+            prepareSelectKey();
+            return selectKey;
+        }
+        return false;
+    }
+
+    //=======================================[ optAutocomplete ]================
+    var optAutocomplete = {};
+
+    var sourceStat = _handle_source();
+    if(sourceStat) {
+        optAutocomplete.source = sourceStat;
+    }
+
+    var selectStat = _handle_select();
+    if(selectStat) {
+        optAutocomplete.select = selectStat;
+    }
+
+    optAutocomplete.minLength = (typeof minLength == 'undefined')  ? ''
+                              : minLength;
+
+    optAutocomplete.focus = function() {
+        return false; /* prevent value inserted on focus */
+    }
+
+
+    //=======================================[ ui-autocomplete ]================
+    // don't navigate away from the field on tab when selecting an item
+    this
+    .bind( "keydown", function( event ){
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).data( "autocomplete" ).menu.active ) {
+             event.preventDefault();
+         }
+    })
+    .autocomplete(optAutocomplete );
+
+    /**
+    * // un exemplu cu array predefinit
+       source: function( request, response ) {
+           // delegate back to autocomplete, but extract the last term
+           response( $.ui.autocomplete.filter(
+               availableTags, extractLast( request.term ) ) );
+       },
+    */
+
+}
+
+//==============================[ ivyMods ]=====================================
 /* Aici vor sta functiile modulelor */
 // pus in core / footer
 if(typeof ivyMods == 'undefined') {
@@ -69,7 +246,7 @@ if(typeof ivyMods == 'undefined') {
      };
 }
 
-//=============================[ framework related functions ]==============================
+//=============================[ framework related functions ]==================
 var fmw = {};
 
 fmw.admin = 0;
@@ -130,7 +307,6 @@ fmw.isset = function(variable) {
         return true;
     }
 }
-
 // not working good dont know yet why
 fmw.notempty = function(variable) {
     if(!fmw.isset(variable)) {

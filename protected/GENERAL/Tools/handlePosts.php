@@ -232,12 +232,12 @@ class handlePosts
 
         foreach($arrPosts AS $postName) {
             $postName  = trim($postName);
-            //$postValue = $objPosts->$postName;
+            $postValue = isset($objPosts->$postName) ? $objPosts->$postName : '';
             // daca exista valoarea sau nu este nevoie sa existe
-            if((isset($objPosts->$postName) && $objPosts->$postName)
+            if((isset($objPosts->$postName) && $postValue)
                 || !$notEmpty
             ) {
-                array_push($sets, "$postName = '".$objPosts->$postName."'");
+                array_push($sets, "$postName = '{$postValue}'");
             }
         }
 

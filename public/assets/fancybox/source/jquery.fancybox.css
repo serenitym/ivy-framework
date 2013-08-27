@@ -185,7 +185,7 @@
 	display: none;
 	z-index: 8010;
 	/*background: url('fancybox_overlay.png');*/
-    background-color: rgba(255,255,255,0.80);
+    background-color: rgba(255,255,255,0.90);
 }
 
 .fancybox-overlay-fixed {
@@ -241,7 +241,8 @@
 .fancybox-title-outside-wrap {
 	position: relative;
 	margin-top: 10px;
-	color: #fff;
+	color: #666;
+    font-weight: bold;
 }
 
 .fancybox-title-inside-wrap {

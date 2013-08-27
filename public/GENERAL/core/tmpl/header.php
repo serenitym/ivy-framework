@@ -10,7 +10,7 @@
                    ? ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
                    : '')
            .'
-            <script type="text/javascript"  src="assets/jquery/jquery-1.7.2.min.js"></script>
+            <script type="text/javascript"  src="assets/jquery/jquery-1.8.3.min.js"></script>
             <script type="text/javascript"  src="assets/jquery-cookie-master/jquery.cookie.js"></script>
             <!-- <link rel="stylesheet" href="fw/GENERAL/core/css/core.css"> -->
             <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script> -->

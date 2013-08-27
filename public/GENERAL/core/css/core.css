@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*RESETS */
-p{ margin: 0.5em 0em; }
+/*p{ margin: 0.5em 0em; }*/
 body, textarea{line-height: initial;
     font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
     font-size: 9pt;
@@ -8,10 +8,16 @@ body, textarea{line-height: initial;
 form{margin: initial;}
 
 .ui-datepicker {font-size: 11px !important;}
+
+.cke_dialog_ui_vbox > table {
+    width: auto !important;
+
+}
 /*==================================================== [ATmpl] =============== */
 
 /* divul pentru ADMIN template */
-.ATmpl, .ATmpl-inline      {display: none; color: gray;  }
+.ATmpl,
+.ATmpl-inline      {display: none; color: gray;  }
 
 /*  cand ajunge in cadrul unui form se face vizibil  */
 form.addForm .ATmpl,
@@ -45,6 +51,7 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 */
 
 .ivy-block {display: block;}
+.it {font-style: italic}
 .ib { display: inline-block; vertical-align: text-top;}
 .vt {vertical-align: top;}
 .radio-btn {vertical-align: top;}
@@ -117,8 +124,7 @@ button.ivy-light:hover{
 }
 
 
-/*=========================================================== [ inputs ] =============================================== */
-
+/*=========================================================== [ inputs ] =======*/
 input[type="text"].ivy,
 input[type="password"].ivy,
 textarea.ivy{
@@ -158,7 +164,14 @@ textarea.ivy-light:focus{
    /* outline-offset: 1px; */
 
 }
-
+/*==============================================[ui-elements]==================*/
+.ui-autocomplete {
+    max-height: 300px;
+    max-width: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
 /*==============================================[ popUp - styling ]============*/
 
 #popUp-canvas{
