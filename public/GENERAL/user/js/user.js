@@ -27,7 +27,7 @@ ivyMods.user = {
     },
     popup :function(pubUrl,template,  headerName, uid) {
         fmw.popUp.init({
-            pathLoad: pubUrl + this.templates[template],
+            pathGet: pubUrl + this.templates[template],
             headerName: headerName,
             widthPop: this.popupwidth[template],
             dataSend: {uid: uid}

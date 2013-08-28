@@ -525,43 +525,44 @@ fmw.popUp = {
      *       content     : ''
      *  })
      * */
+    /*MAN's
+    *
+    * // un template care are nevoie de o randare complexa
+    * // ex: acces la alte module, la BD etc...
+    * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
+    *
+    * opt.pathLoad
+    * opt.dataSend {ajaxReqFile : '', alteVars: '', modName: '', methName: ''}
+    * opt.ajaxProxy
+    *
+    * //un template care trebuie sa ii fie luat asa cum este
+    * // ii se poate trimite si un dataSend
+    *
+    * opt.pathGet
+    * opt.dataSend
+    *
+    * opt.callbackFn: {
+    *   fn: 'functia',
+    *   context: 'obiectul in care sa fie cotextul',
+    *   args: 'lista/ array cu argumentele trimise catre functie'
+    *   }
+    *
+    * */
 
-    init: function(opt){
-        /*MAN's
-        *
-        * // un template care are nevoie de o randare complexa
-        * // ex: acces la alte module, la BD etc...
-        * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
-        *
-        * opt.pathLoad
-        * opt.dataSend {ajaxReqFile : '', alteVars: '', modName: '', methName: ''}
-        * opt.ajaxProxy
-        *
-        * //un template care trebuie sa ii fie luat asa cum este
-        * // ii se poate trimite si un dataSend
-        *
-        * opt.pathGet
-        * opt.dataSend
-        *
-        * opt.callbackFn: {
-        *   fn: 'functia',
-        *   context: 'obiectul in care sa fie cotextul',
-        *   args: 'lista/ array cu argumentele trimise catre functie'
-        *   }
-        *
-        * */
+    init              : function(opt){
 
         // properties
-/*
+        /*
         this.headerName   = opt.headerName;
         this.widthPop     = opt.widthPop;
         this.heightPop    = opt.heightPop;
         this.callbackFn  = opt.callbackFn;
         this.content      = opt.content;
-*/
+        */
 
         //this.popUp_loadContent ;//???
         // defaults
+        this.popUp_remove();
         this.ajaxProxy = fmw.ajaxProxy;
         this.dataSend = { sessionId : $.cookie("PHPSESSID")};
 
@@ -578,10 +579,8 @@ fmw.popUp = {
             //console.log(this.content);
         } else if(typeof opt.pathGet != 'undefined') {
 
-            var dataSend = typeof opt.dataSend == 'undefined' ? '' :
-                           opt.dataSend;
+            var dataSend = typeof opt.dataSend == 'undefined' ? '' : opt.dataSend;
             //console.log('GEN.js - Datele trimise'+ dataSend);
-
             $.get(opt.pathGet , dataSend, function(data) {
                 fmw.popUp.popUp_content(data);
             });
@@ -604,8 +603,7 @@ fmw.popUp = {
 
             this.popUp_load();
         }
-    }
-    ,
+    },
     popUp_load        : function(){
 
        /* var testSendData = '';
@@ -633,8 +631,7 @@ fmw.popUp = {
                   );
         },250);
        // alert( this.completeFunc);
-    }
-    ,
+    },
     popUp_content     : function(content){
         $.when(
             $('#popUp #popUp-content')
@@ -646,8 +643,7 @@ fmw.popUp = {
         // this.popUp_callback();
         //aceaasta procedura ar trebui pusa si ea intr-o metoda
         // callback function?
-    }
-    ,
+    },
     popUp_set_htmlTml : function(){
         var popUp =
         $('body').prepend
@@ -672,7 +668,7 @@ fmw.popUp = {
         }
 
         var popupContent_height = popUpContent.height() /2;
-        var topPopup = ($(window).height() - popUp.height())/2 -50;
+        var topPopup = (window.innerHeight - popUp.height())/2 -50;
         var margin_left =  popUp.width()/2;
 
         popUp.css('top',topPopup+'px');
@@ -686,15 +682,20 @@ fmw.popUp = {
 
         popUp.draggable();
 
+        /*console.log("popUp \n" +
+            " width = " + popUp.width() + "\n" +
+            " height = " + popUp.height() + "\n" +
+            " windowH = " + $(window).height() + "\n" +
+            " topPopup = " + topPopup + "\n\n"
+        );*/
+
          //return popUpContent;
-    }
-    ,
+    },
     popUp_remove      : function(){
          //alert('in Remove popUp');
         //alert('Am reusit sa selectez '+$('body #popUP-canvas').attr('id'));
         $('body #popUp-canvas').remove();
-    }
-    ,
+    },
     popUp_callback    : function(){
         // alert('this is the callBack '+ this.completeFunc);
         if (typeof this.callbackFn !='undefined'
