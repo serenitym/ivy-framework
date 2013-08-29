@@ -1,8 +1,4 @@
-var procesSCRIPT_file = 'procesSCRIPT.php';                 // intermediaza requesturile scripurilor .js
-//     UTILIZARE:
-// $.post(procesSCRIPT_file,  { parsePOSTfile : parsePOSTfile ,$_POST_array  } )
 
-//DOCUMENTEAZA URGENT !!!!
 
 //==============================[ jQuery - extensions ]=====================================
 
@@ -255,6 +251,8 @@ fmw.idC = 0;
 fmw.lg = 'ro';
 fmw.ajaxProxy = 'procesSCRIPT.php';
 fmw.ajaxReqFile = 'ajaxReqFile';
+fmw.sessionId = $.cookie("PHPSESSID");
+
 
 /**
  * Use case :
@@ -318,101 +316,96 @@ fmw.notempty = function(variable) {
     return true;
 }
 
-fmw.asyncConf = function(options, callBack){
+fmw.asyncConf = function(options){
+
+
 
   /**
    * options:
-      - parsePOSTfile
-       - modName
-      - methName
-      callBack_fn :  callbackTest
+      - dataSend: {
+            ajaxReqFile : '',
+            modName: '',
+            methName: ''
+      }
+      - callBack :  {fn: '',context: this, args: []}
+      - restoreCore : true /false
      * */
-  var defaults = {
-      procesSCRIPT : 'procesSCRIPT.php',
-      restoreCore : 1
-  };
-  var prop = $.extend(true,{},defaults, options,callBack);
 
-  var fns = {
-      neApelata : function(apel){
-          console.log("Aceasta functie nu ar trebui niciodata apelata "+apel);
-      },
-      callBackFn_dummy: function(data, func){
-          console.log('Nu a fost setata sau trimisa nici o functie de callback '+data + ' chemat de '+ func);
-      },
-      fnpost:  function(sendData, callBack_fn){
+   this.callBack   =    {"fn": 'dummy', "context": this, "args": []};
+   this.restoreCore = false;
+   this.dataSend    = {};
 
-          console.log("Am apelat functia fnpost");
+   $.extend(true, this, options);
 
-          $.extend(sendData, defaults,options);
+   if(this.restoreCore) {
+      this.dataSend.sessionId = fmw.sessionId;
+   }
 
-          $.post(prop.procesSCRIPT, sendData, function(data)
-          {
-              if(typeof callBack_fn == 'function')
-              {
-                  callBack_fn.call(this, data);
-                  console.log("fnpost - a intrat in primul if");
-              }
+   // ================================[ methods ]===============================
+  this.callBackFn = function(callBack, data) {
 
-              else if(typeof prop.callBack_fn == 'function')
-              {
-                  console.log("fnpost - a intrat in 2 if si "+(callBack_fn.constructor) );
+      if(!fmw.isset(callBack)) {
+          callBack = {};
+      }
+      callBack = $.extend(true, {}, this.callBack,  callBack );
 
-                  if(typeof callBack_fn != 'undefined' && callBack_fn.constructor == Array)
-                  {
-                      console.log("fnpost - callBack_fn este un array");
-                      prop.callBack_fn.apply(this, callBack_fn);
-                  }
-                  else
-                  {
-                     // console.log("fnpost - callBack_fn NU este un array");
-                      prop.callBack_fn.call(this, data);
-                  }
+      if(typeof callBack.fn == 'function') {
 
+          //console.log("callBackFn: is a function function "+ callBack.fn);
 
-              }
-
-              else
-              {
-                  fns.callBackFn_dummy.call(this, data,"fnpost");
-              }
-
-          });
-
-      },
-      fnload : function(jQmod, sendData, callBack_fn){
-
-          console.log("Am apelat functia fnload");
-          if(typeof jQmod !='undefined')
-          {
-              $.extend(sendData,defaults, options);
-
-              jQmod.load(prop.procesSCRIPT, sendData, function()
-              {
-                    if(typeof callBack_fn == 'function')
-                    {
-                        callBack_fn.call();
-                        console.log("fnload - a intrat in primul if");
-                    }
-
-                    else if(typeof prop.callBack_fn == 'function')
-                    {
-                        prop.callBack_fn.call();
-                        console.log("fnload - a intrat in 2 if");
-                    }
-
-                    else
-                        fns.callBackFn_dummy.call(this, "","fnload");
-
-              });
-          }
-          else{ console.log("Selectorul folosit nu a fost bun"); }
+          callBack.args.push(data);
+          callBack.fn.apply(callBack.context, callBack.args);
+      } else {
+          console.log("callBackFn: not a function function "+ callBack.fn
+             // + "\n data primita = "+ data
+          );
 
       }
 
-  };
 
-  return $.extend(prop, fns);
+  }
+  this.fnpost = function(dataSend, callBack){
+
+      if(!fmw.isset(dataSend)){
+          dataSend = {};
+      }
+      dataSend = $.extend(true, {},   dataSend, this.dataSend);
+
+      /*var testDataSend = '';
+      for(var i in dataSend) {
+          testDataSend += " postName =  "+i+" postVal = " + dataSend[i] + "\n";
+      }
+      console.log(" GEN.js fnpost "+ testDataSend);*/
+
+
+
+      var thisObj  = this;
+      $.post(fmw.ajaxProxy, dataSend, function(data) {
+          /*console.log("postul s-a efectuat si data = " + data +
+          " typeof callBack = "+ typeof callBack
+          );*/
+          thisObj.callBackFn.call(thisObj, callBack, data);
+      });
+
+  }
+
+  this.fnload = function(jQmod, dataSend, callBack){
+
+      if(typeof jQmod =='undefined')
+      {
+          console.log("fmw.asyncConf - Selectorul folosit nu a fost bun");
+
+      } else {
+          if(!fmw.isset(dataSend)){
+              dataSend = {};
+           }
+          var thisObj  = this;
+          dataSend = $.extend(true, {},   dataSend, this.dataSend);
+          jQmod.load(fmw.ajaxProxy, dataSend, function(){
+              thisObj.callBackFn(callBack);
+          });
+      }
+  }
 
 }
 fmw.KCFinder_popUp = function(options){
@@ -499,6 +492,81 @@ fmw.openKCFinder_popUp = function(callBackFn){
     // variabila popUPKCF - poate ar trebui sa ii dau unset somehow
 
 }
+fmw.queryData = function(queryString){
+/*
+
+QueryData.js
+
+A function to parse data from a query string
+
+Created by Stephen Morley - http://code.stephenmorley.org/ - and released under
+the terms of the CC0 1.0 Universal legal code:
+
+http://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+*/
+
+/* Creates an object containing data parsed from the specified query string. The
+ * parameters are:
+ *
+ * queryString        - the query string to parse. The query string may start
+ *                      with a question mark, spaces may be encoded either as
+ *                      plus signs or the escape sequence '%20', and both
+ *                      ampersands and semicolons are permitted as separators.
+ *                      This optional parameter defaults to query string from
+ *                      the page URL.
+ */
+  // if a query string wasn't specified, use the query string from the URL
+  if (queryString == undefined){
+    queryString = location.search ? location.search : '';
+  }
+
+  // remove the leading question mark from the query string if it is present
+  if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+
+  // check whether the query string is empty
+  if (queryString.length > 0){
+
+    // replace plus signs in the query string with spaces
+    queryString = queryString.replace(/\+/g, ' ');
+
+    // split the query string around ampersands and semicolons
+    var queryComponents = queryString.split(/[&;]/g);
+
+    // loop over the query string components
+    for (var index = 0; index < queryComponents.length; index ++){
+
+      // extract this component's key-value pair
+      var keyValuePair = queryComponents[index].split('=');
+      var key          = decodeURIComponent(keyValuePair[0]);
+      var value        = keyValuePair.length > 1
+                       ? decodeURIComponent(keyValuePair[1])
+                       : '';
+
+
+      // altered by Ioana
+      if(typeof this[key] == 'undefined') {
+        // store the value
+        this[key] = value;
+
+      } else if(typeof this[key] == 'object') {
+          // daca este obiect => este array
+          this[key].push(value);
+
+      } else {
+          // daca nu este undefined si nu este inca obiect
+          var man = this[key];
+          delete this[key];
+          this[key] = [];
+          this[key].push(man);
+          this[key].push(value);
+      }
+
+    }
+
+  }
+
+}
 
 fmw.popUp = {
 
@@ -525,46 +593,46 @@ fmw.popUp = {
      *       content     : ''
      *  })
      * */
+    /*MAN's
+    *
+    * // un template care are nevoie de o randare complexa
+    * // ex: acces la alte module, la BD etc...
+    * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
+    *
+    * opt.pathLoad
+    * opt.dataSend {ajaxReqFile : '', alteVars: '', modName: '', methName: ''}
+    * opt.ajaxProxy
+    *
+    * //un template care trebuie sa ii fie luat asa cum este
+    * // ii se poate trimite si un dataSend
+    *
+    * opt.pathGet
+    * opt.dataSend
+    *
+    * opt.callbackFn: {
+    *   fn: 'functia',
+    *   context: 'obiectul in care sa fie cotextul',
+    *   args: 'lista/ array cu argumentele trimise catre functie'
+    *   }
+    *
+    * */
 
-    init: function(opt){
-        /*MAN's
-        *
-        * // un template care are nevoie de o randare complexa
-        * // ex: acces la alte module, la BD etc...
-        * // de aceea e posibil sa fie nevoie de core => procesSCRIPT
-        *
-        * opt.pathLoad
-        * opt.dataSend {ajaxReqFile : '', alteVars: '', modName: '', methName: ''}
-        * opt.ajaxProxy
-        *
-        * //un template care trebuie sa ii fie luat asa cum este
-        * // ii se poate trimite si un dataSend
-        *
-        * opt.pathGet
-        * opt.dataSend
-        *
-        * opt.callbackFn: {
-        *   fn: 'functia',
-        *   context: 'obiectul in care sa fie cotextul',
-        *   args: 'lista/ array cu argumentele trimise catre functie'
-        *   }
-        *
-        * */
+    init              : function(opt){
 
         // properties
-/*
+        /*
         this.headerName   = opt.headerName;
         this.widthPop     = opt.widthPop;
         this.heightPop    = opt.heightPop;
         this.callbackFn  = opt.callbackFn;
         this.content      = opt.content;
-*/
+        */
 
         //this.popUp_loadContent ;//???
         // defaults
         this.popUp_remove();
         this.ajaxProxy = fmw.ajaxProxy;
-        this.dataSend = { sessionId : $.cookie("PHPSESSID")};
+        this.dataSend = { sessionId : fmw.sessionId};
 
         // incorporate options
         $.extend(true, this, opt);
@@ -579,10 +647,8 @@ fmw.popUp = {
             //console.log(this.content);
         } else if(typeof opt.pathGet != 'undefined') {
 
-            var dataSend = typeof opt.dataSend == 'undefined' ? '' :
-                           opt.dataSend;
+            var dataSend = typeof opt.dataSend == 'undefined' ? '' : opt.dataSend;
             //console.log('GEN.js - Datele trimise'+ dataSend);
-
             $.get(opt.pathGet , dataSend, function(data) {
                 fmw.popUp.popUp_content(data);
             });
@@ -605,8 +671,7 @@ fmw.popUp = {
 
             this.popUp_load();
         }
-    }
-    ,
+    },
     popUp_load        : function(){
 
        /* var testSendData = '';
@@ -634,8 +699,7 @@ fmw.popUp = {
                   );
         },250);
        // alert( this.completeFunc);
-    }
-    ,
+    },
     popUp_content     : function(content){
         $.when(
             $('#popUp #popUp-content')
@@ -647,8 +711,7 @@ fmw.popUp = {
         // this.popUp_callback();
         //aceaasta procedura ar trebui pusa si ea intr-o metoda
         // callback function?
-    }
-    ,
+    },
     popUp_set_htmlTml : function(){
         var popUp =
         $('body').prepend
@@ -687,15 +750,20 @@ fmw.popUp = {
 
         popUp.draggable();
 
+        /*console.log("popUp \n" +
+            " width = " + popUp.width() + "\n" +
+            " height = " + popUp.height() + "\n" +
+            " windowH = " + $(window).height() + "\n" +
+            " topPopup = " + topPopup + "\n\n"
+        );*/
+
          //return popUpContent;
-    }
-    ,
+    },
     popUp_remove      : function(){
          //alert('in Remove popUp');
         //alert('Am reusit sa selectez '+$('body #popUP-canvas').attr('id'));
         $('body #popUp-canvas').remove();
-    }
-    ,
+    },
     popUp_callback    : function(){
         // alert('this is the callBack '+ this.completeFunc);
         if (typeof this.callbackFn !='undefined'
@@ -715,24 +783,19 @@ fmw.popUp = {
     }
 
 };
-
-// testing stuff
-/*function callbackTest(varTest, varTest2){ console.log("a fost apelata functia de callBack " + varTest +' si ' + varTest2);}
-
-var testAsync = new asyncConf({
-    parsePOSTfile : 'testProcesScript.php',
-    restoreCore : 0
-    },
-    {callBack_fn : callbackTest}
-);
-//testAsync.callBack_fn = callbackTest;
-//testJq =  $('body').prepend("<div id='loadTest'></div>").find('#loadTest');
-var testName = 'Un nume';
-//testAsync.fnpost({test : 'variabila de test'},
-//    function(testName){console.log("A fost apelata o functie nonName cu "+testName);});
-// sau
-//testAsync.fnpost({test : 'variabila de test'},callbackTest);
-//sau
-testAsync.fnpost({test : 'variabila de test'},['variabila1','variabila2']);*/
+fmw.getData = new fmw.queryData();
 
 
+//nu stiu daca asta ar trebui mereu apelata
+// sau ar trebui sa fie relativ la proiect
+
+var procesSCRIPT_file = fmw.ajaxProxy;                 // intermediaza requesturile scripurilor .js
+
+
+$(document).ready(function() {
+
+    console.log("Tring to parse the Get");
+    for(var getName in fmw.getData) {
+        console.log("$_GET['"+getName+"'] = "+fmw.getData[getName]);
+    }
+});

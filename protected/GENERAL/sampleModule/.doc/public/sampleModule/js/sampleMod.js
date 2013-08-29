@@ -1,9 +1,6 @@
-
-
 ivyMods.sampleMod = {
 
-    otherFunction : function (){}
-    ,
+    otherFunction : function (){},
     init : function (){}
 };
 

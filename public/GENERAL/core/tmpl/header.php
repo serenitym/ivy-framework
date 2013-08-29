@@ -25,7 +25,7 @@
 
     <?php
       echo (!isset($core->admin) ? '' :
-                  '  <script type="text/javascript"  src="assets/jquery-ui-1.8.19.custom/js/jquery-ui-1.8.19.custom.min.js"></script> '
+                  '  <script type="text/javascript"  src="assets/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script> '
                    . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
                    . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
       );
