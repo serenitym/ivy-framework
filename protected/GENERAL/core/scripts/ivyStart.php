@@ -1,7 +1,4 @@
 <?php
-
-/* vim: set fdm=marker: */
-
 /** {{{
  * Script containing the basic login and rights management procedure
  *
@@ -25,7 +22,7 @@ $dbLink = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $dbLink->set_charset('utf8');
 
 // config???
-ini_set("session.gc_probability", 100);
+ini_set("session.gc_probability", 1);
 ini_set("session.gc_divisor", 100);
 ini_set("session.gc_maxlifetime", 14400);
 

@@ -205,7 +205,7 @@ class CauthManager extends authCommon implements Serializable {
         if ($this->userData->active != 1) {
             trigger_error("Inactive $loginName tried to log in", E_USER_NOTICE);
             return false;
-        } elseif ($password !== $this->userData->password) {
+        } elseif (md5($password) !== $this->userData->password) {
             trigger_error("Wrong password for $loginName", E_USER_NOTICE);
             return false;
         }

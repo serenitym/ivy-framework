@@ -562,6 +562,7 @@ fmw.popUp = {
 
         //this.popUp_loadContent ;//???
         // defaults
+        this.popUp_remove();
         this.ajaxProxy = fmw.ajaxProxy;
         this.dataSend = { sessionId : $.cookie("PHPSESSID")};
 
@@ -672,7 +673,7 @@ fmw.popUp = {
         }
 
         var popupContent_height = popUpContent.height() /2;
-        var topPopup = ($(window).height() - popUp.height())/2 -50;
+        var topPopup = (window.innerHeight - popUp.height())/2 -50;
         var margin_left =  popUp.width()/2;
 
         popUp.css('top',topPopup+'px');

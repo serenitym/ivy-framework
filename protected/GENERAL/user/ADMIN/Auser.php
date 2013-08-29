@@ -14,7 +14,6 @@ class Auser
             . Toolbox::randomString(10);
         return $token = md5($token);
     }
-
     protected function Db_storeToken($uid, $token = null)
     {
         if ($token === null) {
@@ -40,7 +39,6 @@ class Auser
 
 
     }
-
     public function Db_getToken($id, $token = '')
     {
         // Prepare the query: if $id is integer, select from existing users.
@@ -61,6 +59,44 @@ class Auser
             trigger_error("[ivy] User: No database connection!", E_USER_WARNING);
         }
 
+    }
+
+    public function createPassword($string)
+    {
+        // For now, a simple md5() will be better than plain text, and easier
+        // to debug. If things get nasty (or ideas strike), it'll revolve
+        // around some generated salt added to $string before md5-ing.
+
+        return md5($string);
+    }
+
+    public function Db_setPassword($uid, $password)
+    {
+        $password = $this->createPassword($password);
+        $uid      = intval($uid);
+
+        $stmt = $this->DB->prepare(
+            "UPDATE auth_users SET password = ? WHERE uid = ?"
+        );
+        $stmt->bind_param("si", $password, $uid);
+        $stmt->execute();
+
+        if ($stmt->errno) {
+            return false;
+        } else {
+            return false;
+            return true;
+        }
+    }
+
+    static function Db_getPassword($uid)
+    {
+        $row = $this->DB->query(
+            "SELECT password FROM auth_users WHERE uid = '$uid'"
+        )->fetch_object() or $return = false;
+
+        isset($row->password) && $return = $row->password;
+        return $return;
     }
 
     /**
@@ -240,7 +276,8 @@ class Auser
         // Prepare query to store invitation
 
         $stmt = $this->DB->prepare(
-            "REPLACE INTO auth_invitations VALUES (?, ?, ?)"
+            "REPLACE INTO auth_invitations (email, cid, token)
+                VALUES (?, ?, ?)"
         );
         $stmt->bind_param('sis', $email, $cid, $token);
 
@@ -248,7 +285,7 @@ class Auser
 
         $stmt->execute();
         if ($stmt->errno) {
-            trigger_error(
+            error_log(
                 "[ivy] User: Invitation error: " . $stmt->error(),
                 E_USER_WARNING
             );
@@ -378,7 +415,7 @@ class Auser
         )->fetch_row();
         $oldpw = $result[0];
 
-        if ($this->post->oldpw != $oldpw) {
+        if (md5($this->post->oldpw) != $oldpw) {
             echo ' <script type="text/javascript">
                 alert("Incorrect old password, please retry!")
                 </script> ';
@@ -406,11 +443,8 @@ class Auser
     function changePassword()
     {
         $uid      = $this->post->uid;
-        $password = $this->post->newpw;
 
-        $query = "UPDATE auth_users SET password = '$password'
-            WHERE uid = '$uid';";
-        $this->DB->query($query);
+        $this->Db_setPassword($uid, $this->post->newpw);
 
         $this->C->jsTalk .= 'alert("Well done, you successfully changed you password!");';
         $this->C->jsTalk .= 'window.location = "' . Toolbox::curURL() . '";';
