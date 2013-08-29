@@ -30,11 +30,17 @@ var iEdit = function(){
      *                class : '',
      *                status: '',
      *                methName: 'methName [, otherMethod, ...]',
-     *                async : new asyncConf({
-     *                                modName: 'modName',
-     *                                methName: 'methName [, otherMethod, ...]',
-     *                                parsePOSTfile : 'filePath.php' ,
-     *                                callBack_fn : (typeof fnName != 'undefined'  ? fnName : ''),
+     *                async : new fmw.asyncConf({
+     *                                dataSend: {
+     *                                    modName: 'modName',
+     *                                    methName: 'methName [, otherMethod, ...]',
+     *                                    ajaxReqFile : 'filePath.php'
+     *                                },
+     *                                callBack : {
+     *                                  fn: (typeof fnName != 'undefined'  ? fnName : '') ,
+      *                                 context : this,
+     *                                  args: []
+     *                                },
      *                                restoreCore : 0
      *                            })
      *                },
@@ -378,11 +384,11 @@ var iEdit = function(){
             $("*[id^="+Name+"_"+id+"_] *[class^=ED]").map(function(){
 
                 var EDname =  $(this).attr('class').split(' ').pop();
-                $(this).html(postData[EDname+'_'+LG]);
+                $(this).html(postData[EDname]);
 
-                test +=EDname + ' = '+ postData[EDname+'_'+LG]+' \n \n';
+                test +=EDname + ' = '+ postData[EDname]+' \n \n';
             });
-            alert("iEdit - async_save_reconstruct "+test);
+            console.log("iEdit - async_save_reconstruct "+test);
 
 
     }
@@ -555,7 +561,7 @@ var iEdit = function(){
         editForm
             .find('.TOOLSbtn input[name='+bttName+']')
              .on('click', function(){
-                //alert('bttName = '+bttName+' methName = '+methName);
+               // alert('bttName = '+bttName+' methName = '+methName);
                 editForm
                     .find("input[name=methName]")
                     .first()
@@ -1263,7 +1269,7 @@ var iEdit = function(){
                     // var postData = collect_postData(Name, id, "input[type=hidden]");
                     var postData = $('form[class$='+Name+'][id=EDITform_'+id+'] ').collectData("input[type=hidden]");
 
-                    BTTdelete_async.fnpost(postData ,[Name, id] );
+                    BTTdelete_async.fnpost(postData ,{"args": [Name, id] });
 
                     //====================================================================
                     this.exitEditContent_byName(Name,id);
@@ -1279,9 +1285,9 @@ var iEdit = function(){
 
                   var BTTsave_async = bttConf[Name].saveBt.async;
 
-                  if( BTTsave_async.constructor == Object)
+                  if(typeof BTTsave_async == 'object' )
                   {
-                      BTTsave_async.fnpost(postData, [Name, id] );
+                      BTTsave_async.fnpost(postData, {"args": [Name, id] });
 
                     //bttConf[Name].saveBt.async.neApelata(" APEL");
                       //====================================================================
@@ -1289,7 +1295,9 @@ var iEdit = function(){
                       async_save_reconstruct(Name, id, postData);
 
                   } else {
-                      console.log("Butonul de async nu a fost configurat corect ");
+                      console.log("Butonul de async nu a fost configurat corect pt ca "
+                      + "contructorul este " + typeof  BTTsave_async
+                      );
                   }
              //   return false;
 
