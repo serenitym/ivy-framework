@@ -18,8 +18,14 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 // =====================================
 
 
-$dbLink = new mysqli('p:'.DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$dbLink->set_charset('utf8');
+$dbLink = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+/* change character set to utf8 */
+if (!$dbLink->set_charset("utf8")) {
+    printf("Error loading character set utf8: %s\n", $dbLink->error);
+} else {
+    //printf("Current character set: %s\n", $dbLink->character_set_name());
+}
 
 // config???
 ini_set("session.gc_probability", 1);

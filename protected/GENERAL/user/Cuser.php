@@ -200,6 +200,7 @@ class Cuser extends permissions
     {
 
         if (isset($_GET['login'])) {
+            isset($_SESSION['auth']) && Toolbox::relocate('/');
 
             $_SESSION['postLoginURL'] = $_SESSION['lastURL'];
             $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'loginForm' , 'Login'); ";
@@ -208,7 +209,21 @@ class Cuser extends permissions
 
         if (isset($_GET['route']) && $_GET['route'] == 'invite') {
             $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'inviteConfirm' , 'Register account (invitation)'); ";
+            return true;
         }
+
+        if (isset($_GET['route']) && $_GET['route'] == 'recoverPassword') {
+            isset($_SESSION['auth']) && Toolbox::relocate('/');
+
+            if ($this->Db_getToken(intval($_GET['id']), strval($_GET['token'])) == true) {
+                $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'recoverPassword' , 'Reset password'); ";
+                return true;
+            } else {
+                $this->C->jsTalk .= "alert('Invalid request.');";
+                return false;
+            }
+        }
+
     }
 
     // daca userul este luat din SESSION se refac anumite propritati

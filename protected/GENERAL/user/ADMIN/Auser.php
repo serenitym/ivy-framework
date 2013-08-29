@@ -53,12 +53,51 @@ class Auser
         }
 
         // If database connection is still with us, get the token
-        if (isset($this->DB)) {
+        if (isset($this->DB) && strlen($token) < 1) {
+
             return $this->DB->query($query)->fetch_object()->token;
+
+        } elseif (isset($this->DB) && strlen($token) > 1) {
+
+            // If $token is defined, return comparison result
+            if ($this->DB->query($query)->fetch_object()->token == $token) {
+                return true;
+            }
+
+        } elseif (!isset($this->DB)) {
+            // If database is lost, panic!
+            error_log("[ivy] User: No database connection!", E_USER_WARNING);
+        }
+
+        return false;
+    }
+
+    public function Db_getEmail($id, $email = '')
+    {
+        // @FIXME This adds a lot of duplicate content, unify with above function
+
+        // Prepare the query: if $id is integer, select from existing users.
+        // Otherwise, $id refers to a pending invitation, identified by
+        // email addresses.
+        $id   = filter_var($id, FILTER_SANITIZE_STRING); // Clean it up a little
+
+        if (intval($id) > 0) {
+            $query = "SELECT email FROM auth_users WHERE uid = '$id'";
+        } else {
+            $query = "SELECT email FROM auth_users WHERE name = '$id'";
+        }
+
+        // If database connection is still with us, get the token
+        if (isset($this->DB) && $email == '') {
+            return $this->DB->query($query)->fetch_object()->email;
+        } elseif (isset($this->DB) && $email != '') {
+            // If $token is defined, return comparison result
+            return $this->DB->query($query)->fetch_object()->email == $email;
         } else {
             trigger_error("[ivy] User: No database connection!", E_USER_WARNING);
         }
 
+        return false;
     }
 
     public function createPassword($string)
@@ -442,7 +481,7 @@ class Auser
     }
     function changePassword()
     {
-        $uid      = $this->post->uid;
+        $uid =& $this->post->uid;
 
         $this->Db_setPassword($uid, $this->post->newpw);
 
@@ -452,79 +491,135 @@ class Auser
         return false;
     }
 
-    private function recoverPassword()
+    public function _hook_recoverPassword()
     {
-        if ($this->recoverTestEmail = true) {
-            $this->buildRecoveryMail();
-            $this->recoveryMail->send();
+        /**
+         *  Check where the request came from:
+         *  * if user got here via email, uid and token should be supplied
+         *  * in the case of recovery form, we'd have a loginName
+         */
+
+        if (isset($_POST['uid'], $_POST['token'])) {
+            $this->post  = handlePosts::Get_postsFlexy(array('uid', 'token', 'newpw', 'confirm'));
+            $this->route = 'resetPassword';
+            if ($this->Db_getToken($this->post->uid, $this->post->token) == true) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            trigger_error("Email not registered", E_USER_NOTICE);
-            return false;
-        }
-    }
-
-    private function recoveryTestEmail($email)
-    {
-        $query = "SELECT uid FROM auth_users
-            WHERE email = '$email';";
-        $row = $this->DB->query($query)->fetch_row();
-        $uid = $row[0];
-        if (intval($uid) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private function buildRecoveryMail()
-    {
-        if (defined('SMTP_PORT')) {
-            $this->recoveryMail = new Mail(SMTP_SERVER, SMTP_PORT);
-        } else {
-            $this->recoveryMail = new Mail(SMTP_SERVER);
-        }
-
-        $mail =& $this->recoveryMail;
-
-        $mail->username = SMTP_USER;
-        $mail->password = SMTP_PASS;
-
-        $mail->SetFrom($_POST['email'], $_POST['name']); // Name is optional
-
-        if (!is_array($this->destinationEmail)) {
-            $mail->AddTo($this->destinationEmail);
-        } else {
-            foreach ($this->destinationEmail as $destination) {
-                $mail->AddTo($destination);
+            $this->post  = handlePosts::Get_postsFlexy(array('loginName'));
+            $this->route = 'recoveryEmail';
+            if ($this->loginExists($this->post->loginName) == true) {
+                return true;
+            } else {
+                return false;
             }
         }
 
-        $mail->subject = 'Around the Black Sea: password recovery';
-        //$mail->message = $this->_emailBody;
+        return true;
+    }
 
-        $hash = md5(date('r', time()));
+    public function recoverPassword()
+    {
+        switch($this->route) {
+        default:
+        case 'recoveryEmail':
+            $this->sendRecoveryEmail();
+            break;
 
-        //read the atachment file contents into a string,
-        //encode it with MIME base64,
-        //and split it into smaller chunks
+        case 'resetPassword':
+            $this->resetPassword();
+            break;
+        }
 
-        //define the body of the message.
-        $mail->message = "Test";
+        return false;
+    }
 
-        // Chestii optionale
-        // Note: contentType defaults to "text/plain; charset=iso-8859-1"
-        //$mail->contentType = "text/html";
-        //$mail->contentType =
-        //"multipart/mixed; boundary=\"PHP-mixed-".$hash."\"";
-        $mail->headers['Reply-To']=$_POST['email'];
-        $mail->headers['Content-Type']
-            = "multipart/mixed; boundary=\"PHP-mixed-".$hash."\"";
+    private function resetPassword()
+    {
+        $this->post->newpw   = $this->DB->real_escape_string($this->post->newpw);
+        $this->post->confirm = $this->DB->real_escape_string($this->post->confirm);
 
-        //if(isset($_FILES['upload']))
-        //$mail->addAttachment($_FILES['upload']);
+        if ($this->post->newpw != $this->post->confirm) {
+            echo ' <script type="text/javascript">
+                alert("Password confirmation failed, please retry!")
+                </script> ';
+            return false;
+            exit();
+        } else {
+            $password =& $this->post->newpw;
+            if (strlen($password) < 6) {
+                echo ' <script type="text/javascript">
+                    alert("Password too short, try using at least 6 characters.")
+                    </script> ';
+                return false;
+            }
+        }
 
-        // unset ($_POST);
+        $uid =& $this->post->uid;
+        $this->Db_setPassword($uid, $this->post->newpw);
 
+        $this->C->jsTalk .= 'alert("Well done, you successfully changed you password!");';
+        $this->C->jsTalk .= 'window.location = "/?login";';
+
+        return false;
+    }
+    private function sendRecoveryEmail()
+    {
+        // Let the email fun begin! Build the email object first.
+        $mail = ivyMailer::build();
+
+        $mail->setFrom(SMTP_USER, "The Black Sea mailer");
+        $mail->AddTo($this->post->email, $this->post->name);
+        $mail->subject = 'Password recovery on ' . SITE_NAME;
+        $mail->defineText(
+            PUBLIC_URL
+            . '?user='  . base64_encode($this->post->email)
+            . '&id=' . $this->post->uid
+            . '&token=' . $this->post->token
+            . '&route=recoverPassword'
+        );
+
+        $mail->send();
+
+        // Send a confirmation to the front end
+        // @FIXME ugly alert, must refine this shit
+        $this->C->jsTalk .= "alert('Done! Please check your inbox.');";
+        $this->C->jsTalk .= "window.location = '".Toolbox::curURL()."'";
+    }
+
+    private function loginExists($login)
+    {
+
+        // Check what we have received: email address or user name
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $loginType = 'email';
+            $query = "SELECT uid, token, name FROM auth_users
+                WHERE email = '$login';";
+        } else {
+            $loginType = 'username';
+            $query = "SELECT uid, token, email FROM auth_users
+                WHERE name = '$login';";
+        }
+
+        // Get the user ID and email for the supplied login name
+        $row  = $this->DB->query($query)->fetch_object();
+        $uid  = $this->post->uid
+              = $row->uid;
+
+        // Set the user name and email from wherever they came from
+        $this->post->name  = $loginType == 'name' ?: $row->name;
+        $this->post->email = $loginType == 'email' ?: $row->email;
+        $this->post->token = $row->token;
+
+        // Stop here if uid is not a valid result or it doesn't exist
+        if (!intval($uid)) {
+            $this->C->jsTalk .= "alert('No such user, go away!');";
+            return false;
+        }
+
+        // We got this far, so it's ok to confirm user exists
         return true;
     }
 }

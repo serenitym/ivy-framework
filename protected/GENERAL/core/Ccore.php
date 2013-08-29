@@ -254,6 +254,7 @@ class Ccore extends Cunstable
             die ('Database connection not established!');
         } else {
             $this->DB = $dbLink;
+            $this->DB->set_charset("utf8");
         }
 
         //$this->Set_db();
@@ -306,10 +307,12 @@ class Ccore extends Cunstable
 
             $this->DB = '';
             $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+            $this->DB->set_charset("utf8");
            /* echo "A fost apelat core wakeup si DB NU este connectat <br>".
                 ($this->DB->ping() ? '<b>Dar acum este </b>' : ' TOT nu este conectat ');*/
 
         } else {
+            $this->DB->set_charset("utf8");
            // echo "A fost apelat core -> DB_reConnect este connectat <br>";
         }
 

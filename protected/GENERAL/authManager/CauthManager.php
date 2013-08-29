@@ -250,6 +250,8 @@ class CauthManager extends authCommon implements Serializable {
         }
         //Toolbox::clearSubmit();
 
+        isset($_SESSION['auth']) || Toolbox::relocate('/');
+
         if (isset($_SESSION['postLoginURL'])) {
             $url = $_SESSION['postLoginURL'];
             unset($_SESSION['postLoginURL']);
