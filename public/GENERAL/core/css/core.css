@@ -204,7 +204,8 @@ textarea.ivy-light:focus{
         }
 
              #popUp-header .close{
-                 width: 25px;
+                 padding-left: 7px;
+                 padding-right: 7px;
                  text-align: center;
                  float: right;
              }

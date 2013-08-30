@@ -150,6 +150,7 @@ class CauthManager extends authCommon implements Serializable {
                          auth_users.active,
                          auth_users.cid,
                          auth_users.password,
+                         auth_users.token,
                          auth_users.email,
                          auth_users.active,
 

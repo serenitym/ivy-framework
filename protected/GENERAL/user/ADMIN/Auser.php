@@ -5,7 +5,7 @@
  */
 class Auser
 {
-    static function generate_token($uid=0, $email='')
+    static function generate_token($uid=0, $email='john.doe@example.org')
     {
         $token = ''
             . base64_encode($uid)
@@ -72,6 +72,24 @@ class Auser
         return false;
     }
 
+    public function Db_setToken($uid, $token)
+    {
+        $uid   = filter_var($uid, FILTER_SANITIZE_STRING); // Clean it up a little
+        $token = substr(filter_var($token, FILTER_SANITIZE_STRING), 0 ,32);
+
+        // If database connection is still with us, set the token
+        if (isset($this->DB)) {
+            $this->DB->query(
+                "UPDATE auth_users SET token = '$token' WHERE uid = '$uid'"
+            );
+            if (!$this->DB->errno) return true;
+        } else {
+            // If database is lost, panic!
+            error_log("[ivy] User: No database connection!", E_USER_WARNING);
+        }
+
+        return false;
+    }
     public function Db_getEmail($id, $email = '')
     {
         // @FIXME This adds a lot of duplicate content, unify with above function
@@ -260,7 +278,7 @@ class Auser
     function _hook_inviteUser()
     {
 
-        $this->post = handlePosts::Get_postsFlexy(array('email', 'cid'));
+        $this->post = handlePosts::Get_postsFlexy(array('email', 'cid', 'ref'));
         $this->post->email = filter_var(
             filter_var(
                 $this->post->email, FILTER_SANITIZE_EMAIL
@@ -309,11 +327,20 @@ class Auser
         // Create a unique token for the invitation
 
         $email =& $this->post->email;
+        $ref   =& $this->post->ref;
         $cid   =& $this->post->cid;
         $token =  $this->generate_token(0, $this->post->email);
 
-        // Prepare query to store invitation
+        $refData = $this->DB->query(
+            "SELECT cid FROM auth_users WHERE token = '$ref'"
+        )->fetch_object();
+        $refCid  = $refData->cid;
 
+        if ($cid < $refCid) {
+            $cid = $refCid;
+        }
+
+        // Prepare query to store invitation
         $stmt = $this->DB->prepare(
             "REPLACE INTO auth_invitations (email, cid, token)
                 VALUES (?, ?, ?)"
@@ -425,6 +452,10 @@ class Auser
                     '{$this->post->last_name}', '{$this->post->title}')"
             );
             $this->DB->query(
+                "UPDATE auth_users
+                    SET token = '" . $this->generate_token($newid, $this->post->email) . "';"
+            );
+            $this->DB->query(
                 "INSERT INTO auth_user_stats (uid)
                 VALUES ('$newid')"
             );
@@ -484,6 +515,7 @@ class Auser
         $uid =& $this->post->uid;
 
         $this->Db_setPassword($uid, $this->post->newpw);
+        $this->Db_setToken($uid, $this->generate_token($uid));
 
         $this->C->jsTalk .= 'alert("Well done, you successfully changed you password!");';
         $this->C->jsTalk .= 'window.location = "' . Toolbox::curURL() . '";';
