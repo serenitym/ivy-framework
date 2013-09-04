@@ -302,6 +302,9 @@ class Ccore extends Cunstable
          * => obiectele care au pointer la $this->DB vor da in gol
          * deci degeaba recreez eu conexiunea pentru ca aceasta ar fii
          * valabila doar pentru core*/
+
+        $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+
         $DBstat = isset($this->DB) ? $this->DB->ping() : false;
         if ($DBstat == false) {
 

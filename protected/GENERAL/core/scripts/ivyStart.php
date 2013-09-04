@@ -18,7 +18,7 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 // =====================================
 
 
-$dbLink = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$dbLink = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('No database!');
 
 /* change character set to utf8 */
 if (!$dbLink->set_charset("utf8")) {
@@ -33,22 +33,9 @@ ini_set("session.gc_divisor", 100);
 ini_set("session.gc_maxlifetime", 14400);
 
 $session = new Zebra_Session($dbLink, 'JbBJSvgtAdZY');
-//session_start();
-
-// print_r('<pre><strong>Current session settings:</strong><br><br>');
-// print_r($session->get_settings());
-// print_r('</pre>');
-// exit();
-
-// ----------[ unset cookies ]----------
-// sessionManager::unsetCookies();
-// =====================================
-
 
 // ------[ create the auth object ]------
-// var_dump(CauthManager::getInstance());
 $auth = CauthManager::getInstance();
-// var_dump($auth->userData->uname);
 // ======================================
 
 
@@ -79,9 +66,6 @@ Toolbox::Fs_writeTo(
 );
 // file_put_contents(FW_PUB_PATH.'GENERAL/core/RES/serSESSION.txt', $serSESSION);
 
-// var_dump(Toolbox::http_response_code('http://google.ro'));
-// var_dump($_SESSION['auth']->user);
-
 
 //???
 // $p = new Permissions($_SESSION['auth']->uid);
@@ -94,4 +78,3 @@ Toolbox::Fs_writeTo(
 
 // file_put_contents('serial.txt', serialize($core));
 
-//var_dump($_POST);
