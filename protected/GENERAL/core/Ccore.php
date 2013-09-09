@@ -257,6 +257,7 @@ class Ccore extends Cunstable
             die ('Database connection not established!');
         } else {
             $this->DB = $dbLink;
+            $this->DB->set_charset("utf8");
         }
 
         //$this->Set_db();
@@ -304,18 +305,24 @@ class Ccore extends Cunstable
          * => obiectele care au pointer la $this->DB vor da in gol
          * deci degeaba recreez eu conexiunea pentru ca aceasta ar fii
          * valabila doar pentru core*/
-        $DBstat = $this->DB->ping();
-        if ($DBstat == FALSE) {
+
+        $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+
+        $DBstat = isset($this->DB) ? $this->DB->ping() : false;
+        if ($DBstat == false) {
 
             $this->DB = '';
             $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-            $this->DB->set_charset('utf8');
+            $this->DB->set_charset("utf8");
            /* echo "A fost apelat core wakeup si DB NU este connectat <br>".
                 ($this->DB->ping() ? '<b>Dar acum este </b>' : ' TOT nu este conectat ');*/
 
         } else {
+            $this->DB->set_charset("utf8");
            // echo "A fost apelat core -> DB_reConnect este connectat <br>";
         }
+
+        return true;
 
     }
     public function wakeup()

@@ -150,6 +150,7 @@ class CauthManager extends authCommon implements Serializable {
                          auth_users.active,
                          auth_users.cid,
                          auth_users.password,
+                         auth_users.token,
                          auth_users.email,
                          auth_users.active,
 
@@ -205,7 +206,7 @@ class CauthManager extends authCommon implements Serializable {
         if ($this->userData->active != 1) {
             trigger_error("Inactive $loginName tried to log in", E_USER_NOTICE);
             return false;
-        } elseif ($password !== $this->userData->password) {
+        } elseif (md5($password) !== $this->userData->password) {
             trigger_error("Wrong password for $loginName", E_USER_NOTICE);
             return false;
         }
@@ -249,6 +250,8 @@ class CauthManager extends authCommon implements Serializable {
             unset($_SESSION['userData']);
         }
         //Toolbox::clearSubmit();
+
+        isset($_SESSION['auth']) || Toolbox::relocate('/');
 
         if (isset($_SESSION['postLoginURL'])) {
             $url = $_SESSION['postLoginURL'];

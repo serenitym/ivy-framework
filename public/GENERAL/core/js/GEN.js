@@ -785,6 +785,16 @@ fmw.popUp = {
 	}
 
 };
+fmw.resizeImg = function (img) {
+        var h = img.height;
+        var w = img.width;
+        if (h > w) {
+            img.css("width", "200px");
+        }
+        else {
+            img.css("height", "200px");
+        }
+    }
 fmw.getData = new fmw.queryData();
 //nu stiu daca asta ar trebui mereu apelata
 // sau ar trebui sa fie relativ la proiect
