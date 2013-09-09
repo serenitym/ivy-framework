@@ -64,6 +64,8 @@ class Ccore extends Cunstable
                 error_log("[ ivy ] "." Ccore - Handle_post"
                           . " Object has no method ".$methName);
             }
+            error_log("[ ivy ] "." Ccore - Handle_post"
+                  . " Object was found with method ".$methName);
             return '';
         }
 
@@ -106,6 +108,7 @@ class Ccore extends Cunstable
     {
 
         //var_dump($_POST);
+        //error_log("[ivy] Handle_postRequest modName = ".$_POST['modName']." methName = ".$_POST['methName']);
         if (isset($_POST['modName']) && isset($_POST['methName'])) {
 
             $modName    = $_POST['modName'];
@@ -306,6 +309,7 @@ class Ccore extends Cunstable
 
             $this->DB = '';
             $this->DB = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+            $this->DB->set_charset('utf8');
            /* echo "A fost apelat core wakeup si DB NU este connectat <br>".
                 ($this->DB->ping() ? '<b>Dar acum este </b>' : ' TOT nu este conectat ');*/
 
@@ -318,6 +322,7 @@ class Ccore extends Cunstable
     {
        // echo "wakeup core ";
         $this->DB_reConnect();
+        //error_log("[ivy]-  core wakeup");
         $this->Handle_postRequest();
     }
     public function __destruct()

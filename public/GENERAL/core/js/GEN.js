@@ -287,6 +287,7 @@ fmw.toggle = function (selection, opt) {
 			//console.log( opt.selector.attr('class') + " "+ opt.class[1]);
 		}
 
+		// in cazul acesta se presupune din prima ca callerul este un input
 		if (opt.value != '') {
 			opt.caller.attr('class', (visible ? opt.value[1] : opt.value[0]));
 		}
@@ -355,6 +356,18 @@ fmw.asyncConf = function (options) {
 			);*/
 		}
 	}
+	/**
+	 * use case:
+	 *
+	 * var asyncsConf = new fmw.asyncConf({...});
+	 * asyncConf
+	 *    .fnpost(postData, callBack)
+	 *    .done(function(data{}));
+	 *
+	 * @param dataSend
+	 * @param callBack
+	 * @returns {*}
+	 */
 	this.fnpost = function (dataSend, callBack) {
 
 		if (!fmw.isset(dataSend)) {
