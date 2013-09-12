@@ -163,7 +163,7 @@ var iEdit = function () {
 				//extraHtml:[],
 			}
 		},
-		default_extraBtt: function (bttName) {
+		 default_extraBtt: function (bttName) {
 			return {
 				bttName: bttName,
 
@@ -874,7 +874,9 @@ var iEdit = function () {
 
 			},
 			EDtxa: function () {
-				$(formSelector + ' textarea[name=' + INPUTname + ']').css('height', EDtag_height);
+				$(formSelector + ' textarea[name=' + INPUTname + ']')
+					.css('height', EDtag_height)
+					.css('width', EDtag_width);
 			},
 			EDdate: function () {
 				$(formSelector + ' input[name=' + INPUTname + ']').datepicker({dateFormat: 'yy-mm-dd'});

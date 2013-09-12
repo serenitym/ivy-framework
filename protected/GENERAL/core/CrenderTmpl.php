@@ -283,7 +283,7 @@ class CrenderTmpl extends item
 
                     return file_get_contents($resPath);
                 } else {
-                    return 'CrenderTmpl - get_resContent : Nu exista continut la pagina <b>'.$resPath.'</b>';
+                   error_log( 'CrenderTmpl - get_resContent : Nu exista continut la pagina <b>'.$resPath.'</b>');
                 }
 
              }
@@ -291,8 +291,6 @@ class CrenderTmpl extends item
                  return 'Nu exista continut la pagina <b>'.$resPath.'</b>';
              }
          }
-
-
     }
 
     public function Render_ModulefromRes($obj, $resName='')
