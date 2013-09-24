@@ -124,6 +124,15 @@ button.ivy-light:hover{
 }
 
 
+/*=========================================================== [ links ] =======*/
+a.inherit:link,
+a.inherit:visited,
+a.inherit:active,
+a.inherit {
+    color: inherit !important;
+    border: inherit !important;
+}
+
 /*=========================================================== [ inputs ] =======*/
 input[type="text"].ivy,
 input[type="password"].ivy,
