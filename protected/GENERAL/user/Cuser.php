@@ -1,9 +1,31 @@
 <?php
 /**
- * Un user va exista mereu ca guest chiar daca este sau nu cineva efelctiv logat
- * Class Cuser
+ * User class file
+ *
+ * PHP Version 5.3
+ *
+ * @category  Accounts
+ * @package   User
+ * @author    Victor Nițu <victor@serenitymedia.ro>
+ * @copyright 2010 Serenity Media
+ * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * @link      http://docs.serenitymedia.ro
  */
-class Cuser extends permissions
+
+/**
+ * Class Cuser
+ *
+ * Note: Guest user is logged in by default, and it will always be, unless
+ * someone else logs in.
+ *
+ * @category  Accounts
+ * @package   User
+ * @author    Victor Nițu <victor@serenitymedia.ro>
+ * @copyright 2010 Serenity Media
+ * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * @link      http://docs.serenitymedia.ro
+ */
+class Cuser extends Permissions
 {
 
     // comming from $_SESSION['userData'] & seted by CauthManager
@@ -27,7 +49,20 @@ class Cuser extends permissions
     public $sets = array();
 
 
-    public function get_avatar( $email, $s = 80, $d = 'mm', $r = 'g',
+    /**
+     * getAvatar
+     *
+     * @param mixed  $email Email to get the avatar for
+     * @param int    $s     Image dimensions (square's width)
+     * @param string $d     Unit, probably (?)
+     * @param string $r     No idea, ask the Gravatar guys
+     * @param bool   $img   Return an image? If false, get a link only
+     * @param bool   $atts  Some kind of data array, I guess
+     *
+     * @access public
+     * @return void
+     */
+    public function getAvatar( $email, $s = 80, $d = 'mm', $r = 'g',
         $img = false, $atts = array()
     ) {
 
@@ -35,7 +70,8 @@ class Cuser extends permissions
             return 0;
         }
 
-        $url = 'http://cdn.libravatar.org/avatar/40f8d096a3777232204cb3f796c577b7?s=80&amp;d=mm';
+        $url = 'http://cdn.libravatar.org/avatar/'
+              .'40f8d096a3777232204cb3f796c577b7?s=80&amp;d=mm';
         $url2  = 'http://cdn.libravatar.org/avatar/';
         $url2 .= md5(strtolower(trim($email)));
         $url2 .= "?s=$s&amp;d=$d&amp;r=$r";
@@ -47,18 +83,36 @@ class Cuser extends permissions
 
         if ( $img ) {
             $url = '<img src="' . $url . '"';
-            foreach ( $atts as $key => $val )
-            $url .= ' ' . $key . '="' . $val . '"';
+            foreach ( $atts as $key => $val ) {
+                $url .= ' ' . $key . '="' . $val . '"';
+            }
             $url .= ' />';
         }
         return $url;
     }
 
-    protected function Set_classes()
+    /**
+     * Sets the user's class from database
+     *
+     * @access protected
+     * @return void
+     */
+    protected function Set_class()
     {
         $query = "SELECT cid, name AS uclass FROM auth_classes";
         $this->classes = $this->C->Db_Get_rows($query);
     }
+
+    /**
+     * Reads all the needed user data from the database.
+     *
+     * @todo Outsource table names (module config or whatever)
+     *
+     * @param mixed $uid User id
+     *
+     * @access private
+     * @return void
+     */
     private function getUserData($uid)
     {
         $detailsTable   = 'auth_user_details';
@@ -88,16 +142,20 @@ class Cuser extends permissions
 
 
     /**
-     * initiaza un user uatentificat
+     * Creates an authenticated user
+     *
+     * @access public
+     * @return void
      */
-    public function _init_authUser(){
+    public function _init_authUser()
+    {
         // dont realy know why it doesn't work
         /* foreach ($_SESSION['auth'] AS $dbFields => $dbValue) {
             $this->$dbFields = $dbValue;
         }*/
 
 
-       // echo "<b>Cuser _init_</b>";
+        // echo "<b>Cuser _init_</b>";
         // var_dump($_SESSION['userData']);
         $userData     = &$_SESSION['userData'];
         $this->uid    = $userData->uid;
@@ -107,6 +165,9 @@ class Cuser extends permissions
         $this->uclass = $userData->uclass;
         // $this->first_name  = $userData->first_name;
         // $this->last_name  = $userData->last_name;
+
+        $_COOKIE['token'] = $this->Db_getToken($this->uid);
+
         $this->permissions  = $userData->permissions;
         $this->rights =& $this->permissions;
 
@@ -126,6 +187,13 @@ class Cuser extends permissions
         // echo "Cuser - _init_authUser : toolbar buttons";
         $this->toolbarBtts();
     }
+
+    /**
+     * Class magic init method
+     *
+     * @access public
+     * @return void
+     */
     public function _init_()
     {
         //$uid = $_SESSION['userData']->uid;
@@ -155,36 +223,67 @@ class Cuser extends permissions
 
 
     //====================================================
+
+    /**
+     * addGEN_edit - Not yet documented
+     *
+     * @access public
+     * @return void
+     */
     public function addGEN_edit()
     {
-        if($this->rights['perm_manage']) {
-           array_push($this->C->defaultAdmin_GENERAL, 'GEN_edit');
-           // echo "Cuser - addGEN_edit ";
+        //TODO: Document this!
+
+        if ($this->rights['perm_manage']) {
+            array_push($this->C->defaultAdmin_GENERAL, 'GEN_edit');
+            // echo "Cuser - addGEN_edit ";
             //var_dump($this->C->defaultAdmin_GENERAL);
         }
     }
+
+    /**
+     * Adds account buttons on the main user toolbar.
+     *
+     * @access public
+     * @return void
+     */
     public function addToolbarAccount()
     {
-        $buttons = $this->C->Render_objectFromPath($this,
-                        "GENERAL/user/tmpl/account.html");
+        $buttons = $this->C->Render_objectFromPath(
+            $this, "GENERAL/user/tmpl/account.html"
+        );
 
         array_push($this->toolbarBtts, $buttons);
     }
+
+    /**
+     * Add logout button on the main user toolbar.
+     *
+     * @access public
+     * @return void
+     */
     public function addToolbarLogout()
     {
-        array_push($this->toolbarBtts,"
-            <a href='index.php?logOUT=1' id='logOUT'>
+        array_push(
+            $this->toolbarBtts,
+            "<a href='index.php?logOUT=1' id='logOUT'>
                 Log out {$this->uname}
                 [ id: {$this->uid} | class: {$this->uclass} ]
-            </a>
-        ");
+            </a>"
+        );
 
     }
-    // please document this
+
+    /**
+     * Adds all the needed toolbar buttons.
+     *
+     * @access public
+     * @return void
+     */
     public function toolbarBtts()
     {
         $this->toolbarBtts = array();
-        if(isset($this->C->TOOLbar)) {
+        if (isset($this->C->TOOLbar)) {
             $this->toolbarBtts = &$this->C->TOOLbar->buttons;
         } else {
 
@@ -195,7 +294,13 @@ class Cuser extends permissions
         $this->addToolbarAccount();
 
     }
-    // set popup
+
+    /**
+     * Secondary init function, a bit of a hackish way to separate init logic.
+     *
+     * @access public
+     * @return void
+     */
     public function _init_second()
     {
 
@@ -203,20 +308,26 @@ class Cuser extends permissions
             isset($_SESSION['auth']) && Toolbox::relocate('/');
 
             $_SESSION['postLoginURL'] = $_SESSION['lastURL'];
-            $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'loginForm' , 'Login'); ";
+            $this->C->jsTalk .= "ivyMods.user.popup('"
+                . FW_PUB_URL . "', 'loginForm' , 'Login'); ";
             return true;
         }
 
         if (isset($_GET['route']) && $_GET['route'] == 'invite') {
-            $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'inviteConfirm' , 'Register account (invitation)'); ";
+            $this->C->jsTalk .= "ivyMods.user.popup('"
+                . FW_PUB_URL
+                . "', 'inviteConfirm' , 'Register account (invitation)'); ";
             return true;
         }
 
         if (isset($_GET['route']) && $_GET['route'] == 'recoverPassword') {
             isset($_SESSION['auth']) && Toolbox::relocate('/');
 
-            if ($this->Db_getToken(intval($_GET['id']), strval($_GET['token'])) == true) {
-                $this->C->jsTalk .= "ivyMods.user.popup('".FW_PUB_URL."', 'recoverPassword' , 'Reset password'); ";
+            if ($this->Db_getToken(
+                intval($_GET['id']), strval($_GET['token'])
+            ) == true) {
+                $this->C->jsTalk .= "ivyMods.user.popup('"
+                    . FW_PUB_URL . "', 'recoverPassword' , 'Reset password'); ";
                 return true;
             } else {
                 $this->C->jsTalk .= "alert('Invalid request.');";
@@ -226,8 +337,17 @@ class Cuser extends permissions
 
     }
 
-    // daca userul este luat din SESSION se refac anumite propritati
-    public function afterInit(&$C){
+    /**
+     * Called when session is being rebuilt, also needs to
+     * rebuild some core pointers and properties
+     *
+     * @param mixed $core Pointer to core
+     *
+     * @access public
+     * @return void
+     */
+    public function afterInit(&$core)
+    {
         /**
          * ADD GEN_edit to c or not
          * add profile buttons
@@ -235,11 +355,22 @@ class Cuser extends permissions
          *  - change password
          *  - ivite
          */
-        $C->Module_configCorePointers($this);
-        $C->Module_Set_incFilesJsCss($this);
+        $core->Module_configCorePointers($this);
+        $core->Module_Set_incFilesJsCss($this);
         $this->_init_second();
         $this->toolbarBtts();
 
 
+    }
+
+    /**
+     * __destruct clears the token cookie
+     *
+     * @access public
+     * @return void
+     */
+    public function __destruct()
+    {
+        $_COOKIE['token'] = null;
     }
 }

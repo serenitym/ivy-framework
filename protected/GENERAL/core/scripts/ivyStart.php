@@ -19,12 +19,19 @@ require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 
 
 $dbLink = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('No database!');
+//$dbLink = MDB2::singleton(DSN) or die('No MDB2 here...');
 
 /* change character set to utf8 */
-if (!$dbLink->set_charset("utf8")) {
-    printf("Error loading character set utf8: %s\n", $dbLink->error);
+if (method_exists($dbLink->set_charset)) {
+    if (!$dbLink->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $dbLink->error);
+    } else {
+        //printf("Current character set: %s\n", $dbLink->character_set_name());
+    }
 } else {
-    //printf("Current character set: %s\n", $dbLink->character_set_name());
+    /* If the method above doesn't exists, then we have MDB2
+     * We expect the IvyDb class to take care of the character set for us
+     */
 }
 
 // config???

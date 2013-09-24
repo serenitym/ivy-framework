@@ -4,7 +4,7 @@ class IvyDb extends MDB2
 
     public function __construct($dsn)
     {
-        //$dsn .= '?charset=utf-8';
+        $dsn .= '?charset=utf8';
         $this->db = MDB2::singleton($dsn);
     }
 

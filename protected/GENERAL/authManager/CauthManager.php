@@ -1,38 +1,99 @@
 <?php
 /**
- * CauthManager
+ * Authentication Manager class file.
  *
- * PHP Version 5.4
+ * PHP Version 5.3+
  *
  * @category  Accounts
  * @package   Auth
  * @author    Victor Nițu <victor@serenitymedia.ro>
  * @copyright 2010 Serenity Media
  * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
- * @version   0.1.2
+ * @link      http://docs.serenitymedia.ro
  */
 
-class CauthManager extends authCommon implements Serializable {
+/**
+ * CauthManager
+ *
+ * Authentication Manager class, handles login requests
+ *
+ * This class can be used to process the login form(s).
+ *
+ * Note that any form designed to use this class for processing, **must**
+ * send the class name in a hidden field, as follows:
+ *
+ *      <input type="hidden" name="login" value="CauthManager" />
+ *
+ * @category  Accounts
+ * @package   Auth
+ * @author    Victor Nițu <victor@serenitymedia.ro>
+ * @copyright 2010 Serenity Media
+ * @license   http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
+ * @link      http://docs.serenitymedia.ro
+ */
 
+class CauthManager extends AuthCommon
+{
+
+    /**
+     * String user for login: can be either a (valid) user name, or a
+     * valid email address.
+     *
+     * The type (name || email) will be further determined by login() method.
+     *
+     * @var mixed
+     * @access protected
+     */
     protected $loginName;
+
+    /**
+     * The password, not sure why it is still here...
+     *
+     * @var mixed
+     * @access protected
+     */
     protected $password;
 
+    /**
+     *  Class instance, as indicated by Singleton design pattern.
+     */
     protected static $instance;
 
-    final public static function getInstance() {
+    /**
+     * Return class instance or creates a new one.
+     *
+     * Implements Singleton design pattern.
+     * Initially, this was designed a a trait, which was removed to ensure
+     * compatibility with version 5.3
+     *
+     * @static
+     * @final
+     * @access public
+     * @return void
+     */
+    final public static function getInstance()
+    {
         return isset(static::$instance)
             ? static::$instance
             : static::$instance = new static(func_get_args());
     }
 
-    final private function __construct() {
-        # {{{ Dead code
+    /**
+     * Class constructor, restricted access to enforce Singleton pattern
+     *
+     * @final
+     * @access private
+     * @return void
+     */
+    final private function __construct()
+    {
+        // {{{ Dead code
         /*
          * This is a neat, not appropriate, object creation via ReflectionClass,
          * when the number of parameters is uncertain.
          */
-        #$reflection = new ReflectionClass(__CLASS__);
-        #return $reflection->newInstanceArgs(func_get_args());
+        // $reflection = new ReflectionClass(__CLASS__);
+        // return $reflection->newInstanceArgs(func_get_args());
 
         /*
          * This was the old post-construct callback
@@ -49,58 +110,71 @@ class CauthManager extends authCommon implements Serializable {
 
     }
 
+    /**
+     * Private __wakeup to enforce Singleton pattern.
+     *
+     * @final
+     * @access private
+     * @return void
+     */
     final private function __wakeup()
-    {}
-    final private function __clone()
-    {}
+    {
+    }
 
     /**
-     * _render_
+     * Private __clone to enforce Singleton pattern.
+     *
+     * @final
+     * @access private
+     * @return void
+     */
+    final private function __clone()
+    {
+    }
+
+    /**
+     * Enable a class instance to seamlessly return the loginName property
+     * when echoed.
      *
      * @access public
      * @return void
      */
-    public function _render_() {
-        $display = '
-          <form class="form-horizontal pull-right" action="" method="post">
-            <div class="control-group">
-              <div class="controls">
-                <input class="loginInput input-small" name="loginName" type="text" id="inputEmail" placeholder="Email" />
-                <input class="loginInput input-small" name="password" type="password" id="inputPassword" placeholder="Password" />
-                <input name="login" type="hidden" value="CauthManager" />
-                <input type="submit" class="btn btn-mini topbarBtn" value="Sign in" />
-              </div>
-            </div>
-          </form>
-        ';
-        return $display;
-    }
-
-    public function __tostring() {
+    public function __tostring()
+    {
         return $this->loginName;
     }
 
-    public function serialize() {
-        return serialize(get_object_vars($this));
-    }
-
-    public function unserialize($data) {
-        self::getInstance();
-
-        // Set the values
-        if (is_array($data)) {
-            foreach ($data as $k => $v) {
-                $this->$k = $v;
-            }
-        }
-    }
-
-    protected function sanitize ($var) {
+    /**
+     * Generalize the string cleanup process.
+     *
+     * @param mixed $var String to be sanitized
+     *
+     * @access protected
+     * @return void
+     */
+    protected function sanitize ($var)
+    {
         return $this->rodb->real_escape_string($var);
     }
 
-    protected function getAllLoginDetails($loginName='', $type='email') {
-        //TODO: docblock
+    /**
+     * Acquire a bunch of details about one user from the database.
+     *
+     * This method attempts to get some user properties from the database, as
+     * follows:
+     * * users: uid, name, active, cid, password, email
+     * * user_details: language, country, city, last_ip
+     * * user_stats: failed_logins
+     * * classes: name
+     *
+     * @param string $loginName Login name can be either a name or email address
+     * @param bool   $type      Clear specification for type (email or username)
+     *
+     * @access protected
+     * @return void
+     */
+    protected function getAllLoginDetails($loginName='', $type='email')
+    {
         $loginQ = ( $type == 'email'
             ? "auth_users.email = '$loginName'"
             :  "auth_users.name = '$loginName'");
@@ -110,7 +184,8 @@ class CauthManager extends authCommon implements Serializable {
                          auth_user_details.language,
                          auth_user_details.country, auth_user_details.city,
                          auth_user_details.last_ip,
-                         FROM_UNIXTIME(auth_user_details.creation, '%Y %D %M') AS joindate,
+                         FROM_UNIXTIME(auth_user_details.creation, '%Y %D %M')
+                            AS joindate,
                          auth_user_details.first_name, auth_user_details.last_name,
                          auth_user_details.last_ip, auth_user_stats.failed_logins,
                          LOWER(auth_classes.name) AS uclass
@@ -130,15 +205,20 @@ class CauthManager extends authCommon implements Serializable {
 
     }
 
-   /**
-    * Get basic data for user
-    * @param $loginName
-    *
-    * @return mixed
-    *
-    * old: getLoginDetails
-    */
-    protected function Get_loginDetails($loginName) {
+    /**
+     * Get basic data for user
+     *
+     * Return the following set of data:
+     * * users: uid, name, active, cid, password, token, email,
+     * * user_stats: permissions
+     * * classes: name (as uclass)
+     *
+     * @param string $loginName Either a valid email address or user name
+     *
+     * @return mixed
+     */
+    protected function Get_loginDetails($loginName)
+    {
 
         $loginQ = filter_var($loginName, FILTER_VALIDATE_EMAIL) != false
                 ? "auth_users.email = '$loginName'"
@@ -152,7 +232,6 @@ class CauthManager extends authCommon implements Serializable {
                          auth_users.password,
                          auth_users.token,
                          auth_users.email,
-                         auth_users.active,
 
                          auth_user_stats.permissions,
 
@@ -178,17 +257,20 @@ class CauthManager extends authCommon implements Serializable {
     }
 
     /**
-     * authCheck
+     * Attempt to validate a user's login - DEPRECATED!
      *
-     * @param string $loginName
-     * @param string $password
+     * Deprecated, uses clear text passwords and trigger_error()
+     *
+     * @param string $loginName The name used for login
+     * @param string $password  Clear text (!) password from POST data
+     *
      * @static
      * @access public
      * @return void
      */
     public function authCheck($loginName='', $password='')
     {
-        $this->rodb = new mysqli(DB_HOST,DB_RO_USER,DB_RO_PASS,DB_NAME);
+        $this->rodb = new mysqli(DB_HOST, DB_RO_USER, DB_RO_PASS, DB_NAME);
         $this->rodb->set_charset("utf8");
 
         //echo "Setting login vars & Sanitizing login...";
@@ -213,16 +295,6 @@ class CauthManager extends authCommon implements Serializable {
         return true;
 
     }
-
-    /*public  function Set_toolbarButtons(&$C)
-    {
-        array_push($C->TOOLbar->buttons,"
-            <a href='index.php?logOUT=1' id='logOUT'>
-                Log out {$C->user->uname}
-                [ id: {$C->user->uid} | class: {$C->user->uclass} ]
-            </a>
-        ");
-    }*/
 
     /**
      * login
@@ -275,6 +347,12 @@ class CauthManager extends authCommon implements Serializable {
         Toolbox::relocate('/');
     }
 
+    /**
+     * init
+     *
+     * @access protected
+     * @return void
+     */
     protected function init ()
     {
         if (isset($_POST['login']) && $_POST['login'] == __CLASS__) {
