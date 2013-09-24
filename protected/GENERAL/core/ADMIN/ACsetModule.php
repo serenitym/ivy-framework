@@ -31,4 +31,30 @@ class ACsetModule extends CLcore
         }
     }
 
+    public function Module_Build_objProp($mod, $objName, $adminFolder='ADMIN/', $adminPrefix='A')
+    {
+        error_log("[ivy]");
+        error_log("[ivy] ACsetModule");
+
+        $obj = parent::Module_Build_objProp($mod, $objName, $adminFolder, $adminPrefix);
+        // daca nu a reusit sa instantieze un admin type atunci
+        //incearca cu varianta simpla
+        if(!$obj) {
+            //error_log("[ivy] ACsetModule - Module_Build_objProp ".
+            // "Modulul nu are o parte de admin => incercam o intantiere simpla");
+           $obj = parent::Module_Build_objProp($mod, $objName);
+        }
+
+        if(is_object($obj)) {
+            error_log("[ivy] ACsetModule - Module_Build_objProp ".
+             "Modulul a fost instantiat cu succes {$objName}");
+
+        } else {
+            error_log("[ivy] ACsetModule - Module_Build_objProp ".
+                         "Modulul NU a fost instantiat cu succes {$objName}");
+
+        }
+        return $obj;
+    }
+
 }

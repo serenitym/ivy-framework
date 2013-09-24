@@ -64,28 +64,27 @@ class CrenderTmpl extends item
         // pentrua a se putea face referinta din cadrul templateului la
         //obiectul principal chemat acest fromArr
         $o  = &$obj;
+        $co = $obj->template_context ?: '';
+
         $display = '';
         eval("\$display = \"$tmplContent\";");
         return $display;
     }
     public function Render_assoc( &$aR, $obj='', $tmplType='str', $tmpl)
     {
-        if(!is_array($aR) || !count($aR) > 0) {
+        if( (!is_array($aR) || !count($aR) > 0) && !is_object($aR)) {
             error_log("Render_assoc: There are no items ");
             return '';
-
-        } else {
-
-            $content = $this->Get_template($tmpl,'Str', $tmplType);
-            if (!$content) {
-               error_log("Render_assoc: Templateul nu a putu"
-                        ." fi randat , Check logs ");
-               return '';
-
-           } else {
-                return $this->Render_assocTmplContent($aR, $content, $obj);
-            }
         }
+
+        $content = $this->Get_template($tmpl,'Str', $tmplType);
+        if (!$content) {
+           error_log("Render_assoc: Templateul nu a putu"
+                    ." fi randat , Check logs ");
+           return '';
+        }
+
+        return $this->Render_assocTmplContent($aR, $content, $obj);
 
     }
 
@@ -140,6 +139,8 @@ class CrenderTmpl extends item
         $display = '';
         // pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
         $o  = &$obj;
+        $co = $obj->template_context ?: '';
+
         foreach($items AS $key => $i)
         {
             $displayItem = '';
@@ -183,6 +184,8 @@ class CrenderTmpl extends item
     {
         // use $o in templates for easy edit end reading
          $o = &$obj;
+         $co = $obj->template_context ?: '';
+
          $display = '';
          eval("\$display = \"$tmplContent\";");
          return $display;

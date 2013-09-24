@@ -44,7 +44,7 @@ class Ccore extends Cunstable
      *
      * @return string
      */
-    public function Handle_post($mod, $methName , $autoRelocate = false)
+    public function Handle_post($mod, $methName)
     {
 
 
@@ -91,16 +91,73 @@ class Ccore extends Cunstable
         $relocate = false;
         if($handlingSupport) {
            //echo "<b>Ccore - Handle_post </b> methName = $methName <br>";
-
             $relocate = $mod->{$methName}();
-            if ($autoRelocate && $relocate) {
+            /*if ($autoRelocate && $relocate) {
                 $this->reLocate();
-            }
+            }*/
         }
         return $relocate;
 
     }
 
+    public function Get_postMod($modName)
+    {
+        //ex: modName = 'blog, handler, otherObject' => mod =  blog->hadler->otherObject
+        error_log("[ ivy ] "." Ccore - Handle_post"
+                    ." objectName requiered $modName");
+
+        $modsTree = explode(',', $modName);
+        $mod = &$this;
+
+
+        foreach($modsTree AS $modName)
+        {
+            $modName = trim($modName);
+            $mod = &$mod->$modName;
+            if(!is_object($mod)){
+                error_log("[ ivy ] "." Ccore - Handle_post : "
+                    ." There is no object $modName");
+                return '';
+            }
+        }
+
+        return $mod;
+
+    }
+    public function Get_postMethNames($methName, $mod)
+    {
+         $methNames = explode(',', $methName);
+         $standardMethNames = array();
+
+         foreach ($methNames AS $methName) {
+              $methName = trim($methName);
+
+              if (!method_exists($mod,$methName)) {
+                error_log("[ ivy ] "." Ccore - Handle_post"
+                          . " Object has no method ".$methName);
+             } else {
+                  array_push($standardMethNames, $methName);
+              }
+         }
+
+        return $standardMethNames;
+
+    }
+    public function parse_modMethNames($mod, $methNames)
+    {
+        $relocate = true;
+        foreach($methNames AS $methName)
+        {
+            // daca exista obiectul
+            $methName = trim($methName);
+            //echo "<b>Ccore - Handle_postRequest </b> modName = $modName && methName = $methName <br>";
+            $relocate &= $this->Handle_post($mod, $methName);
+        }
+        // daca toate metodele au fost apelate si au returnat true => se va face relocate
+        if($relocate) {
+            $this->reLocate();
+        }
+    }
     /**
      * Apel direct la un modul->metoda pentru rezolvarea requesturilor
      */
@@ -111,37 +168,13 @@ class Ccore extends Cunstable
         //error_log("[ivy] Handle_postRequest modName = ".$_POST['modName']." methName = ".$_POST['methName']);
         if (isset($_POST['modName']) && isset($_POST['methName'])) {
 
-            $modName    = $_POST['modName'];
-            $methName   = $_POST['methName'];
+            $mod = $this->Get_postMod($_POST['modName']);
 
-            // oricum cred ca face relocate in CmethDb
-            //$relocate   = isset($_POST['relocate']) ? $_POST['relocate'] : false ;
-            $mod = &$this->$modName;
-            if(!is_object($mod)){
-                error_log("[ ivy ] "." Ccore - Handle_post"
-                          ."There is no object $modName");
-                return '';
+            if($mod) {
+                $methNames = $this->Get_postMethNames($_POST['methName'], $mod);
+                $this->parse_modMethNames($mod, $methNames);
             }
-            // se pot trimite mai multe metode de handling despartite prin virgula
-            $methNames = explode(',', $methName);
-            // pentru ca nu trebuie sa faca relocate decat dupa ce executa
-            // toate metodele din lista
-            // daca e o singura metoda in lista relocateul va fi automat
-            $autoRelocate = count($methNames) == 1 ? true : false;
-            foreach($methNames AS $methName)
-            {
-                // daca exista obiectul
-                $methName = trim($methName);
-                //echo "<b>Ccore - Handle_postRequest </b> modName = $modName && methName = $methName <br>";
-                $relocate = $this->Handle_post($mod, $methName, $autoRelocate);
-            }
-            // $relocateul final va fi dat de ultima metodata apelata
-            if ($relocate || !$autoRelocate) {
-                $this->reLocate();
-            } else {
-                /*echo "Ccore - Handle_postRequest : autoRelocate = $relocate";
-                var_dump($_POST);*/
-            }
+
         }
 
     }

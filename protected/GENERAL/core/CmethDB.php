@@ -7,7 +7,7 @@
  * @version 1.0
  * @copyright Copyright (c) 2012 Serenity Media
  * @author  Ioana Cristea
- * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
+ * @license  http://www.gnu.org/licenses/agpl-3.0.txt AGPLv3
  */
 class CmethDB extends CrenderTmpl {
 
