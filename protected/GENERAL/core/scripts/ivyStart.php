@@ -22,7 +22,7 @@ $dbLink = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('No database!');
 //$dbLink = MDB2::singleton(DSN) or die('No MDB2 here...');
 
 /* change character set to utf8 */
-if (method_exists($dbLink->set_charset)) {
+if (method_exists($dbLink, "set_charset")) {
     if (!$dbLink->set_charset("utf8")) {
         printf("Error loading character set utf8: %s\n", $dbLink->error);
     } else {
@@ -49,6 +49,7 @@ $auth = CauthManager::getInstance();
 // ---------[ load the base class ]------
 if (isset($_SESSION['auth'])) {
     $core = new ACLcore($dbLink);
+    setcookie('username', $core->user->uname);
     //$auth->Set_toolbarButtons($core);
 } else {
     $core = new CLcore($dbLink);

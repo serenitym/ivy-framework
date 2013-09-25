@@ -857,6 +857,7 @@ var iEdit = function () {
 				CKEDITOR.replace('editor_' + EDname + '_' + LG,
 					{
 						toolbar: toolbarName,
+                        username: $.cookie('username'),
 						height: EDtag_height + 'px', width: EDtag_width
 					}
 				);
