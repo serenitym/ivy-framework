@@ -153,10 +153,8 @@ class Ccore extends Cunstable
             //echo "<b>Ccore - Handle_postRequest </b> modName = $modName && methName = $methName <br>";
             $relocate &= $this->Handle_post($mod, $methName);
         }
-        // daca toate metodele au fost apelate si au returnat true => se va face relocate
-        if($relocate) {
-            $this->reLocate();
-        }
+        return $relocate;
+
     }
     /**
      * Apel direct la un modul->metoda pentru rezolvarea requesturilor
@@ -164,7 +162,7 @@ class Ccore extends Cunstable
     public function Handle_postRequest()
     {
 
-        //var_dump($_POST);
+        //echo "Ccore - Handle_postRequest POST: "; var_dump($_POST);
         //error_log("[ivy] Handle_postRequest modName = ".$_POST['modName']." methName = ".$_POST['methName']);
         if (isset($_POST['modName']) && isset($_POST['methName'])) {
 
@@ -172,7 +170,12 @@ class Ccore extends Cunstable
 
             if($mod) {
                 $methNames = $this->Get_postMethNames($_POST['methName'], $mod);
-                $this->parse_modMethNames($mod, $methNames);
+                $relocate = $this->parse_modMethNames($mod, $methNames);
+                // daca toate metodele au fost apelate si au returnat true => se va face relocate
+                //$relocate = false;
+                if($relocate) {
+                    $this->reLocate();
+                }
             }
 
         }
