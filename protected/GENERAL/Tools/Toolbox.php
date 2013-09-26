@@ -123,6 +123,87 @@ class Toolbox extends LibToolbox
 
     /* Filesystem tools */
 
+    function getkeypath($arr, $lookup)
+    {
+        if (array_key_exists($lookup, $arr))
+        {
+            return array($lookup);
+        }
+        else
+        {
+            foreach ($arr as $key => $subarr)
+            {
+                if (is_array($subarr))
+                {
+                    $ret = getkeypath($subarr, $lookup);
+
+                    if ($ret)
+                    {
+                        $ret[] = $key;
+                        return $ret;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * List files and folders inside a directory into a deep array.
+     *
+     * @param string $Path
+     * @return array/null
+     */
+    function Fs_buildTree($path)
+    {
+        // Validate argument
+        if (!is_string($path) or !strlen($path = trim($path))) {
+            error_log('$path must be a non-empty trimmed string.', E_USER_WARNING);
+            return null;
+        }
+
+        // If we get a file as argument, resolve its folder
+        if (!is_dir($path) and is_file($path)) {
+            $path = dirname($path);
+        }
+
+        // Validate folder-ness
+        if (!is_dir($path) or !($path = realpath($path))) {
+            error_log('$path must be an existing directory.', E_USER_WARNING);
+            return null;
+        }
+
+        // Store initial path for relative paths (second argument is reserved)
+        $rootpath = (func_num_args() > 1) ? func_get_arg(1) : $path;
+        $rootPathLen = strlen($rootpath);
+
+        // Prepare the array of files
+        $files = array();
+        $Iterator = new DirectoryIterator($path);
+
+        foreach ($Iterator as /** @var \SplFileInfo */ $file) {
+            if ($file->isDot()) continue; // Skip . and ..
+            if ($file->isLink() or (!$file->isDir() and !$file->isFile())) continue; // Skip links & other stuff
+
+            $filePath = $file->getpathname();
+            $relativePath = str_replace('\\', '/', substr($filePath, $rootPathLen));
+            $files[$relativePath] = $filePath; // Files are string
+
+            if (!$file->isDir()) continue;
+
+            // Calls itself recursively [regardless of name :)]
+            $subFiles = call_user_func(self::Fs_buildTree(), $filePath, $rootpath);
+            $files[$relativePath] = $subFiles; // Folders are arrays
+        }
+        return $files; // Return the tree
+    }
+
+    static function Fs_dirInPath($needle, $haystack)
+    {
+
+    }
+
     static function pathExists($file)
     {
         if (file_exists($file)) {
