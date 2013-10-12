@@ -114,7 +114,7 @@ class CrenderTmpl extends item
     public function Render_items ($items, $obj='' , $tmplType='str', $tmpl)
     {
         if(!is_array($items) || !count($items) > 0) {
-            return "<i>Sorry, no items here</i>";
+            return "<i>Coming soon</i>";
 
         } else {
             $content = $this->Get_template($tmpl,'Str', $tmplType);
