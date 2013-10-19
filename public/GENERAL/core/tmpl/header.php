@@ -27,7 +27,7 @@
       echo (!isset($core->admin) ? '' :
                   '  <script type="text/javascript"  src="assets/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script> '
                    . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
-                   . '<script type="text/javascript"  src="assets/ckeditor/ckeditor.js" type="text/javascript"></script>'
+                   . '<script type="text/javascript"  src="assets/ckeditor-4.2/ckeditor.js" type="text/javascript"></script>'
       );
 
     if(defined("FAV_ICON")) {
