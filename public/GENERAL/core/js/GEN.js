@@ -1,6 +1,8 @@
 //DOAR FUNCTII GENERALE !!!! cu parametrii !!!!!
 
 //==============================[ jQuery - extensions ]=====================================
+// reverse an array's order
+$.fn.reverse = [].reverse;
 
 $.fn.collectData = function () {
 
