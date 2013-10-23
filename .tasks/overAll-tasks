@@ -8,8 +8,7 @@
 =====================[ PHP ]================================================================
 [ victor ] server_processing.php - sta in public si ar trebui trecut prin procesSCRIPT
 
-[*] TrenderTmpl - vazut ce functii sunt deprecated
-[*] Ccore       - review general
+
 [?] - obiecte instantiate cu construct($C) - deprecated
 [] - file_puts_contents - metoda dedicata
 

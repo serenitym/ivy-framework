@@ -18,6 +18,7 @@ CKEDITOR.editorConfig = function( config )
 	config.extraPlugins = 'dialog';
 	config.extraPlugins = 'link';
 	config.extraPlugins = 'save';
+	config.extraPlugins = 'div';
 	//config.extraPlugins = 'scayt';
 	config.language = 'en';
 	config.skin = 'moono';

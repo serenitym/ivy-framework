@@ -2,6 +2,12 @@
 
 //==============================[ jQuery - extensions ]=====================================
 // reverse an array's order
+
+$.fn.widthHeight = function(width, height){
+	this.width(width);
+	this.height(height);
+}
+
 $.fn.reverse = [].reverse;
 
 $.fn.collectData = function () {

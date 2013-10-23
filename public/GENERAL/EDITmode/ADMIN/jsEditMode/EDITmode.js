@@ -683,7 +683,13 @@ var iEdit = function () {
 
 		$('*[classs$=hoverZoomLink]').removeClass('hoverZoomLink');
 
-		BLOCK.find('*[class^=ED]').map(function () {
+		//BLOCK.find('*[class^=ED]').map(function () {
+		/**
+		 * Daca se mai doreste facuta vreo operatie pe dom inaintea editarii
+		 * acestuia , ar trebui facuta pe contentul a ce urmeaza sa se editeze
+		 * - adica pe selectorul formului si nu pe SING-ul sau ENT-ul in sine
+		 */
+		$(formSelector).find('*[class^=ED]').map(function () {
 			// selELEM =  $(this).attr('class')+' ';
 			if ($(this).parents('*[class^=allENTS]').length <= 1) {
 
@@ -1306,16 +1312,6 @@ var iEdit = function () {
 				});
 				//==============================================================
 
-				transform(elD.BLOCK, 'form[class$=' + Name + '][id=EDITform_' + id + ']', Name);
-				// disable all links 'a' in this form
-				$('form[class$=' + Name + '][id=EDITform_' + id + ']')
-					.find('a')
-					.on('click', function () {
-						return false;
-					});
-
-				elD.BLOCK.hide();
-
 				// nu imi place unde este pozitiionata aceasta functie
 				//@todo: inca nu imi place trebuie apelata dinamic
 				//=====================[callbackFn]=========================================
@@ -1329,6 +1325,18 @@ var iEdit = function () {
 					//console.log("NU exista metoda cu numele " + elD.BTT.edit.callbackFn);
 
 				}
+
+				transform(elD.BLOCK, 'form[class$=' + Name + '][id=EDITform_' + id + ']', Name);
+				// disable all links 'a' in this form
+				$('form[class$=' + Name + '][id=EDITform_' + id + ']')
+					.find('a')
+					.on('click', function () {
+						return false;
+					});
+
+				elD.BLOCK.hide();
+
+
 
 
 			},
