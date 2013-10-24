@@ -47,7 +47,9 @@ if (isset($_SESSION['auth'])) {
     $core = new CLcore($dbLink);
 }
 
-$core->Set_lastURL();
+if($_GET['route'] != 'invite') {
+    $core->Set_lastURL();
+}
 
 // $_SESSION['core'] = &$core;
 // ======================================

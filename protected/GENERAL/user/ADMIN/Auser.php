@@ -20,6 +20,10 @@ class Auser
             $token = $this->generate_token($uid);
         }
 
+        if ($uid === null) {
+            $uid = $_POST['uid'];
+        }
+
         $stmt = $this->DB->prepare(
             "UPDATE auth_users SET token = ? WHERE uid = '$uid'"
         ) or trigger_error(
@@ -130,7 +134,11 @@ class Auser
     public function Db_setPassword($uid, $password)
     {
         $password = $this->createPassword($password);
-        $uid      = intval($uid);
+
+        if($uid == null) {
+            // Some fail-safe mechanics for the posts acquiring / escaping
+            $uid = $_POST['uid'];
+        }
 
         $stmt = $this->DB->prepare(
             "UPDATE auth_users SET password = ? WHERE uid = ?"
@@ -439,7 +447,8 @@ class Auser
 
         $newUserQ = "INSERT INTO auth_users (cid, name, active, email, password)
             VALUES ('{$invite->cid}', '{$this->post->loginName}', '1',
-                    '{$invite->email}', '{$this->post->password}');";
+                    '{$invite->email}', md5('{$this->post->password}'));";
+        //FIXME: md5() to be replaced with the dedicated method
 
         if (!$this->DB->query($newUserQ)) {
             $this->C->jsTalk .= "alert('Something went wrong, please contact us ASAP');";
@@ -459,6 +468,11 @@ class Auser
                 "INSERT INTO auth_user_stats (uid)
                 VALUES ('$newid')"
             );
+            $this->DB->query(
+                "DELETE FROM auth_invitations
+                WHERE email = '{$this->post->email}'"
+            );
+
             $this->C->jsTalk .= "alert('Congratulations, you can now log in!');";
             $this->C->jsTalk .= 'window.location = "/?login";';
         }
@@ -468,22 +482,19 @@ class Auser
 
     function _hook_changePassword()
     {
+
         $this->post = handlePosts::Get_postsFlexy(
-            array('oldpw','newpw','confirm', 'uid')
+            array('oldpw','newpw','confirm')
         );
 
-        foreach (array('uid', 'oldpw', 'newpw', 'confirm') as $key) {
-            $this->post->$key = mysql_real_escape_string(
-                strval($_POST[$key])
-            );
-        }
-
-        $uid =& $this->post->uid;
+        $uid = $_POST['uid'];
 
         $result = $this->DB->query(
             "SELECT password from auth_users WHERE uid = '$uid'"
         )->fetch_row();
         $oldpw = $result[0];
+
+        //die($oldpw . ' = ' . md5($this->post->oldpw));
 
         if (md5($this->post->oldpw) != $oldpw) {
             echo ' <script type="text/javascript">
@@ -502,7 +513,7 @@ class Auser
             $password = $this->post->newpw;
             if (strlen($password) < 6) {
                 echo ' <script type="text/javascript">
-                    alert("Password too short, try using at least 6 characters.")
+                    alert("Password too short, try using at least 6 characters (given: '.strlen($password).').")
                     </script> ';
                 return false;
             }
@@ -512,7 +523,8 @@ class Auser
     }
     function changePassword()
     {
-        $uid =& $this->post->uid;
+        $uid = $this->post->uid;
+
 
         $this->Db_setPassword($uid, $this->post->newpw);
         $this->Db_setToken($uid, $this->generate_token($uid));
@@ -589,7 +601,7 @@ class Auser
             }
         }
 
-        $uid =& $this->post->uid;
+        $uid = $this->post->uid;
         $this->Db_setPassword($uid, $this->post->newpw);
 
         $this->C->jsTalk .= 'alert("Well done, you successfully changed you password!");';
