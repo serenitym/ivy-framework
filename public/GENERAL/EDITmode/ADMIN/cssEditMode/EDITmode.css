@@ -23,7 +23,12 @@
 
 .SING:hover, .ENT:hover
     {
-    outline: 1px solid #ccc;
+    outline: 1px solid  rgba(255, 255, 255, 0.3);
+
+}
+
+@-moz-document url-prefix() {
+ .SING:hover, .ENT:hover { outline: 0px solid  rgba(255, 255, 255, 0.3); }
 
 }
 
