@@ -256,6 +256,7 @@ textarea.ivy-light:focus{
 /*==============================================[general styling ]=============*/
 .Cgray {color: gray;}
 
+.widthFull{width: 100%;}
 .width25 {width: 25px;}
 .width50 {width: 50px;}
 .width100{width: 100px;}
