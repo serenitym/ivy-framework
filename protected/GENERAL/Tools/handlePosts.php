@@ -242,6 +242,8 @@ class handlePosts
         }
 
         $set = implode(', ', $sets);
+       // echo "Db_Get_setString = $set <br>";
+
         return $set;
 
     }

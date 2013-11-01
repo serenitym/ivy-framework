@@ -2,42 +2,32 @@
 <html>
 <head>
     <meta charset="utf-8">
-
-    <?php
-        echo
-           //'<base href="'.PUBLIC_URL.'" />'.
-           (isset($core->admin)
-                   ? ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
-                   : '')
-           .'
-            <script type="text/javascript"  src="assets/jquery/jquery-1.8.3.min.js"></script>
-            <script type="text/javascript"  src="assets/onVisible/onvisible.js"></script>
-            <script type="text/javascript"  src="assets/jquery-cookie-master/jquery.cookie.js"></script>
-            <!-- <link rel="stylesheet" href="fw/GENERAL/core/css/core.css"> -->
-            <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
-            ';
-
-
-            $header_TMPL = TMPL_INC . 'header.php';
-            if(is_file($header_TMPL)) require_once($header_TMPL);
-
-           echo  $core->cssInc;
+    <?php echo defined("FAV_ICON")
+               ? '<link rel="icon" type="image/png" href="' . FAV_ICON . '">'
+               : '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
     ?>
 
+    <!--  <script type="text/javascript"  src="assets/headjs-0.99/dist/head.min.js"></script>-->
+    <script type="text/javascript"  src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
+
     <?php
-      echo (!isset($core->admin) ? '' :
-                  '  <script type="text/javascript"  src="assets/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script> '
-                   . ' <script type="text/javascript"  src="assets/nestedSortable/jquery.ui.nestedSortable.js"></script>'
-                   . '<script type="text/javascript"  src="assets/ckeditor-4.2/ckeditor.js" type="text/javascript"></script>'
-      );
+        if(isset($core->admin)) {
+            $core->cssIncPaths[] = "assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css";
+        }
+        /*echo
+           (!isset($core->admin) ? '' :
+            ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
+           ).
+          $core->cssInc;*/
 
-    if(defined("FAV_ICON")) {
-        echo '<link rel="icon" type="image/png" href="' . FAV_ICON . '">';
-    } else {
-        echo '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
-    }
-
+        $header_TMPL = TMPL_INC . 'header.php';
+        if(is_file($header_TMPL)) {
+            require_once($header_TMPL);
+        }
     ?>
+    <script type="text/javascript">
+        head.load( "<?php echo implode('", "', $core->cssIncPaths);  ?> " );
+    </script>
 
 </head>
 <body>

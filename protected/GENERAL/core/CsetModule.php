@@ -56,10 +56,12 @@
  */
 class CsetModule extends CgenTools
 {
-    public $cssInc;
+    public $cssInc = '';
+    public $cssIncPaths = array();
+    public $jsIncPaths = array();
     //Modulele vor seta aceste jsTalk so the php can communicate with scrips
-    public $jsTalk;
-    public $jsInc;
+    public $jsTalk ;
+    public $jsInc = '';
     public $toolbarBtts = array();
 
 
@@ -77,37 +79,40 @@ class CsetModule extends CgenTools
         return "<link rel='stylesheet' href= '".$SrcPath."'  />"."\n";
     }
     # 2
-    public function Get_incHtmlTags($extension, $extPath, $extSrcPath)
+    public function Get_incHtmlTags($extension, $incPaths)
     {
-
-        //if(method_exists($this,"GET_INCtag_".$extension))
-        // echo "Get_incHtmlTags tring to get  =  $extSrcPath".'<br>';
-
         if (!method_exists($this,"Get_IncTag_".$extension)) {
-
-           // echo 'Get_incHtmlTags no method = '."Get_IncTag_".$extension.'<br>';
+            error_log("[ ivy ]".'Get_incHtmlTags no method = '."Get_IncTag_".$extension.'<br>');
             return '';
-
-        } else {
-            //echo "<br> Get_incHtmlTags cu extPath = $extPath <br>";
-            $tags = '';
-            if (is_dir($extPath)) {
-                $dir = dir($extPath);
-                while(false!== ($file=$dir->read()) )
-                {
-                    $arr_file = explode('.',$file);
-                    //echo "file found in $file <br>";
-
-                    if (end($arr_file) == $extension) {
-                        $tags .= $this->{"Get_IncTag_".$extension}($extSrcPath.$file);
-                       /* echo "$tags <br> <b>good tag </b> in ".$extSrcPath.$file
-                            ." <br> <b>functie aplicata</b> =  "."Get_IncTag_".$extension.'<br>';*/
-                    }
-                }
-                return $tags;
-            }
         }
 
+        //echo "<br> Get_incHtmlTags cu extPath = $extPath <br>";
+        $tags = '';
+        foreach($incPaths AS $srcPath) {
+             $tags .= $this->{"Get_IncTag_".$extension}($srcPath);
+        }
+        return $tags;
+
+    }
+    public function Get_incPaths($extension, $extPath, $extSrcPath){
+
+        if (!is_dir($extPath)) {
+            return false;
+        }
+
+        $incPaths = array();
+        $dir = dir($extPath);
+        while(false!== ($file=$dir->read()) )
+        {
+            $arr_file = explode('.',$file);
+            //echo "file found in $file <br>";
+
+            if (end($arr_file) == $extension) {
+                array_push($incPaths, $extSrcPath.$file);
+
+            }
+        }
+        return $incPaths;
     }
     # 3 - A
     /**
@@ -136,9 +141,19 @@ class CsetModule extends CgenTools
          $ext_PATH         =   FW_PUB_PATH.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
          $ext_SRC_PATH     =   FW_PUB_URL.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
 
-         $htmlTag = $this->Get_incHtmlTags($extension,$ext_PATH,$ext_SRC_PATH);
-         $this->{$extension."Inc"} .= $htmlTag;
-        //  echo "Set_incFiles - modName =  $modName  && htmltag = ".$htmlTag.'<br>';
+
+         $incPaths = &$this->{$extension."IncPaths"};
+         $htmlTags = &$this->{$extension."Inc"};
+
+         $newIncPaths = $this->Get_incPaths($extension,$ext_PATH,$ext_SRC_PATH);
+        if($newIncPaths) {
+
+            //var_dump($newIncPaths);
+            $incPaths  = array_merge($incPaths, $newIncPaths );
+            $htmlTags .=  $this->Get_incHtmlTags($extension,$newIncPaths);;
+            //  echo "Set_incFiles - modName =  $modName  && htmltag = ".$htmlTag.'<br>';
+        }
+
 
 
     }
@@ -188,6 +203,7 @@ class CsetModule extends CgenTools
     public function Module_Set_incFilesHard($extension,$srcPath)
    {
        if (method_exists($this,"Get_IncTag_".$extension)) {
+           $this->{$extension."IncPaths"}[] = $srcPath;
            $this->{$extension."Inc"} .= $this->{"Get_IncTag_".$extension}($srcPath);
        }
    }
