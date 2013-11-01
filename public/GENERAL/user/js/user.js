@@ -27,6 +27,11 @@ ivyMods.user = {
         fmw.toggle("#p-recover");
     },
     popup :function(pubUrl,template,  headerName, uid) {
+	    /*if(typeof  fmw == 'undefined') {
+		    alert("Aparent GEN.js nu este inca incarcat");
+	    } else {
+		    alert("Aparent GEN.js Ar trebui sa fie incarcat");
+	    }*/
         fmw.popUp.init({
             pathGet: pubUrl + this.templates[template],
             headerName: headerName,
