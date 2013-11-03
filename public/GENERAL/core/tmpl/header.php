@@ -11,8 +11,8 @@
     <script type="text/javascript"  src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
 
     <?php
-        if(isset($core->admin)) {
-            $core->cssIncPaths[] = "assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css";
+        if(isset($core->admin) && $core->admin) {
+            $core->cssIncPaths[] = "assets/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.min.css";
         }
         /*echo
            (!isset($core->admin) ? '' :
