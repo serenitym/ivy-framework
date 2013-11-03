@@ -632,6 +632,7 @@ fmw.popUp = {
 		 this.heightPop    = opt.heightPop;
 		 this.callbackFn  = opt.callbackFn;
 		 this.content      = opt.content;
+		 this.draggable    = opt.draggable
 		 */
 
 		//this.popUp_loadContent ;//???
@@ -640,6 +641,7 @@ fmw.popUp = {
 		this.ajaxProxy = fmw.ajaxProxy;
 		this.closeBtn = 'button'; // or it could be submit
 		this.dataSend = { sessionId: fmw.sessionId};
+      this.draggable = false;
 
 		// incorporate options
 		$.extend(true, this, opt);
@@ -760,7 +762,10 @@ fmw.popUp = {
 			"<img alt='preloader' src='fw/GENERAL/core/css/img/ajax-loader.gif' " +
 				"style='display: block; margin: 0px auto; padding-top:" + popupContent_height + "px;'>");
 
-		popUp.draggable();
+		// daca am setat optiunea de draggable ( atentia aceasta necesita jqueryUI.draggable)
+		if(this.draggable) {
+			popUp.draggable();
+		}
 
 		/*console.log("popUp \n" +
 		 " width = " + popUp.width() + "\n" +

@@ -15,7 +15,7 @@
 }
 .galleria-stage {
     overflow: hidden;
-    background: #000;
+    background: rgba(0,0,0,0.9);;
     position: absolute;
     top: 0;
     left: 0;
@@ -29,18 +29,17 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    background: url(bar.png) repeat-x;
+    background: url("bar.png") repeat-x scroll 0 -1px #CCCCCC;
     z-index: 3;
 }
 /*=====little tiwik======*/
 .galleria-bar-close {
-    height: 31px;
+    height: 30px;
     width: 100%;
    /* position: absolute;*/
     bottom: 0;
     left: 0;
-    background: url(bar.png) repeat-x;
-    background-color: #ddd;
+    background: url("bar.png") repeat-x scroll 0 -1px #CCCCCC;
     z-index: 3;
 }
 .galleria-bar-close  input[type="button"]{
