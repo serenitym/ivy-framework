@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <?php echo defined("FAV_ICON")
+    <?php
+    echo defined("FAV_ICON")
                ? '<link rel="icon" type="image/png" href="' . FAV_ICON . '">'
                : '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
     ?>
