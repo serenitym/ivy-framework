@@ -13,7 +13,7 @@ $.fn.reverse = [].reverse;
 $.fn.collectData = function () {
 
 	var selector = arguments.length > 0 ? arguments[0]
-		: "input[type=text] ,input[type=hidden] , textarea, select";
+		: "input[type=text] ,input[type=hidden] ,input[type=checkbox], input[type=submit] , textarea, select";
 
 	var data = {};
 	if (this.length == 1) {
@@ -259,7 +259,10 @@ fmw.lg = 'ro';
 fmw.ajaxProxy = 'procesSCRIPT.php';
 fmw.ajaxReqFile = 'ajaxReqFile';
 fmw.sessionId = $.cookie("PHPSESSID");
-
+fmw.pubPath = '';
+/**
+ * fmw.pubUrl
+ */
 
 /**
  * Use case :
