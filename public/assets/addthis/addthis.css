@@ -398,7 +398,8 @@ div.atclear {
 }
 
 .addthis_default_style .at300b,.addthis_default_style .at300bo,.addthis_default_style .at300m {
-    padding: 0 2px;
+    /*padding: 0 2px;*/
+    padding: 0px;
 }
 
 .at300b,.at300bo,.at300m,.at300bs {
