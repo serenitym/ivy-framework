@@ -18,19 +18,17 @@
    head.js(
    "<?php echo implode('", "', $core->jsIncPaths);  ?> "
    , function(){
-      //alert('fmw.idT este = ' +fmw.idT );
        <?php echo $core->jsTalk; ?>
    });
 
    head.ready( "GEN.js",
    function(){
-
        ivyMods = {    set_iEdit:{ /*modName : function(){}*/       } };
        <?php echo  (!$core->admin ? ''
              : "fmw.admin  = 1;").
                "fmw.idC    = $core->idNode;
                 fmw.idT    = $core->idTree;
-                fmw.pubUrl = '".FW_PUB_PATH."';
+                fmw.pubPath = '".FW_PUB_PATH."';
                ";
        ?>
    });
