@@ -8,8 +8,8 @@
                : '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
     ?>
 
-    <!--  <script type="text/javascript"  src="assets/headjs-0.99/dist/head.min.js"></script>-->
     <script type="text/javascript"  src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
+    <!--<script type="text/javascript"  src="assets/jquery/jquery-1.8.3.min.js"></script>-->
 
     <?php
         if(isset($core->admin) && $core->admin) {

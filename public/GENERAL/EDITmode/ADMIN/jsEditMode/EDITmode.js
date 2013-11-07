@@ -762,7 +762,9 @@ var iEdit = function () {
 				return "<textarea   name='" + INPUTname + "'  class='" + INPUTclasses + "' >" + EDvalue + "</textarea>";
 			},
 			EDeditor: function () {
-				return "<textarea   name='" + INPUTname + "'  class='" + INPUTclasses + "'  id='editor_" + EDname + '_' + LG + "' >" + EDvalue + "</textarea>";
+				return "<textarea   name='" + INPUTname + "'  class='" + INPUTclasses + "'  id='editor_" + EDname + '_' + LG + "' >"
+						+ EDvalue
+					+ "</textarea>";
 			},
 			EDaddEditor: function () {
 				return "<textarea   name='" + INPUTname + "'  class='" + INPUTclasses + "'  id='editorAdd_" + EDname + '_' + LG + "' >" + EDvalue + "</textarea>";

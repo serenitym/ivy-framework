@@ -260,6 +260,7 @@ fmw.ajaxProxy = 'procesSCRIPT.php';
 fmw.ajaxReqFile = 'ajaxReqFile';
 fmw.sessionId = $.cookie("PHPSESSID");
 fmw.pubPath = '';
+//fmw.liveEdit = '';
 /**
  * fmw.pubUrl
  */
