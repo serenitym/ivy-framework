@@ -33,7 +33,7 @@
 }
 
 form[id^="EDITform"]
-   {outline: 1px solid #eee;}
+   {/*outline: 1px solid #eee;*/}
 
 .SING:hover, .ENT:hover, form[id^="EDITform"]
 {
