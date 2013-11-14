@@ -69,7 +69,19 @@ class Cmodules extends CsetModule
     // core basics
     //===============================================================================
 
+    public  function Set_module($modName, $modType){
+        //error_log("*****[ivy] Cmodules - Set_module ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
+
+        $this->$modName =  $this->Module_Build($this, $modName, $modType);
+        /*error_log("*****[ivy] Cmodules - Set_module "
+            .(is_object($this->$modName)
+                ? "modulul {$modName} a fost instantiat "
+                : "Modulul {$modName}  nu a fost instantiat "
+            ));*/
+
+    }
     #2.2
+    // dep??
     /**
     * Instantziaza si seteaza /configureaza modulul curent
     *  - modulul curent = requested by type/moduleName || idNode=> type
@@ -78,7 +90,7 @@ class Cmodules extends CsetModule
     {
         //$this->Module_Build($this->mgrName,$this->modType) ;
         //$this->Module_Build($this->modName,$this->modType) ;
-        $this->Module_Build($this->mgrName, $this->mgrType);
+        $this->Set_module($this->mgrName, $this->mgrType);
     }
 
     #2.1
@@ -91,8 +103,7 @@ class Cmodules extends CsetModule
         {
             foreach($this->{'default_'.$modType} AS $modName)
             {
-                 error_log("Set_defaultModules ".'$modType = '.$modType.' $modName = '.$modName."\n\n");
-                $this->Module_Build($modName,$modType);
+                 $this->Set_module($modName,$modType);
             }
         }
     }
@@ -118,7 +129,8 @@ class Cmodules extends CsetModule
         //$this->SET_HISTORY($this->idNode);
         if ($this->mgrName) {
             //echo "Ccore - Set_modules : Current ModuleName is $this->mgrName <br>";
-            $this->Set_currentModule();
+            //$this->Set_currentModule();
+            $this->Set_module($this->mgrName, $this->mgrType);
         } else {
             error_log("[ ivy ] "."Ccore - Set_modules : "
                     . " Atentie nu este definit nici un modul manager!!!");
@@ -169,13 +181,11 @@ class Cmodules extends CsetModule
                 $this->_Set_Fs_usedModules();
             }
 
-        } else {
+        } elseif($this->admin) {
             // daca suntem in modul admin si nu este creat vectorul $this->mods
-            // atunci in cream si inregistram ca este complet cu partea de admin
-            if ($this->admin) {
-                $this->mods['adminYml'] = true;
-            }
-             // construieste vectorul $mods
+            // atunci il cream si inregistram ca este complet cu partea de admin
+            $this->mods['adminYml'] = true;
+            // construieste vectorul $mods
             if (isset($this->modTypes) && is_array($this->modTypes)) {
                 foreach($this->modTypes AS $modType){
                     //seteaza modulele folosite in proiect

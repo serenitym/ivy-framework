@@ -524,7 +524,7 @@ class CsetModule extends CgenTools
             //echo "Obiectul care exista deja $modName <br>";
             //var_dump($this->$modName);
             error_log("[ ivy ] "."CsetModule - Build_object : Obiectul $objName este deja instantiat ");
-            return false;
+            return $caller->$objName;
 
         }
 
@@ -567,35 +567,37 @@ class CsetModule extends CgenTools
      ***#4** apeleaza daca exista un al doilea __construct   al obiectului (daca metoda exista)
      *       util pentru procesele care depind de configurilea modulului
      *
-     * @param string $modName - numele modulului ce se doreste a fi creat
-     * @param string $modType -  'LOCALS'/ 'GENERAL' / 'MODELS' / 'PLUGINS'
-     * @param string $adminFolder -    '' / "ADMIN/"
-     * @param string $adminPrefixfix - 'C' / 'AC'
-     * @return bool obiectul creat / false daca nu a creat nimic
+     *
+     * @uses
+     * @return bool -  obiectul creat / false daca nu a creat nimic
      */
-    public function Module_Build($modName, $modType, $adminFolder='', $adminPrefix='C')
-    {
 
+    public function Module_Build($caller, $modName, $modType, $adminFolder='', $adminPrefix='C')
+    {
         #1
         //$this->$modName = new $className($this);
-        $this->$modName = $this->Build_object($this, $modType, $modName, $modName, $adminFolder, $adminPrefix);
-        if(!$this->$modName) {
+        error_log("[ ivy ] CsetModule  - Module_Build trying to buid - {$modType} / {$modName}" );
+        $obj = $this->Build_object($caller, $modType, $modName, $modName, $adminFolder, $adminPrefix);
+        if(!is_object($obj)) {
+            error_log("[ ivy ] CsetModule  - Modulul NU a fost instantiat corect" );
             return false;
-        }
+        } /*else {
+            error_log("[ ivy ] CsetModule  - Modulul Pare sa fi fost instantiat corect" );
+        }*/
         #2
-        $this->Module_config($this->$modName,$modType,$modName);
+        $this->Module_config($obj,$modType,$modName);
         #4
-        if (method_exists($this->$modName,"_init_")) {
-            $this->$modName->_init_();
+        if (method_exists($obj,"_init_")) {
+            $obj->_init_();
         }
         #3
-        $this->Module_incs($this->$modName, $adminFolder);
+        $this->Module_incs($obj, $adminFolder);
         #4
-        return $this->$modName;
+        return $obj;
 
     }
 
-    public function Module_configObjrop(&$mod, &$obj, $objName)
+    public function Module_configObjProp(&$mod, &$obj, $objName)
     {
         error_log("[ivy] CsetModule - Module_configObjrop : "
             ." Incerc sa configurez obiectul cu numele {$objName}");
@@ -616,6 +618,17 @@ class CsetModule extends CgenTools
         }
     }
 
+    /**
+     * Construieste handlere pentru un anumit modul ( clase care exista tot in
+     * acelasi modul ) . Aici ne referim mai mult la idea de obiect si nu modul - obiect
+     * @param        $mod
+     * @param        $objName
+     * @param string $adminFolder
+     * @param string $adminPrefix
+     *
+     * @uses
+     * @return bool|object
+     */
     public function Module_Build_objProp($mod, $objName, $adminFolder='', $adminPrefix='')
     {
         #1
@@ -628,7 +641,7 @@ class CsetModule extends CgenTools
         }
 
         #2
-        $this->Module_configObjrop($mod, $obj, $objName);
+        $this->Module_configObjProp($mod, $obj, $objName);
         #3
         if (method_exists( $obj,"_init_")) {
             $obj->_init_();

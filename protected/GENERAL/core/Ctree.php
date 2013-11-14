@@ -338,6 +338,10 @@ class Ctree extends Cmodules
         }
 
         // returns
+        /**
+         * Atentie aceste proprietati pot fi setate si default din
+         * core.yml
+         */
         if($this->idTree && $this->idNode) {
             error_log("[ ivy ] ".'Ccore - Set_currentTreeNode :' .
                             "Se incearca setarea currentNode cu "

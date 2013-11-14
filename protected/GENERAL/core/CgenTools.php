@@ -242,6 +242,10 @@ class CgenTools extends CmethDB{
             $lang = $this->lang;
         }
 
+        /**
+         * presupunem deci ca modulul a fost instantiat prin core
+         * si core a setat lucruri precum modDir..
+         */
         $modResDir = RES_PATH.$mod->modDir;
          if (!is_dir($modResDir)) {
             mkdir($modResDir,0777,true);

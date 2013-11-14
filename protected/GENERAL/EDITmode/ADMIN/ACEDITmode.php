@@ -45,6 +45,8 @@ class ACEDITmode
          if(isset($_SESSION['activeEdit'])) {
              $activeValue = "stop live edit";
              $activeMeth = "deactivate" ;
+             $this->C->jsTalk = " fmw.liveEdit = true;";
+
              $this-> activateLiveEdit();
          } else {
              $activeValue = "start live edit";
@@ -52,6 +54,16 @@ class ACEDITmode
          }
         // isset($_SESSION['activeEdit']) ? "stop live edit" : "start live edit";
          //isset($_SESSION['activeEdit']) ? "deactivate" : "activate";
+
+         if(!is_object($this->C)){
+             error_log("ACEDITmode - aparent nu am pointer la core");
+             return '';
+         }
+        else if(!is_object($this->C->TOOLbar)){
+            error_log("ACEDITmode - aparent nu am pointer la TOOLbar");
+             return '';
+        }
+        error_log("ACEDITmode - teoretic ar trebui sa am C si TOOLbar");
 
          $this->C->TOOLbar->ADDbuttons(
             "<span class='iedit-toolbarBtt'>

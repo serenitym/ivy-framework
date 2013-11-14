@@ -1,0 +1,14 @@
+1. Create your data base from core.sql
+2. configure your project to use that data base ( ex: config.developement.php )
+
+3. Think about what modules do you want to use
+    - your modules
+    - your local modules
+    - your plugins
+
+4. configure core to use does modules
+
+5. configure each module acordingly
+
+6. configure your main Module / manager
+
