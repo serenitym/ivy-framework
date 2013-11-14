@@ -213,6 +213,7 @@ class Ccore extends Cunstable
             /**
              * pentru a initia un modul putem trimite "mgrName"
              * nu neapara idC || idTree
+             * - aceasta proprietate poate fi setata si din cofigul lui core.yml
              */
             if(isset($_REQUEST['mgrName']))
             $this->Set_currentManager($_REQUEST['mgrName']);

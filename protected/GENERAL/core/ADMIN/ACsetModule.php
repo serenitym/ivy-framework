@@ -20,15 +20,15 @@ class ACsetModule extends CLcore
         }*/
     }
 
-    public function Module_Build($modName, $modType, $adminFolder='ADMIN/', $adminPrefix='AC')
+    public function Module_Build($caller, $modName, $modType, $adminFolder='ADMIN/', $adminPrefix='AC')
     {
-
         if (isset($this->adminMods[$modName]) ) {
-            parent::Module_Build($modName,$modType,$adminFolder,$adminPrefix);
+           $obj =  parent::Module_Build($caller, $modName,$modType,$adminFolder,$adminPrefix);
 
         } else {
-            parent::Module_Build($modName,$modType);
+          $obj =   parent::Module_Build($caller, $modName,$modType);
         }
+        return $obj;
     }
 
     public function Module_Build_objProp($mod, $objName, $adminFolder='ADMIN/', $adminPrefix='A')

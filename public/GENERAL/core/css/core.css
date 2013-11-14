@@ -1,18 +1,12 @@
 @charset "UTF-8";
 /*RESETS */
 /*p{ margin: 0.5em 0em; }*/
-body, textarea{line-height: initial;
-    font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
-    font-size: 9pt;
-}
+body, textarea{line-height: initial; font-family: sans-serif, Arial, Verdana, "Trebuchet MS"; font-size: 9pt; }
 form{margin: initial;}
 
 .ui-datepicker {font-size: 11px !important;}
 
-.cke_dialog_ui_vbox > table {
-    width: auto !important;
-
-}
+.cke_dialog_ui_vbox > table { width: auto !important; }
 /*==================================================== [ATmpl] =============== */
 
 /* divul pentru ADMIN template */
@@ -42,8 +36,7 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 
 
 .clearfix {clear: both;}
-.no-display{ display: none;}
-.hidden, .hiddeHidden {display: none;}
+.no-display, .hidden, .hiddeHidden { display: none;}
 .pull-left {float: left;}
 .pull-right {float: right;}
 /*
@@ -59,13 +52,9 @@ form[id^="EDITform"] .ATmpl .hidden {display: none;}
 .b{font-weight: bold;}
 
 
-/*==================================================== [elements] =========== */
 
-.label-mini{
-    padding: 1px 5px;
-    font-size: 10px;
-    line-height: 12px;
-}
+
+/*==================================================== [elements] =========== */
 
 .hr-shadow {
     box-shadow: 0px -8px 7px 4px white, 0 5px 30px #bbb;
@@ -253,10 +242,28 @@ textarea.ivy-light:focus{
 
 
 
+/*==============================================[general positioning ]=============*/
+.ivy-clearfix {clear: both;}
+.ivy-pull-left {float: left;}
+.ivy-pull-right {float: right;}
+.ivy-center {margin: 0px auto;}
+
+.ivy-hidden{ display: none;}
+.ivy-block {display: block; position: relative;}
+.ivy-it {font-style: italic}
+.ivy-ib { display: inline-block; vertical-align: text-top;}
+.ivy-vt {vertical-align: top;}
+.ivy-btn-radio{vertical-align: top;}
+
+.ivy-b{font-weight: bold;}
+
+
 /*==============================================[general styling ]=============*/
-.Cgray {color: gray;}
 
 .widthFull{width: 100%;}
+.width75-pr {width: 75%;}
+.width70-pr {width: 70%;}
+
 .width25 {width: 25px;}
 .width50 {width: 50px;}
 .width100{width: 100px;}

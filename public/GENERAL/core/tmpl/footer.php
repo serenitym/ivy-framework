@@ -26,8 +26,8 @@
        ivyMods = {    set_iEdit:{ /*modName : function(){}*/       } };
        <?php echo  (!$core->admin ? ''
              : "fmw.admin  = 1;").
-               "fmw.idC    = $core->idNode;
-                fmw.idT    = $core->idTree;
+               "fmw.idC    = ".($core->idNode ?: '""' ).";
+                fmw.idT    = ".($core->idTree ?: '""').";
                 fmw.pubPath = '".FW_PUB_PATH."';
                ";
        ?>
