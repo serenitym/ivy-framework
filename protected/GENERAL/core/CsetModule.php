@@ -610,6 +610,10 @@ class CsetModule extends CgenTools
         $this->Module_configCorePointers($obj);
         $this->Module_configNodePointers($obj);
 
+        /**
+         * modulul / callerul isi asuma raspunderea de necesitatile handlerului
+         * in yml vor fi definite props ale objProps_links
+         */
         if(isset($mod->objProps_links[$objName])){
             $this->Obj_configExtraLinks($mod, $obj, $mod->objProps_links[$objName]);
         } else {
