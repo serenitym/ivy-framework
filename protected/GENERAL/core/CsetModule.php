@@ -170,7 +170,7 @@ class CsetModule extends CgenTools
 
         $template = isset($obj->template) ? $obj->template : '';
 
-        $this->Set_incFiles($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
+        $this->Set_incFiles($obj->modName,$obj->modTypePub,$extension,$folder,$template,$adminFolder);
 
         //echo "CsetModule - Module_Set_incFiles {$obj->modName} template_file = $obj->template_file <br> ";
         /**
@@ -179,7 +179,7 @@ class CsetModule extends CgenTools
         */
         if (isset($obj->template_file)) {
              $folder = $folder."/"."{$folder}_".$obj->template_file;
-             $this->Set_incFiles($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
+             $this->Set_incFiles($obj->modName,$obj->modTypePub,$extension,$folder,$template,$adminFolder);
         }
 
     }
@@ -420,14 +420,23 @@ class CsetModule extends CgenTools
     public function Module_configAttributes(&$mod,$modType,$modName)
     {
         #date despre acest modul
-        $mod->modName = $modName;
-        $mod->modType = $modType;
-        $mod->modDir  = $modType.'/'.$modName.'/';
+        $mod->modName    = $modName;
+        $mod->modType    = $modType;
+        $mod->modDir     = $modType.'/'.$modName.'/';
+
+        // modulele pot avea partea de templating locala de exemplu
+        $mod->modTypePub =  is_dir(FW_PUB_PATH.'LOCALS/'.$modName)
+                            ? 'LOCALS'
+                            : $mod->modType;
+        $mod->modDirPub  = $mod->modTypePub.'/'.$modName.'/';
+
+        //echo "modName = {$modName} , {$modType} , pubPart = {$mod->modDirPub} <br> ";
+
 
         #error_log("[ ivy ] ".'modName '.$modName."\n\n");
     }
     /**
-     * Setarea proprietatilor in plus din core sau din alte module
+     * configure external properties ( pointers) from other objects
      * @param $mod
      * @param $objREQ = ['modName': 'varName1', 0: 'varName2']
      *     array cu numele variabilelor dorite din CsetINI
@@ -458,11 +467,12 @@ class CsetModule extends CgenTools
     }
 
     /**
-     *
+     * cofigure external object as pointers tu object $obj from $mod
      * @param $mod - obiectul care contine metodele
      * @param $obj - obiectul pentru care vor fi creti pointerii
-     * @param $links - array cu numele obiectelor din cadrul obiectului nod la care
+     * @param $links - array cu numele obiectelor din cadrul obiectului mod la care
      *               se doreste sa se creeze un pointer
+     *               = ['handler1', 'handler2', 'handler3', ....]
      *
      * @uses
      */

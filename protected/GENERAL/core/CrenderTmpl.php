@@ -219,6 +219,13 @@ class CrenderTmpl extends item
 
 
     //=====================[ render Module ]====================================
+    // Get_path methods
+    public function Module_Get_pathTmpl(&$mod, $templateDir, $templateFile)
+    {
+        return $mod->modDirPub
+                    . $templateDir.'/tmpl/'
+                        . $templateFile.'.html';
+    }
 
     public function Render_Module($mod, $tmplFile='')
     {
