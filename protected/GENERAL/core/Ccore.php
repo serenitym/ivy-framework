@@ -5,6 +5,8 @@ class Ccore extends Cunstable
 
     public $modName      = 'core';
     public $modType      = 'GENERAL';
+    public $modTypePub      = 'GENERAL';
+    public $modDirPub      = 'GENERAL/core';
     public $mainTemplate = '';
     public $mainModel    = '';
 

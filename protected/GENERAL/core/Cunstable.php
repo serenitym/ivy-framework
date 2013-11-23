@@ -7,13 +7,6 @@
 class Cunstable extends Ctree{
 
 
-    // Get_path methods
-    public function Module_Get_pathTmpl(&$mod, $templateDir, $templateFile)
-    {
-        return $mod->modDir
-                    . $templateDir.'/tmpl/'
-                        . $templateFile.'.html';
-    }
 
     // autonoma
     public function Get_resPath($modType, $modName, $resName, $lang='')

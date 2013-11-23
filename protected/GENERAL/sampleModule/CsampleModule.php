@@ -18,13 +18,15 @@ class CsampleModule{
     # date ale modu
     $mod->idNode    =             # id-ul categoriei curente
     $mod->idTree    =             # id-ul parintelui originar
-    $mod->level  =             # levelul din tree la care se afla cat
+    $mod->level     =             # levelul din tree la care se afla cat
     $mod->mgrName   =             # tipul categoriei curente ex: MODELS / LOCALS
 
 
     #date despre acest modul
     $mod->modName =            # numele modulului
     $mod->modType =            # tipul acestuia : GENERAL/ LOCALS /MODELS/ PLUGINS
+ *  $mod->modDir  = $modType.'/'.$modName.'/';
+ *  $mod->modDirPub  = [ $modType, LOCALS ].'/'.$modName.'/';
  *
  *
  *
