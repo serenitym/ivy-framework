@@ -28,7 +28,7 @@ if (!$dbLink->set_charset("utf8")) {
 }
 
 // config???
-ini_set("session.gc_probability", 75);
+ini_set("session.gc_probability", 100);
 ini_set("session.gc_divisor", 100);
 ini_set("session.gc_maxlifetime", 3600);
 
