@@ -8,7 +8,7 @@
  * @author  Ioana Cristea
  * @license AGPLv3 {@link http://www.gnu.org/licenses/agpl-3.0.txt}
  */
-class CgenTools extends Cmanage{
+class CgenTools extends CmethDB{
 
    var $rendermod;
    var $historyArgs;   #array setat de model
@@ -218,6 +218,45 @@ class CgenTools extends Cmanage{
     {
         return str_replace(BASE_URL, '', $full_urlPath);
     }
+
+    /**
+    * resName poate fi aflat in 2 moduri
+    *  1. din numele modulului
+    *  2. sau din numele resFile ( declarat in tabelul ITEMS )
+    *
+    * 1 - este valabil pentru orice mdoul
+    * 2 - este valabil doar pentru acel modul care este manager curent al paginii
+    * adica $mod->modName = $this->mgrName;
+    */
+    public function Module_Get_pathRes(&$mod, $resName='', $lang='')
+    {
+        if (!$resName) {
+           // daca modulul este managerul curent al paginii
+           // see Ccore->Set_currentNode()
+            //if ($this->mgrName == $mod->modName)
+            $resName = $this->mgrName == $mod->modName
+                     ? $this->nodeResFile
+                     : $mod->modName;
+        }
+        if (!$lang) {
+            $lang = $this->lang;
+        }
+
+        /**
+         * presupunem deci ca modulul a fost instantiat prin core
+         * si core a setat lucruri precum modDir..
+         */
+        $modResDir = RES_PATH.$mod->modDir;
+         if (!is_dir($modResDir)) {
+            mkdir($modResDir,0777,true);
+        }
+
+        $resPath = $modResDir."{$lang}_{$resName}.html";
+
+        return $resPath;
+
+    }
+
 
     /*=================[ END - meth - images] ====================================*/
 

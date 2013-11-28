@@ -37,14 +37,28 @@ class ClassLoader {
         $this->initClassList();
     }
 
-    public function loadClass($className) {
-        if ( !array_key_exists($className, $this->classList) && !$this->refreshed ) {
+    public function loadClass($className)
+    {
+        $packageClass = str_replace('_', '/', $className);
+        //echo $packageClass . '.php ... ';
+
+        if (stream_resolve_include_path($packageClass . '.php')) {
+            //echo "in path.\n<br>";
+            include_once $packageClass . '.php';
+            return true;
+        } elseif ( !array_key_exists($className, $this->classList) && !$this->refreshed ) {
+            //echo "trying class list.\n<br>";
             $this->refreshClassList();
         }
-        include_once($this->classList[$className]);
+        if (substr($this->classList[$className], -4, 4) === ".php") {
+            include_once $this->classList[$className] ;
+        } else {
+            return false;
+        }
     }
 
-    private function initClassList() {
+    private function initClassList()
+    {
 
 
         if (file_exists(self::$saveFile)) {
@@ -55,22 +69,26 @@ class ClassLoader {
         }
     }
 
-    private function refreshClassList() {
+    private function refreshClassList()
+    {
         $this->classList = $this->scanDirectory(FW_INC_PATH);
+                         //+ $this->scanDirectory('/usr/share/php');
         $this->refreshed = TRUE;
 
         $this->saveClassList();
     }
 
 
-    private function openFile() {
+    private function openFile()
+    {
         if (($handle = fopen(self::$saveFile, "w+") === FALSE))
             throw new Exception("File cannot be opened for writing!");
         chmod(self::$saveFile, 0777);
         return $handle;
     }
 
-    private function saveClassList() {
+    private function saveClassList()
+    {
 
         try {
             $handle = $this->openFile();

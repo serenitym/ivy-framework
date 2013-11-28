@@ -9,29 +9,39 @@
  *
  * => se vor folosi doar numere 0 / 1
 */
-trigger_error($_POST['parsePOSTfile'],E_USER_NOTICE);
-
 require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
 
-$_POST['restoreCore'] = !isset($_POST['restoreCore']) ? 1 : intval($_POST['restoreCore']);
-if ($_POST['restoreCore'] && file_exists(VAR_PATH.'tmp/sercore.txt')) {
+// se face restore la core doar daca se cere explicit
+//$_POST['restoreCore'] = !isset($_POST['restoreCore']) ? 0 : intval($_POST['restoreCore']);
+if ($_POST['sessionId'] ) {
 
-    error_log("[ ivy ] "."Restore Core restoreCore = ".$_POST['restoreCore']);
-    $sercore  = file_get_contents(VAR_PATH.'tmp/sercore.txt');
-    $core     = unserialize($sercore);
+    $sercorePath = VAR_PATH.'tmp/sessions/'.$_POST['sessionId'].'/sercore.txt' ;
+
+    if (file_exists($sercorePath)) {
+        //echo "Sunt incerc sa preiau core din ".$sercorePath;
+        //var_dump($_POST);
+
+        error_log("[ ivy ] "."Restore Core cu sessionId  = ".$_POST['sessionId']);
+        $sercore  = file_get_contents($sercorePath);
+        $core     = unserialize($sercore);
+        $core->wakeup();
+
+
+    }
 
 } else {
-
-    echo "
-    <div class='formFBK'>
-        Fisierul sercore.txt nu exista sau POST['restoreCore'] = "
-        .$_POST['restoreCore']." cu tipul ".gettype($_POST['restoreCore'])
-    ."</div>";
+    error_log( "Nu se cere Restore Core ");
 }
 
 //=========================================================================
 if (isset($_POST['parsePOSTfile'])) {
     include_once FW_INC_PATH.$_POST['parsePOSTfile'];
 }
+//trigger_error($_REQUEST['ajaxReqFile'],E_USER_NOTICE);
+
+if (isset($_REQUEST['ajaxReqFile'])) {
+    include_once FW_INC_PATH.$_REQUEST['ajaxReqFile'];
+}
+
 
  /* echo FW_INC_PATH.$_POST['parsePOSTfile'];*/

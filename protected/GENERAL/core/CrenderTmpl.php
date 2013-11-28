@@ -64,26 +64,27 @@ class CrenderTmpl extends item
         // pentrua a se putea face referinta din cadrul templateului la
         //obiectul principal chemat acest fromArr
         $o  = &$obj;
+        $co = $obj->template_context ?: '';
+
         $display = '';
         eval("\$display = \"$tmplContent\";");
         return $display;
     }
     public function Render_assoc( &$aR, $obj='', $tmplType='str', $tmpl)
     {
-        if(!is_array($aR) || !count($aR) > 0) {
-            return $this->debugMess("Render_array: There are no items <br>");
-
-        } else {
-
-            $content = $this->Get_template($tmpl,'Str', $tmplType);
-            if (!$content) {
-               return $this->debugMess("Render_array: Templateul nu a putu fi
-                                         randat , Check logs <br>");
-
-           } else {
-                return $this->Render_assocTmplContent($aR, $content, $obj);
-            }
+        if( (!is_array($aR) || !count($aR) > 0) && !is_object($aR)) {
+            error_log("Render_assoc: There are no items ");
+            return '';
         }
+
+        $content = $this->Get_template($tmpl,'Str', $tmplType);
+        if (!$content) {
+           error_log("Render_assoc: Templateul nu a putu"
+                    ." fi randat , Check logs ");
+           return '';
+        }
+
+        return $this->Render_assocTmplContent($aR, $content, $obj);
 
     }
 
@@ -113,7 +114,7 @@ class CrenderTmpl extends item
     public function Render_items ($items, $obj='' , $tmplType='str', $tmpl)
     {
         if(!is_array($items) || !count($items) > 0) {
-            return $this->debugMess("Render_items: There are no items <br>");
+            return "<i>Coming soon</i>";
 
         } else {
             $content = $this->Get_template($tmpl,'Str', $tmplType);
@@ -138,6 +139,8 @@ class CrenderTmpl extends item
         $display = '';
         // pentrua a se putea face referinta din cadrul templateului la obiectul principal chemat acest fromArr
         $o  = &$obj;
+        $co = $obj->template_context ?: '';
+
         foreach($items AS $key => $i)
         {
             $displayItem = '';
@@ -181,6 +184,8 @@ class CrenderTmpl extends item
     {
         // use $o in templates for easy edit end reading
          $o = &$obj;
+         $co = $obj->template_context ?: '';
+
          $display = '';
          eval("\$display = \"$tmplContent\";");
          return $display;
@@ -214,6 +219,13 @@ class CrenderTmpl extends item
 
 
     //=====================[ render Module ]====================================
+    // Get_path methods
+    public function Module_Get_pathTmpl(&$mod, $templateDir, $templateFile)
+    {
+        return $mod->modDirPub
+                    . $templateDir.'/tmpl/'
+                        . $templateFile.'.html';
+    }
 
     public function Render_Module($mod, $tmplFile='')
     {
@@ -281,7 +293,7 @@ class CrenderTmpl extends item
 
                     return file_get_contents($resPath);
                 } else {
-                    return 'CrenderTmpl - get_resContent : Nu exista continut la pagina <b>'.$resPath.'</b>';
+                   error_log( 'CrenderTmpl - get_resContent : Nu exista continut la pagina <b>'.$resPath.'</b>');
                 }
 
              }
@@ -289,8 +301,6 @@ class CrenderTmpl extends item
                  return 'Nu exista continut la pagina <b>'.$resPath.'</b>';
              }
          }
-
-
     }
 
     public function Render_ModulefromRes($obj, $resName='')

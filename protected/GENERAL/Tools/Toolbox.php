@@ -18,19 +18,19 @@ class Toolbox extends LibToolbox
 
 
     static function clearSubmit()
-    { /*{{{*/
+    {
         unset($_POST);
         header("Location: http://".$_SERVER['REQUEST_URI']);
-    }/*}}}*/
+    }
 
     static function http_response_code($uri)
-    {/*{{{*/
+    {
         $headers = get_headers($uri);
         return substr($headers[0], 9, 3);
-    }/*}}}*/
+    }
 
     static function dump($var, $varName = 'variable')
-    {/*{{{*/
+    {
         list(, $trace) = debug_backtrace(false);
         $file = substr(strrchr(dirname($trace['file']), '/'), 1);
         $file .= '/' . basename($trace['file']);
@@ -41,10 +41,10 @@ class Toolbox extends LibToolbox
         );
         var_dump($var);
         print "</small>";
-    }/*}}}*/
+    }
 
     static function postRequest($url, $data, $referer='')
-    {/*{{{*/
+    {
 
     // Convert the data array into URL Parameters like a=b&foo=bar etc.
     $data = http_build_query($data);
@@ -104,12 +104,27 @@ class Toolbox extends LibToolbox
         'header' => $header,
         'content' => $content
     );
-    }/*}}}*/
+    }
+
+    static function relocate($location='', $ANCORA='',$paramAdd='')
+    {
+        unset($_POST);
+        //$location = ($location=='' ? $_SERVER['REQUEST_URI'] :$location);
+        if (empty($location)) {
+            $location = Toolbox::curURL();
+        }
+
+        //header("Location: ".$location.$paramAdd.$ANCORA);
+
+        echo "<script type='text/javascript'>window.location = '$location';</script>";
+        echo "<a href='$location'>Click here if the browser does not redirect you automatically</a>";
+        exit;
+    }
 
     /* Filesystem tools */
 
     static function pathExists($file)
-    {/*{{{*/
+    {
         if (file_exists($file)) {
             return pathinfo($file);
         } else {
@@ -117,10 +132,10 @@ class Toolbox extends LibToolbox
                 'File or directory does not exist ['. $file .']'
             );
         }
-    }/*}}}*/
+    }
 
     static function Fs_writeTo($file, $data, $mode='w')
-    {/*{{{*/
+    {
         try {
             self::pathExists($file);
         } catch (Exception $e) {
@@ -165,10 +180,10 @@ class Toolbox extends LibToolbox
                 file_put_contents($file, $data, FILE_APPEND);
                 break;
         }
-    }/*}}}*/
+    }
 
     static function rmkdir($path, $mode = 0777)
-    {/*{{{*/
+    {
         $dirs = explode(DIRECTORY_SEPARATOR, $path);
         $count = count($dirs);
         $path = '.';
@@ -179,42 +194,42 @@ class Toolbox extends LibToolbox
             }
         }
         return true;
-    }/*}}}*/
+    }
 
     static function createFile($file)
-    {/*{{{*/
+    {
         if (!touch($file)) {
             throw new Exception('Cannot create file ' . basename($file) . '!');
         } else {
             return true;
         }
-    }/*}}}*/
+    }
 
     static function createDir($dir)
-    {/*{{{*/
+    {
         if (!mkdir($dir)) {
             throw new Exception('Cannot create directory ' . $dir . '!');
         } else {
             return true;
         }
-    }/*}}}*/
+    }
 
     /* Traits import below */
 
-    /* caseTools */
+    /* string tools */
 
     static function capitalize ($match)
-    {/*{{{*/
+    {
         return $match[1] . $match[2] . ucfirst($match[3]);
-    }/*}}}*/
+    }
 
     static function camelize ($match)
-    {/*{{{*/
+    {
         return ucfirst($match[3]);
-    }/*}}}*/
+    }
 
     static function sentenceCase($str)
-    {/*{{{*/
+    {
         // search for punctuation which should precede uppercase letters, then
         // send the matches to callback function
         //
@@ -226,21 +241,33 @@ class Toolbox extends LibToolbox
 
         // regex doesn't make the first letter uppercase, doing it 'manually'
         return ucfirst($str);
-    }/*}}}*/
+    }
 
     static function camelCase($str)
-    {/*{{{*/
+    {
         $str = preg_replace_callback(
             '[(\?|\!|\.|\b)(\s)*(\w*)]', 'self::camelize', $str
         );
         return lcfirst($str);
-    }/*}}}*/
+    }
 
+    function randomString($length)
+    {
+        $chars = "0123456789."
+               . "/qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+        //only allowed chars in the blowfish salt.
+        $size = strlen($chars); $str = "";
+        for ($i = 0; $i < $length; $i++)
+            $str .= $chars[rand(0, $size - 1)]; // strings can be used as char arrays
+            // Yes, I am aware this salt isn't generated using the OS source.
+            // use mycrypt_create_iv or /dev/urandom/
+        return $str;
+    }
 
     /* countryTools */
 
     static function codeToCountry ($code, $file='data/countries.json')
-    {/*{{{*/
+    {
         if (!is_file($file) || !is_readable($file)) {
             return false;
         } else {
@@ -254,21 +281,22 @@ class Toolbox extends LibToolbox
             $country = $json->name ?: 'n/a';
         }
         return $country;
-    }/*}}}*/
+    }
 
 
     /* urlTools */
 
     static function curURL()
-    {/*{{{*/
-        $https = strlen(strval($_SERVER['HTTPS'])) == 0
-                ? 'http://'
-                : 'https://';
-        return $https.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-    }/*}}}*/
+    {
+        $http = 'http://';
+
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || $_SERVER['SERVER_PORT'] == 443) {
+                $http = 'https://';
+            }
+
+        return $http.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+    }
 
 }
 /* vim: set ft=php: set fdm=marker: */
-/**
- *
- */

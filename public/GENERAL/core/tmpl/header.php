@@ -1,37 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset=utf-8>
-
-
-
+    <meta charset="utf-8">
     <?php
-
-        echo
-
-           //$core->SEO->DISPLAY().
-           //'<base href="'.PUBLIC_URL.'" />'.
-
-           (isset($core->admin)
-                   ? ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
-                   : '')
-           .'
-            <!-- <link rel="stylesheet" href="fw/GENERAL/core/css/core.css"> -->
-            <script type="text/javascript"  src="assets/jquery/jquery-1.7.2.min.js"></script>';
-
-
-            $header_TMPL = tmpl_inc.'header.php';
-            if(is_file($header_TMPL)) require_once($header_TMPL);
-
-           echo  $core->cssInc;
-
+    echo defined("FAV_ICON")
+               ? '<link rel="icon" type="image/png" href="' . FAV_ICON . '">'
+               : '<link rel="icon" type="image/png" href="' . TMPL_URL . 'favicon.ico">';
     ?>
 
-        <link rel="icon" type="image/png"
-        href="<?php echo FAV_ICON; ?>">
+    <script type="text/javascript"  src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
+    <!--<script type="text/javascript"  src="assets/jquery/jquery-1.8.3.min.js"></script>-->
 
+    <?php
+        if(isset($core->admin) && $core->admin) {
+            $core->cssIncPaths[] = "assets/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.min.css";
+        }
+        /*echo
+           (!isset($core->admin) ? '' :
+            ' <link rel="stylesheet" href="assets/jquery-ui-1.8.19.custom/development-bundle/themes/base/jquery.ui.all.css">'
+           ).
+          $core->cssInc;*/
 
+        $header_TMPL = TMPL_INC . 'header.php';
+        if(is_file($header_TMPL)) {
+            require_once($header_TMPL);
+        }
+    ?>
+    <script type="text/javascript">
+        head.load( "<?php echo implode('", "', $core->cssIncPaths);  ?> " );
+    </script>
 
 </head>
-
-<body >
+<body>

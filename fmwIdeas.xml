@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<review xmlns="http://plugins.intellij.net/revu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://plugins.intellij.net/revu http://plugins.intellij.net/revu/ns/revu_1_0.xsd" name="fmwIdeas" status="reviewing" shared="true">
+  <history createdBy="[unknown]" lastUpdatedBy="[unknown]" createdOn="2013-10-21 11:17:39 +0300" lastUpdatedOn="2013-10-21 11:28:46 +0300"/>
+  <goal>Telul este de a scrie ideile - bablingurile undeva
+</goal>
+  <referential>
+    <priorities>
+      <priority order="0" name="low"/>
+      <priority order="1" name="medium"/>
+      <priority order="2" name="high"/>
+    </priorities>
+    <tags>
+      <tag name="concept"/>
+      <tag name="feature"/>
+      <tag name="optimization"/>
+      <tag name="refactor"/>
+    </tags>
+    <users>
+      <user displayName="ioana" login="ioana" roles="admin,reviewer,author"/>
+    </users>
+  </referential>
+  <filescope pathPattern="file[*]:*//*"/>
+  <issues>
+    <issue filePath="public/fw/MODELS/blog/tmpl_bsea/js/blogRecord.js" summary="poate ca ar trebui embeduita cumva in EDITmode ca feature general" localRev="1382442824050" lineStart="-1" lineEnd="-1" hash="288" tags="concept,feature" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-22 14:53:44 +0300" lastUpdatedOn="2013-10-22 14:53:44 +0300"/>
+    </issue>
+    <issue summary="Templateuri locale" lineStart="-1" lineEnd="-1" hash="-337559695" tags="optimization" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:27:44 +0300" lastUpdatedOn="2013-10-21 11:29:07 +0300"/>
+      <desc>idea este sa caute / creeze path-urile catre template intai catre
+    LOCALS si apoi daca path-ul nu exista sa caute via modType</desc>
+    </issue>
+    <issue summary="module cu yml-uri diferite" lineStart="-1" lineEnd="-1" hash="777807995" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:33:17 +0300" lastUpdatedOn="2013-10-21 11:33:17 +0300"/>
+      <desc>setari diferite in functie de ceva anume? automatizare? 
+
+ ex: am modulul contact
+ cu paginile - contact si cariere
+ pentru contact sa zicem ca nu vreau upload de fisiere
+ dar pentru cariere vreau . Deci? solutie?</desc>
+    </issue>
+    <issue summary="obiecte instantiate cu construct($C) - deprecated" lineStart="-1" lineEnd="-1" hash="380472870" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:36:19 +0300" lastUpdatedOn="2013-10-21 11:36:19 +0300"/>
+    </issue>
+    <issue summary="instantiere ACmodule" lineStart="-1" lineEnd="-1" hash="-77690061" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:37:51 +0300" lastUpdatedOn="2013-10-21 11:37:51 +0300"/>
+      <desc> - ma cam deranjaza setarea in plus care trebuie sa o fac in tmpl_AblackSea.yml
+     pe admin_MOD
+    - o tot uit si este sacaitoare - parca parca as vrea sa scap de ea...</desc>
+    </issue>
+    <issue summary="user pe modul de admin" lineStart="-1" lineEnd="-1" hash="0" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:38:37 +0300" lastUpdatedOn="2013-10-21 11:38:59 +0300"/>
+      <desc>user pe modul de admin cu incarcare de ACcore  si user simplu
+logare diferentiata - user / userAdmin</desc>
+    </issue>
+    <issue summary="js + css mini" lineStart="-1" lineEnd="-1" hash="696597410" tags="feature" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:40:12 +0300" lastUpdatedOn="2013-10-21 11:40:12 +0300"/>
+    </issue>
+    <issue summary="Module locale si generale" localRev="1382345142960" lineStart="-1" lineEnd="-1" hash="-1812850527" tags="concept" status="to_resolve">
+      <history createdBy="ioana" lastUpdatedBy="ioana" createdOn="2013-10-21 11:45:42 +0300" lastUpdatedOn="2013-10-21 11:45:42 +0300"/>
+      <desc>CUmva sa testeze daca exista modulul local definit si daca da sa il instantieze pe cel local?
+ex CLmoduleName</desc>
+    </issue>
+  </issues>
+</review>

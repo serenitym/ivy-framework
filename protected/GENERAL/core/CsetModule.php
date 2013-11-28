@@ -4,44 +4,50 @@
  * **Create object Module**
  *
  * **proprietati magice**
- *  + resPath
- *  + displayPage
- *  + displayPathRes
+ *
+ * * resPath
+ * * displayPage
+ * * displayPathRes
  *
  * **metode magice**
- *  + _init_
- *  + _setRes_
- *  + _render_()
+ *
+ * * _init_
+ * * _setRes_
+ * * _render_()
  *
  * **Setting properties for Module**
- *  - configCorePointers
- *      + DB
- *      + admin
- *      + LG
- *      + lang
- *      + nodeResFile
- *      + idTree
- *      + mgrName
  *
- *  - configAttributes
- *      + modName
- *      + modType
- *      + modDir  = modType / modName
+ * * configCorePointers
  *
- *  - FS_configYamlProps
- *      + objREQ  = daca se doresc proprietati ale altor module
- *      + include = daca se doreste citirea unui alt yaml
- *      + template
- *      + template_file
+ *  - DB
+ *  - admin
+ *  - LG
+ *  - lang
+ *  - nodeResFile
+ *  - idTree
+ *  - mgrName
  *
- *      + assetsInc['js'] = array ('paths to other js like: /assets/...js');
- *      + assetsInc['css']
- *          - alte js-uri , css-uri de inclus
+ * * configAttributes
  *
- *      + assetsInc_{tmplFileName}['js', 'css']
- *       - alte js-uri , css-uri de inclus in functie de un template_file
+ *   + modName
+ *   + modType
+ *   + modDir  = modType / modName
  *
- * automatizari speciale:
+ * * FS_configYamlProps
+ *   + objREQ  = daca se doresc proprietati ale altor module
+ *   + include = daca se doreste citirea unui alt yaml
+ *   + template
+ *   + template_file
+ *
+ *   + assetsInc['js'] = array ('paths to other js like: /assets/...js');
+ *   + assetsInc['css']
+ *      - alte js-uri , css-uri de inclus
+ *
+ *   + assetsInc_{tmplFileName}['js', 'css']
+ *      - alte js-uri , css-uri de inclus in functie de un template_file
+ *
+ * * automatizari speciale:
+ *
  *   - module->_init_()
  *      - apelarea unei metode "magice" daca exista , dupa ce modulul a fost setat
  *   -_setRes_($resPath)
@@ -50,8 +56,16 @@
  */
 class CsetModule extends CgenTools
 {
+    public $cssInc = '';
+    public $cssIncPaths = array();
+    public $jsIncPaths = array();
+    //Modulele vor seta aceste jsTalk so the php can communicate with scrips
+    public $jsTalk ;
+    public $jsInc = '';
+    public $toolbarBtts = array();
 
-    #=============================================[ incHtmlTags ]===============
+
+    #=============================================[ module incHtmlTags ]========
     # 1
     public function Get_IncTag_js($SrcPath)
     {
@@ -65,41 +79,45 @@ class CsetModule extends CgenTools
         return "<link rel='stylesheet' href= '".$SrcPath."'  />"."\n";
     }
     # 2
-    public function Get_incHtmlTags($extension, $extPath, $extSrcPath)
+    public function Get_incHtmlTags($extension, $incPaths)
     {
-
-        //if(method_exists($this,"GET_INCtag_".$extension))
-        // echo "Get_incHtmlTags tring to get  =  $extSrcPath".'<br>';
-
         if (!method_exists($this,"Get_IncTag_".$extension)) {
-
-           // echo 'Get_incHtmlTags no method = '."Get_IncTag_".$extension.'<br>';
+            error_log("[ ivy ]".'Get_incHtmlTags no method = '."Get_IncTag_".$extension.'<br>');
             return '';
-
-        } else {
-            //echo "<br> Get_incHtmlTags cu extPath = $extPath <br>";
-            $tags = '';
-            if (is_dir($extPath)) {
-                $dir = dir($extPath);
-                while(false!== ($file=$dir->read()) )
-                {
-                    $arr_file = explode('.',$file);
-                    //echo "file found in $file <br>";
-
-                    if (end($arr_file) == $extension) {
-                        $tags .= $this->{"Get_IncTag_".$extension}($extSrcPath.$file);
-                       /* echo "$tags <br> <b>good tag </b> in ".$extSrcPath.$file
-                            ." <br> <b>functie aplicata</b> =  "."Get_IncTag_".$extension.'<br>';*/
-                    }
-                }
-                return $tags;
-            }
         }
 
+        //echo "<br> Get_incHtmlTags cu extPath = $extPath <br>";
+        $tags = '';
+        foreach($incPaths AS $srcPath) {
+             $tags .= $this->{"Get_IncTag_".$extension}($srcPath);
+        }
+        return $tags;
+
+    }
+    public function Get_incPaths($extension, $extPath, $extSrcPath){
+
+        if (!is_dir($extPath)) {
+            return false;
+        }
+
+        $incPaths = array();
+        $dir = dir($extPath);
+        while(false!== ($file=$dir->read()) )
+        {
+            $arr_file = explode('.',$file);
+            //echo "file found in $file <br>";
+
+            if (end($arr_file) == $extension) {
+                array_push($incPaths, $extSrcPath.$file);
+
+            }
+        }
+        return $incPaths;
     }
     # 3 - A
     /**
-     * utilizata cand se doreste css-ul sau js-ul unui anumit model (istantiat sau NEinstantiat)
+     * utilizata cand se doreste css-ul sau js-ul unui anumit model
+     * (istantiat sau NEinstantiat)
      *  - tagul de includere a fisierului va fi retinut in $this->INC_[extension]
      *
      *
@@ -110,7 +128,8 @@ class CsetModule extends CgenTools
      * @param string $template - templateul daca este necesar
      * @param string $adminFolder - ADMIN
      */
-    public function Set_incFiles($modName,$modType,$extension,$folder,$template='',$adminFolder='')
+    public function Set_incFiles($modName,$modType,$extension,$folder,
+        $template='',$adminFolder='')
     {
          if ($folder=='') {
             $folder = $extension;
@@ -122,9 +141,19 @@ class CsetModule extends CgenTools
          $ext_PATH         =   FW_PUB_PATH.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
          $ext_SRC_PATH     =   FW_PUB_URL.$modType.'/'.$modName.'/'.$tmpl.$adminFolder."$folder/";
 
-         $htmlTag = $this->Get_incHtmlTags($extension,$ext_PATH,$ext_SRC_PATH);
-         $this->{$extension."Inc"} .= $htmlTag;
-        //  echo "Set_incFiles - modName =  $modName  && htmltag = ".$htmlTag.'<br>';
+
+         $incPaths = &$this->{$extension."IncPaths"};
+         $htmlTags = &$this->{$extension."Inc"};
+
+         $newIncPaths = $this->Get_incPaths($extension,$ext_PATH,$ext_SRC_PATH);
+        if($newIncPaths) {
+
+            //var_dump($newIncPaths);
+            $incPaths  = array_merge($incPaths, $newIncPaths );
+            $htmlTags .=  $this->Get_incHtmlTags($extension,$newIncPaths);;
+            //  echo "Set_incFiles - modName =  $modName  && htmltag = ".$htmlTag.'<br>';
+        }
+
 
 
     }
@@ -141,15 +170,16 @@ class CsetModule extends CgenTools
 
         $template = isset($obj->template) ? $obj->template : '';
 
-        $this->Set_incFiles($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
+        $this->Set_incFiles($obj->modName,$obj->modTypePub,$extension,$folder,$template,$adminFolder);
 
+        //echo "CsetModule - Module_Set_incFiles {$obj->modName} template_file = $obj->template_file <br> ";
         /**
          * daca obiectul are setat un template file atunci se va cauta un
          * path = modType/ modName/ tmpl_tmplName/ js/ js_templateFileName/ ....js
         */
         if (isset($obj->template_file)) {
              $folder = $folder."/"."{$folder}_".$obj->template_file;
-             $this->Set_incFiles($obj->modName,$obj->modType,$extension,$folder,$template,$adminFolder);
+             $this->Set_incFiles($obj->modName,$obj->modTypePub,$extension,$folder,$template,$adminFolder);
         }
 
     }
@@ -158,7 +188,6 @@ class CsetModule extends CgenTools
      * Automatic html tag css/js inclusion for object
      *
      * @param $obj
-     * @param string $folder
      * @param string $adminFolder
      */
    public function Module_Set_incFilesJsCss(&$obj,$adminFolder='')
@@ -169,42 +198,93 @@ class CsetModule extends CgenTools
    }
 
    #============================================[hard includes]=================
-   #1
-   public function Module_Set_incFilesHard($extension,$srcPath)
+    // from local/ framework assets
+    #1
+    public function Module_Set_incFilesHard($extension,$srcPath)
    {
        if (method_exists($this,"Get_IncTag_".$extension)) {
+           $this->{$extension."IncPaths"}[] = $srcPath;
            $this->{$extension."Inc"} .= $this->{"Get_IncTag_".$extension}($srcPath);
        }
    }
-   #2
-   public function Module_Set_incFilesAssets($mod)
-   {
-      # default assets   $mod->INC_assets[js / css]
-      if (isset($mod->assetsInc)) {
-          foreach($mod->assetsInc AS $extension => $paths){
-              foreach($paths AS $srcPath) {
-                  $this->Module_Set_incFilesHard($extension, $srcPath);
-              }
-          }
-      }
-
-     /**
-     * Assets for a template file  $mod->INC_assets_tmplF[ template_file ] [js / csss]
+    #2
+    /**
+     * Refer yml conf:  assetsInc[js: [] ,css: []]  & assetsInc_tmlFileName[]
+     * @param $mod
      */
-     if ( isset($mod->template_file)
+    public function Module_Set_incFilesAssets($mod)
+    {
+        if (isset($mod->assetsInc)) {
+           foreach($mod->assetsInc AS $extension => $paths){
+               foreach($paths AS $srcPath) {
+                   $this->Module_Set_incFilesHard($extension, $srcPath);
+               }
+           }
+        }
+
+        // assetsInc_templateFileName
+        if ( isset($mod->template_file)
          && isset($mod->{'assetsInc_'.$mod->template_file})
-     ) {
-            $tmplFile_assets = &$mod->{'assetsInc_'.$mod->template_file};
+        ) {
+            /*echo "[ivy]Module_Set_incFilesAssets modName = ".$mod->modName
+                        ." template_file = ".$mod->template_file."<br>";*/
 
-            foreach($tmplFile_assets AS $extension => $paths)
-                foreach($paths AS $srcPath)
+            $tmplFile_assets = $mod->{'assetsInc_'.$mod->template_file};
+
+            foreach($tmplFile_assets AS $extension => $paths) {
+                foreach($paths AS $srcPath) {
                     $this->Module_Set_incFilesHard($extension, $srcPath);
-
-     }
-
-
-
+                    /*echo "[ivy]Module_Set_incFilesAssets extenstion = ". $extension
+                          ." srcPath = ".$srcPath."<br>";*/
+                }
+            }
+        }
    }
+    // from external
+    public function Set_incTagsExtern($extension, $tags)
+    {
+        $this->{$extension."Inc"} .= $tags;
+    }
+    //assetsExternal
+    /**
+     * Refer yml conf:  assetsExtern[js: '' ,css: '']  & assetsExtern_tmlFileName[]
+     * @param $mod
+     */
+    public function Module_Set_incFilesExtern($mod)
+    {
+        if (isset($mod->assetsExtern)) {
+           foreach($mod->assetsExtern AS $extension => $tags){
+               $this->Set_incTagsExtern($extension, $tags);
+           }
+        }
+
+        // assetsExtern_templateFileName
+        if ( isset($mod->template_file)
+         && isset($mod->{'assetsExtern_'.$mod->template_file})
+        ) {
+            $tmplFile_assets = &$mod->{'assetsExtern_'.$mod->template_file};
+
+            foreach($tmplFile_assets AS $extension => $tags) {
+                $this->Set_incTagsExtern($extension, $tags);
+            }
+        }
+
+    }
+
+    # 1
+    /**
+     * @param        $mod
+     * @param string $adminFolder
+     */
+    public function Module_incs($mod, $adminFolder='')
+    {
+        # preia si seteaza toate cele necesare pentru respectivul model
+        # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nodeResFile
+        # si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
+        $this->Module_Set_incFilesJsCss($mod,$adminFolder);
+        $this->Module_Set_incFilesAssets($mod);
+        $this->Module_Set_incFilesExtern($mod);
+    }
 
     #=========================================[ Yaml config]====================
     # 1
@@ -236,7 +316,7 @@ class CsetModule extends CgenTools
                                  && count($mod->$var_name) > 0 );
 
                 $mod->$var_name = $notEmptyArray
-                                  ? array_merge($mod->$var_name,$var_value)
+                                  ? array_merge_recursive($mod->$var_name,$var_value)
                                   : $var_value;
             }
 
@@ -320,36 +400,43 @@ class CsetModule extends CgenTools
         $mod->admin  =  &$this->admin;
         //$mod->LG     =  &$this->lang;
         $mod->lang   =  &$this->lang;
-        $mod->tree   =  &$this->tree;
 
+        // acelasi lucru cu modName
+        $mod->mgrName =  &$this->mgrName;
+        $mod->mgrType =  &$this->mgrType;
 
+    }
+    public function Module_configNodePointers(&$mod)
+    {
         # date ale modulului curent
+        $mod->tree        =  &$this->tree;
         $mod->idNode      =  &$this->idNode;
         $mod->idTree      =  &$this->idTree;
 
         $mod->nodeLevel   =  &$this->nodeLevel;
         $mod->nodeResFile =  &$this->nodeResFile;
-        // acelasi lucru cu modName
-        $mod->mgrName =  &$this->mgrName;
-        $mod->mgrType =  &$this->mgrType;
-
 
     }
-
     public function Module_configAttributes(&$mod,$modType,$modName)
     {
         #date despre acest modul
-        $mod->modName = $modName;
-        $mod->modType = $modType;
-        $mod->modDir  = $modType.'/'.$modName.'/';
+        $mod->modName    = $modName;
+        $mod->modType    = $modType;
+        $mod->modDir     = $modType.'/'.$modName.'/';
+
+        // modulele pot avea partea de templating locala de exemplu
+        $mod->modTypePub =  is_dir(FW_PUB_PATH.'LOCALS/'.$modName)
+                            ? 'LOCALS'
+                            : $mod->modType;
+        $mod->modDirPub  = $mod->modTypePub.'/'.$modName.'/';
+
+        //echo "modName = {$modName} , {$modType} , pubPart = {$mod->modDirPub} <br> ";
 
 
         #error_log("[ ivy ] ".'modName '.$modName."\n\n");
-
     }
-
     /**
-     * Setarea proprietatilor in plus din core sau din alte module
+     * configure external properties ( pointers) from other objects
      * @param $mod
      * @param $objREQ = ['modName': 'varName1', 0: 'varName2']
      *     array cu numele variabilelor dorite din CsetINI
@@ -378,6 +465,31 @@ class CsetModule extends CgenTools
         }
 
     }
+
+    /**
+     * cofigure external object as pointers tu object $obj from $mod
+     * @param $mod - obiectul care contine metodele
+     * @param $obj - obiectul pentru care vor fi creti pointerii
+     * @param $links - array cu numele obiectelor din cadrul obiectului mod la care
+     *               se doreste sa se creeze un pointer
+     *               = ['handler1', 'handler2', 'handler3', ....]
+     *
+     * @uses
+     */
+    public function Obj_configExtraLinks(&$mod, &$obj, $links)
+    {
+        error_log("[ivy]");
+        error_log(" [ivy] CsetModule - Obj_configExtraLinks : "
+            ." Incerc sa DEPENDINTELE obiectul cu numele {$obj->objName} ");
+        foreach($links as $linkName)
+        {
+            if(is_object($mod->$linkName)) {
+                error_log("[ivy] CsetModule - Obj_configExtraLinks ".
+                    "{$obj->objName} -> $linkName");
+                $obj->$linkName = &$mod->$linkName;
+            }
+        }
+    }
     # 2 + #2 - objConf
     /**
      * standard confing of a model REQ, CONF, mod-> [ objREQ, _init_() ]
@@ -401,6 +513,7 @@ class CsetModule extends CgenTools
                                                     $this->lang);*/
 
         $this->Module_configCorePointers($mod);
+        $this->Module_configNodePointers($mod);
         $this->Module_configAttributes($mod,$modType,$modName);
         $this->Module_Fs_configYamlProps($mod);
 
@@ -413,26 +526,39 @@ class CsetModule extends CgenTools
     }
 
     #=============================================[ Module initialization]======
-    # 1
-    /**
-     * seteaza requierments pentru modulul
-     * - config yml
-     * - js / css tags
-     *
-     * @param $modName
-     * @param $modType
-     * @param string $adminFolder
-     */
-    public function Module_Set($modName,$modType,$adminFolder='')
-    {
-        $this->Module_config($this->$modName,$modType,$modName);
-        # preia si seteaza toate cele necesare pentru respectivul model
-        # exemplu: seteaza configurarea lui din etc, ii seteaza cateva variabile utile cum ar fii DB, lang, LG, nodeResFile
-        # si incearca sa gaseasca o metoda set INI care actioneaza ca un al doilea construct
-        $this->Module_Set_incFilesJsCss($this->$modName,$adminFolder);
-        $this->Module_Set_incFilesAssets($this->$modName);
 
+    public function Build_object($caller,  $objFolder, $objModName, $objName, $adminFolder='', $adminPrefix='')
+    {
+#1
+        if (isset($caller->$objName) && is_object($caller->$objName) ) {
+            //echo "Obiectul care exista deja $modName <br>";
+            //var_dump($this->$modName);
+            error_log("[ ivy ] "."CsetModule - Build_object : Obiectul $objName este deja instantiat ");
+            return $caller->$objName;
+
+        }
+
+        $className        = $adminPrefix.$objName;
+        $classPath = FW_INC_PATH . $objFolder . "/$objModName/" . $adminFolder . $className . '.php';
+
+        if (!file_exists($classPath)) {
+            error_log("[ ivy ] "."CsetModule - Build_object : Nu  exista fisierul: $classPath ");
+            return false;
+        }
+
+        #2
+        $obj = new $className($caller);
+        error_log("[ivy]");
+        error_log("[ ivy ] "."CsetModule - Build_object : Modul instantiat = $className");
+        if(!is_object($obj)) {
+            error_log("[ ivy ] "."CsetModule - Build_object : ATENTIE
+            Modul instantiat = $className nu a fost instantiat corect");
+
+        }
+
+        return $obj;
     }
+
     # 2  + incTags #5  - A
     /**
      * Instantierea unui modul - obiect cu tot ce ii trebuie + css, js html tags for inclusion
@@ -451,47 +577,94 @@ class CsetModule extends CgenTools
      ***#4** apeleaza daca exista un al doilea __construct   al obiectului (daca metoda exista)
      *       util pentru procesele care depind de configurilea modulului
      *
-     * @param string $modName - numele modulului ce se doreste a fi creat
-     * @param string $modType -  'LOCALS'/ 'GENERAL' / 'MODELS' / 'PLUGINS'
-     * @param string $adminFolder -    '' / "ADMIN/"
-     * @param string $adminPrefixfix - 'C' / 'AC'
-     * @return bool obiectul creat / false daca nu a creat nimic
+     *
+     * @uses
+     * @return bool -  obiectul creat / false daca nu a creat nimic
      */
-    public function Module_Build($modName, $modType, $adminFolder='', $adminPrefix='C')
+
+    public function Module_Build($caller, $modName, $modType, $adminFolder='', $adminPrefix='C')
     {
-
         #1
-        if (isset($this->$modName) && is_object($this->$modName) ) {
-            //echo "Obiectul care exista deja $modName <br>";
-            //var_dump($this->$modName);
-            error_log("[ ivy ] "."CsetModule - Module_Build : Obiectul $modName este deja instantiat ");
-
-        } else {
-
-            $className        = $adminPrefix.$modName;
-            $classPath = FW_INC_PATH . $modType . "/$modName/" . $adminFolder . $className . '.php';
-
-            if (file_exists($classPath)) {
-
-                #2
-                //@todo: scos $this
-                error_log("[ ivy ] "."CsetModule - Module_Build : Modul instantiat = $className");
-                $this->$modName = new $className($this);
-                #3
-                $this->Module_Set($modName, $modType, $adminFolder);
-                #4
-                if (method_exists($this->$modName,"_init_")) {
-                    $this->$modName->_init_();
-                }
-                #5
-                return $this->$modName;
-            } else {
-                error_log("[ ivy ] "."CsetModule - Module_Build : Nu  exista fisierul: $classPath ");
-                return false;
-            }
+        //$this->$modName = new $className($this);
+        error_log("[ ivy ] CsetModule  - Module_Build trying to buid - {$modType} / {$modName}" );
+        $obj = $this->Build_object($caller, $modType, $modName, $modName, $adminFolder, $adminPrefix);
+        if(!is_object($obj)) {
+            error_log("[ ivy ] CsetModule  - Modulul NU a fost instantiat corect" );
+            return false;
+        } /*else {
+            error_log("[ ivy ] CsetModule  - Modulul Pare sa fi fost instantiat corect" );
+        }*/
+        #2
+        $this->Module_config($obj,$modType,$modName);
+        #4
+        if (method_exists($obj,"_init_")) {
+            $obj->_init_();
         }
+        #3
+        $this->Module_incs($obj, $adminFolder);
+        #4
+        return $obj;
 
     }
 
+    public function Module_configObjProp(&$mod, &$obj, $objName)
+    {
+        error_log("[ivy] CsetModule - Module_configObjrop : "
+            ." Incerc sa configurez obiectul cu numele {$objName}");
+        $modName = $mod->modName;
+
+        $obj->$modName = &$mod;
+        $obj->caller   = $modName;
+        $obj->objName  = $objName;
+
+        $this->Module_configCorePointers($obj);
+        $this->Module_configNodePointers($obj);
+
+        /**
+         * modulul / callerul isi asuma raspunderea de necesitatile handlerului
+         * in yml vor fi definite props ale objProps_links
+         */
+        if(isset($mod->objProps_links[$objName])){
+            $this->Obj_configExtraLinks($mod, $obj, $mod->objProps_links[$objName]);
+        } else {
+            error_log("[ivy] CsetModule - Module_configObjrop : "
+            ." ***** Nu exista dependente pentru obiectul cu numele {$objName}");
+        }
+    }
+
+    /**
+     * Construieste handlere pentru un anumit modul ( clase care exista tot in
+     * acelasi modul ) . Aici ne referim mai mult la idea de obiect si nu modul - obiect
+     * @param        $mod
+     * @param        $objName
+     * @param string $adminFolder
+     * @param string $adminPrefix
+     *
+     * @uses
+     * @return bool|object
+     */
+    public function Module_Build_objProp($mod, $objName, $adminFolder='', $adminPrefix='')
+    {
+        #1
+        $obj = $this->Build_object($mod, $mod->modType, $mod->modName, $objName,  $adminFolder, $adminPrefix);
+        if(!$obj) {
+           /* echo "[ivy] <b>Module_Build_objProp obiectul nu a putut fi instantiat
+            </b>- objName = {$objName} <br>";*/
+
+            return false;
+        }
+
+        #2
+        $this->Module_configObjProp($mod, $obj, $objName);
+        #3
+        if (method_exists( $obj,"_init_")) {
+            $obj->_init_();
+        }
+        #4
+        //echo "[ivy] <b>Module_Build_objProp </b>- objName = {$objName} <br>";
+        // var_dump($obj);
+        return $obj;
+
+    }
 
 }

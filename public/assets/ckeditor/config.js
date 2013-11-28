@@ -2,6 +2,11 @@
 Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
+$(document).ready( function(){
+if(typeof CKEDITOR.editorConfig == 'undefined') {
+
+console.log('config.js - A luat CKEditor din locals');
+
 CKEDITOR.editorConfig = function( config )
 {
 	// Define changes to default configuration here. For example:
@@ -14,8 +19,10 @@ CKEDITOR.editorConfig = function( config )
 					config.extraPlugins = 'link';
 					config.extraPlugins = 'save';
 					//config.extraPlugins = 'scayt';
-					config.language = 'ro';
+					config.language = 'en';
 					config.skin = 'moono';
+                   // config.extraPlugins = 'slideshow';
+
 
 
 
@@ -32,7 +39,7 @@ CKEDITOR.editorConfig = function( config )
 	{ name: 'document', items : [ 'Source','Print','Save'] },
 	{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 	{ name: 'links', items : [ 'Link','Unlink' ] },
-	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','SpecialChar' ] },
+	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','SpecialChar','Slideshow'  ] },
 	'/',
 	{ name: 'styles', items : [ 'Font','FontSize' ] },
 	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
@@ -40,7 +47,7 @@ CKEDITOR.editorConfig = function( config )
 									'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
 	{ name: 'colors', items : [ 'TextColor','BGColor' ] }
 ];
-    config.toolbar_EXTRAsmallTOOL =
+    config.toolbar_defaultSmall =
       [
 
 
@@ -52,16 +59,14 @@ CKEDITOR.editorConfig = function( config )
 
       ];
 
-    config.toolbar_smallTOOL =
+    config.toolbar_default =
     [
-
-
         { name: 'styles', items : [ 'FontSize' ] },
         { name: 'links', items : [ 'Link','Unlink'] },
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','RemoveFormat' ] },
         { name: 'paragraph', items : ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','BulletedList' ] },
         { name: 'colors', items : [ 'TextColor','BGColor' ] },
-        { name: 'insert', name:'save',items : [ 'Image','Flash','Table' ] }
+        { name: 'insert', name:'save',items : [ 'Image','Flash','Table', 'Slideshow' ] }
     ];
 //config.toolbar = 'Full';
 config.toolbar_Full =
@@ -88,6 +93,8 @@ config.toolbar_Full =
 
 
 };
+} //if
+}); //document ready
 /*
 CKEDITOR.on('dialogDefinition', function(ev) {
       // Take the dialog name and its definition from the event data
