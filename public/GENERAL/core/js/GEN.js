@@ -113,8 +113,8 @@ $.fn.ivyAutocomplete = function (source, minLength, select) {
 						response($.ui.autocomplete.filter(data, searchTerm));
 					} else {
 						console.log('sourceRemote nu s-a primit nici un json pt autocomplete' +
-							"s-a apelat scitptul " + source.scriptPath +
-							'sendData.ajaxReqFile' + source.sendData.ajaxReqFile
+							 " s-a apelat scritptul = " + source.scriptPath +
+							' sendData.ajaxReqFile = ' + source.sendData.ajaxReqFile
 						);
 					}
 				},
