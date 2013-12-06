@@ -259,6 +259,7 @@ fmw.lg = 'ro';
 fmw.ajaxProxy = 'procesSCRIPT.php';
 fmw.ajaxReqFile = 'ajaxReqFile';
 fmw.sessionId = $.cookie("PHPSESSID");
+//console.log("sessionId " + fmw.sessionId );
 fmw.pubPath = '';
 fmw.liveEdit = false;
 /**
@@ -353,6 +354,7 @@ fmw.asyncConf = function (options) {
 	// ================================[ methods ]===============================
 	this.callBackFn = function (callBack, data) {
 
+		//console.log("GEN.js - tring to callback " + data);
 		if (!fmw.isset(callBack)) {
 			callBack = {};
 		}
@@ -365,9 +367,9 @@ fmw.asyncConf = function (options) {
 			callBack.args.push(data);
 			callBack.fn.apply(callBack.context, callBack.args);
 		} else {
-			/*console.log("callBackFn: not a function function " + callBack.fn
+			console.log("callBackFn: not a function function " + callBack.fn
 				// + "\n data primita = "+ data
-			);*/
+			);
 		}
 	}
 	/**
@@ -388,18 +390,13 @@ fmw.asyncConf = function (options) {
 			dataSend = {};
 		}
 		dataSend = $.extend(true, {}, dataSend, this.dataSend);
-
-		/*var testDataSend = '';
-		 for(var i in dataSend) {
-		 testDataSend += " postName =  "+i+" postVal = " + dataSend[i] + "\n";
-		 }
-		 console.log(" GEN.js fnpost "+ testDataSend);*/
-
+		//console.log(dataSend);
 
 		var thisObj = this;
 		var jqxhr = $.post(fmw.ajaxProxy, dataSend, function (data) {
 
 			thisObj.callBackFn.call(thisObj, callBack, data);
+			//console.log("GEN.js - apparantly it works");
 		});
 
 		return jqxhr;
