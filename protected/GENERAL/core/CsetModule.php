@@ -91,6 +91,7 @@ class CsetModule extends CgenTools
         foreach($incPaths AS $srcPath) {
              $tags .= $this->{"Get_IncTag_".$extension}($srcPath);
         }
+
         return $tags;
 
     }
