@@ -748,7 +748,7 @@ var iEdit = function () {
 			},
 
 			EDtxt: function () {
-				return "<input type='text' name='" + INPUTname + "'  class='" + INPUTclasses + "' value='" + EDvalue + "' />";
+				return "<input type='text' name='" + INPUTname + "'  class='" + INPUTclasses + "' value=\"" + EDvalue + "\" />";
 			},
 			EDdate: function () {
 				return "<input type='text' name='" + INPUTname + "'  class='" + INPUTclasses + "' value='" + EDvalue + "' />";
