@@ -419,162 +419,6 @@ fmw.asyncConf = function (options) {
 	}
 
 }
-fmw.KCFinder_popUp = function (options) {
-
-	/**
-	 * opt= { callBackFn, jqmod_img }
-	 * */
-	var defaults = {
-		callBackFn: '',
-		jqmod_img: ''
-	}
-	var opt = $.extend(true, {}, defaults, options);
-
-	window.KCFinder = {
-		callBack: function (url) {
-			//field.value = url;
-			console.log("fmw.KCFinder_popUp - " + url);
-			if (typeof opt.callBackFn == 'function') {
-				opt.newUrl = url;
-				opt.callBackFn.call(this, opt);
-			} else {
-				// carrousel callback function
-				console.log("fmw.KCFinder_popUp - " + 'functia cu numele '
-					+ opt.callBackFn + ' nu exista'
-				);
-				/*   if(opt.jqmod_img != '')
-				 {
-				 //alert(opt.jqmod_img.attr('src'));
-				 opt.jqmod_img.attr('src',url);
-				 }*/
-				popUp_remove();
-				window.KCFinder = null;
-			}
-		}
-	};
-
-	//@todo: schimbat pe noul fmw.popup
-	var popUpKCF = new popUp_call(
-		{ content: "<div id='kcfinder_div'>" +
-			'<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
-			'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />' +
-			"</div>",
-
-			widthPop: '900', heightPop: '500'
-		});
-
-	// variabila popUPKCF - poate ar trebui sa ii dau unset somehow
-
-}
-fmw.openKCFinder_popUp = function (callBackFn) {
-
-	window.KCFinder = {
-		callBack: function (url) {
-			//field.value = url;
-			console.log("fmw.openKCFinder_popUp" + url);
-			if (callBackFn != '') {
-				if (typeof callBackFn == 'function') {
-					callBackFn.call(this, url);  // carrousel callback function
-
-				} else {
-					console.log("fmw.openKCFinder_popUp" + ' - functia cu numele '
-						+ callBackFn + ' nu pare sa fie o functie declarata'
-					);
-				}
-			}
-			popUp_remove();
-			window.KCFinder = null;
-		}
-	};
-	//@todo: pune pe noul pop-ul al frameworkului
-	var popUpKCF = new popUp_call(
-		{ content: "<div id='kcfinder_div'>" +
-			'<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
-			'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />' +
-			"</div>",
-
-			widthPop: '900', heightPop: '500'
-		});
-
-	// variabila popUPKCF - poate ar trebui sa ii dau unset somehow
-
-}
-fmw.queryData = function (queryString) {
-	/*
-
-	 QueryData.js
-
-	 A function to parse data from a query string
-
-	 Created by Stephen Morley - http://code.stephenmorley.org/ - and released under
-	 the terms of the CC0 1.0 Universal legal code:
-
-	 http://creativecommons.org/publicdomain/zero/1.0/legalcode
-
-	 */
-
-	/* Creates an object containing data parsed from the specified query string. The
-	 * parameters are:
-	 *
-	 * queryString        - the query string to parse. The query string may start
-	 *                      with a question mark, spaces may be encoded either as
-	 *                      plus signs or the escape sequence '%20', and both
-	 *                      ampersands and semicolons are permitted as separators.
-	 *                      This optional parameter defaults to query string from
-	 *                      the page URL.
-	 */
-	// if a query string wasn't specified, use the query string from the URL
-	if (queryString == undefined) {
-		queryString = location.search ? location.search : '';
-	}
-
-	// remove the leading question mark from the query string if it is present
-	if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
-
-	// check whether the query string is empty
-	if (queryString.length > 0) {
-
-		// replace plus signs in the query string with spaces
-		queryString = queryString.replace(/\+/g, ' ');
-
-		// split the query string around ampersands and semicolons
-		var queryComponents = queryString.split(/[&;]/g);
-
-		// loop over the query string components
-		for (var index = 0; index < queryComponents.length; index++) {
-
-			// extract this component's key-value pair
-			var keyValuePair = queryComponents[index].split('=');
-			var key = decodeURIComponent(keyValuePair[0]);
-			var value = keyValuePair.length > 1
-				? decodeURIComponent(keyValuePair[1])
-				: '';
-
-
-			// altered by Ioana
-			if (typeof this[key] == 'undefined') {
-				// store the value
-				this[key] = value;
-
-			} else if (typeof this[key] == 'object') {
-				// daca este obiect => este array
-				this[key].push(value);
-
-			} else {
-				// daca nu este undefined si nu este inca obiect
-				var man = this[key];
-				delete this[key];
-				this[key] = [];
-				this[key].push(man);
-				this[key].push(value);
-			}
-
-		}
-
-	}
-
-}
-
 fmw.popUp = {
 
 	/**
@@ -801,6 +645,161 @@ fmw.popUp = {
 	}
 
 };
+
+fmw.KCFinder_popUp = function (options) {
+
+	/**
+	 * opt= { callBackFn, jqmod_img }
+	 * */
+	var defaults = {
+		callBackFn: '',
+		jqmod_img: ''
+	}
+	var opt = $.extend(true, {}, defaults, options);
+
+	window.KCFinder = {
+		callBack: function (url) {
+			//field.value = url;
+			console.log("fmw.KCFinder_popUp - " + url);
+			if (typeof opt.callBackFn == 'function') {
+				opt.newUrl = url;
+				opt.callBackFn.call(this, opt);
+			} else {
+				// carrousel callback function
+				console.log("fmw.KCFinder_popUp - " + 'functia cu numele '
+					+ opt.callBackFn + ' nu exista'
+				);
+				/*   if(opt.jqmod_img != '')
+				 {
+				 //alert(opt.jqmod_img.attr('src'));
+				 opt.jqmod_img.attr('src',url);
+				 }*/
+				popUp_remove();
+				window.KCFinder = null;
+			}
+		}
+	};
+
+	var popUpKCF = fmw.popUp.init(
+		{ content: "<div id='kcfinder_div'>" +
+			'<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+			'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />' +
+			"</div>",
+
+			widthPop: '900', heightPop: '500'
+		});
+	// variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+}
+fmw.openKCFinder_popUp = function (callBackFn) {
+
+	window.KCFinder = {
+		callBack: function (url) {
+			//field.value = url;
+			console.log("fmw.openKCFinder_popUp" + url);
+			if (callBackFn != '') {
+				if (typeof callBackFn == 'function') {
+					callBackFn.call(this, url);  // carrousel callback function
+
+				} else {
+					console.log("fmw.openKCFinder_popUp" + ' - functia cu numele '
+						+ callBackFn + ' nu pare sa fie o functie declarata'
+					);
+				}
+			}
+			popUp_remove();
+			window.KCFinder = null;
+		}
+	};
+	//@todo: pune pe noul pop-ul al frameworkului
+	var popUpKCF = new popUp_call(
+		{ content: "<div id='kcfinder_div'>" +
+			'<iframe name="kcfinder_iframe" src="/assets/kcfinder/browse.php?type=images" ' +
+			'frameborder="0" width="100%" height="450px" marginwidth="0" marginheight="0" scrolling="no" />' +
+			"</div>",
+
+			widthPop: '900', heightPop: '500'
+		});
+
+	// variabila popUPKCF - poate ar trebui sa ii dau unset somehow
+
+}
+fmw.queryData = function (queryString) {
+	/*
+
+	 QueryData.js
+
+	 A function to parse data from a query string
+
+	 Created by Stephen Morley - http://code.stephenmorley.org/ - and released under
+	 the terms of the CC0 1.0 Universal legal code:
+
+	 http://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+	 */
+
+	/* Creates an object containing data parsed from the specified query string. The
+	 * parameters are:
+	 *
+	 * queryString        - the query string to parse. The query string may start
+	 *                      with a question mark, spaces may be encoded either as
+	 *                      plus signs or the escape sequence '%20', and both
+	 *                      ampersands and semicolons are permitted as separators.
+	 *                      This optional parameter defaults to query string from
+	 *                      the page URL.
+	 */
+	// if a query string wasn't specified, use the query string from the URL
+	if (queryString == undefined) {
+		queryString = location.search ? location.search : '';
+	}
+
+	// remove the leading question mark from the query string if it is present
+	if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+
+	// check whether the query string is empty
+	if (queryString.length > 0) {
+
+		// replace plus signs in the query string with spaces
+		queryString = queryString.replace(/\+/g, ' ');
+
+		// split the query string around ampersands and semicolons
+		var queryComponents = queryString.split(/[&;]/g);
+
+		// loop over the query string components
+		for (var index = 0; index < queryComponents.length; index++) {
+
+			// extract this component's key-value pair
+			var keyValuePair = queryComponents[index].split('=');
+			var key = decodeURIComponent(keyValuePair[0]);
+			var value = keyValuePair.length > 1
+				? decodeURIComponent(keyValuePair[1])
+				: '';
+
+
+			// altered by Ioana
+			if (typeof this[key] == 'undefined') {
+				// store the value
+				this[key] = value;
+
+			} else if (typeof this[key] == 'object') {
+				// daca este obiect => este array
+				this[key].push(value);
+
+			} else {
+				// daca nu este undefined si nu este inca obiect
+				var man = this[key];
+				delete this[key];
+				this[key] = [];
+				this[key].push(man);
+				this[key].push(value);
+			}
+
+		}
+
+	}
+
+}
+
+
 
 fmw.getData = new fmw.queryData();
 //nu stiu daca asta ar trebui mereu apelata
