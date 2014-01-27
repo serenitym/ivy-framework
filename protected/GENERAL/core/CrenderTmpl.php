@@ -223,7 +223,7 @@ class CrenderTmpl extends item
     public function Module_Get_pathTmpl(&$mod, $templateDir, $templateFile)
     {
         return $mod->modDirPub
-                    . $templateDir.'/tmpl/'
+                    . $templateDir.'tmpl/'
                         . $templateFile.'.html';
     }
 
@@ -244,7 +244,7 @@ class CrenderTmpl extends item
 
             //daca nu exista nici un template name => nu exista nici un tmpl_dir
             $tmpl_dir = isset($mod->template) &&  $mod->template!=''
-                        ? 'tmpl_'.$mod->template
+                        ? "tmpl_{$mod->template}/"
                         : '' ;
 
             $tmplPath = $this->Module_Get_pathTmpl($mod, $tmpl_dir, $tmplFile);

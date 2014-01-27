@@ -91,6 +91,7 @@ class CsetModule extends CgenTools
         foreach($incPaths AS $srcPath) {
              $tags .= $this->{"Get_IncTag_".$extension}($srcPath);
         }
+
         return $tags;
 
     }
@@ -526,8 +527,9 @@ class CsetModule extends CgenTools
     }
 
     #=============================================[ Module initialization]======
-
-    public function Build_object($caller,  $objFolder, $objModName, $objName, $adminFolder='', $adminPrefix='')
+    public function Build_object($caller,  $objFolder, $objModName, $objName,
+        $adminFolder='', $adminPrefix=''
+    )
     {
 #1
         if (isset($caller->$objName) && is_object($caller->$objName) ) {
@@ -539,9 +541,11 @@ class CsetModule extends CgenTools
         }
 
         $className        = $adminPrefix.$objName;
-        $classPath = FW_INC_PATH . $objFolder . "/$objModName/" . $adminFolder . $className . '.php';
+        $classPath        = FW_INC_PATH . $objFolder . "/$objModName/" . $adminFolder . $className . '.php';
+        // in cazul in care sunt scripturi , clase LOCALE
+        $classPathLocal   = FW_INC_PATH . "LOCALS/$objModName/" . $adminFolder . $className . '.php';
 
-        if (!file_exists($classPath)) {
+        if (!file_exists($classPath) && !file_exists($classPathLocal)) {
             error_log("[ ivy ] "."CsetModule - Build_object : Nu  exista fisierul: $classPath ");
             return false;
         }
@@ -553,7 +557,6 @@ class CsetModule extends CgenTools
         if(!is_object($obj)) {
             error_log("[ ivy ] "."CsetModule - Build_object : ATENTIE
             Modul instantiat = $className nu a fost instantiat corect");
-
         }
 
         return $obj;
@@ -582,7 +585,9 @@ class CsetModule extends CgenTools
      * @return bool -  obiectul creat / false daca nu a creat nimic
      */
 
-    public function Module_Build($caller, $modName, $modType, $adminFolder='', $adminPrefix='C')
+    public function Module_Build($caller, $modName, $modType, $adminFolder='',
+        $adminPrefix='C'
+    )
     {
         #1
         //$this->$modName = new $className($this);
@@ -619,6 +624,7 @@ class CsetModule extends CgenTools
 
         $this->Module_configCorePointers($obj);
         $this->Module_configNodePointers($obj);
+        $this->Module_configAttributes($obj,$mod->modType,$mod->modName);
 
         /**
          * modulul / callerul isi asuma raspunderea de necesitatile handlerului
@@ -646,8 +652,9 @@ class CsetModule extends CgenTools
     public function Module_Build_objProp($mod, $objName, $adminFolder='', $adminPrefix='')
     {
         #1
-        $obj = $this->Build_object($mod, $mod->modType, $mod->modName, $objName,  $adminFolder, $adminPrefix);
-        if(!$obj) {
+        $obj = $this->Build_object($mod, $mod->modType, $mod->modName, $objName,
+                                    $adminFolder, $adminPrefix);
+        if(!is_object($obj)) {
            /* echo "[ivy] <b>Module_Build_objProp obiectul nu a putut fi instantiat
             </b>- objName = {$objName} <br>";*/
 

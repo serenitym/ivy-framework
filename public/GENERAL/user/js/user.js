@@ -14,6 +14,9 @@ ivyMods.user = {
         inviteMember: '250',
         inviteConfirm: '400'
     },
+	 sel: {
+		 loginLink: "div.footerText"
+	 },
     forgotPassword : function(){
         fmw.toggle('#recover-pass');
         fmw.toggle("#loginForm");
@@ -38,5 +41,17 @@ ivyMods.user = {
             widthPop: this.popupwidth[template],
             dataSend: {uid: uid}
         });
-    }
+    },
+	 writeLoginLink: function (){
+	     var el = $(this.sel.loginLink);
+	     el.html(el.html() + "<a href='/?login'>Login</a>");
+	 },
+	 init: function(){
+		this.writeLoginLink();
+	 }
 };
+
+$(document).ready(function(){
+	ivyMods.user.init();
+});
+

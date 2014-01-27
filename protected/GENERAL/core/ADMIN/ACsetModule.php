@@ -39,7 +39,7 @@ class ACsetModule extends CLcore
         $obj = parent::Module_Build_objProp($mod, $objName, $adminFolder, $adminPrefix);
         // daca nu a reusit sa instantieze un admin type atunci
         //incearca cu varianta simpla
-        if(!$obj) {
+        if(!is_object($obj)) {
             //error_log("[ivy] ACsetModule - Module_Build_objProp ".
             // "Modulul nu are o parte de admin => incercam o intantiere simpla");
            $obj = parent::Module_Build_objProp($mod, $objName);

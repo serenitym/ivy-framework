@@ -10,6 +10,7 @@
  * => se vor folosi doar numere 0 / 1
 */
 require FW_INC_PATH.'GENERAL/core/scripts/classLoader.inc';
+//error_log("in axajProxy.php = ".$_POST['sessionId']);
 
 // se face restore la core doar daca se cere explicit
 //$_POST['restoreCore'] = !isset($_POST['restoreCore']) ? 0 : intval($_POST['restoreCore']);
