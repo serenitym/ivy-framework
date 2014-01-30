@@ -50,7 +50,7 @@ class ClassLoader {
             //echo "trying class list.\n<br>";
             $this->refreshClassList();
         }
-        if (substr($this->classList[$className], -4, 4) === ".php") {
+        if (isset($this->classList[$className]) && substr($this->classList[$className], -4, 4) === ".php") {
             include_once $this->classList[$className] ;
         } else {
             return false;
@@ -137,13 +137,14 @@ class ClassLoader {
             }
 
             // recursion
-            if (is_dir($path)) {
+            if (is_dir($path) && !is_link($path)) {
                 $scanRes = array_merge($scanRes, $this->scanDirectory($path));
-
+            } elseif (is_link($path) && is_dir($path)){
+                $scanRes = array_merge($scanRes, $this->scanDirectory(realpath($path)));
             } elseif (is_file($path)) {
                 $className = explode('.', $file);
                 if ( $className[count($className)-1] == 'php')  {
-                    $scanRes[$className[0]] = $path;
+                    $scanRes[$className[0]] = realpath($path);
                 }
             }
         }
