@@ -1,12 +1,12 @@
 <?php
-     $add_jsIncPaths[] = "assets/jquery/jquery-1.8.3.min.js";
-     $add_jsIncPaths[] = "assets/onVisible/onvisible.js";
-     $add_jsIncPaths[] = "assets/jquery-cookie-master/jquery.cookie.js";
+     $add_jsIncPaths[] = "/assets/jquery/jquery-1.8.3.min.js";
+     $add_jsIncPaths[] = "/assets/onVisible/onvisible.js";
+     $add_jsIncPaths[] = "/assets/jquery-cookie-master/jquery.cookie.js";
      if(isset($core->admin) && $core->admin) {
 
-         $add_jsIncPaths[] =  "assets/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js" ;
-         $add_jsIncPaths[] =  "assets/nestedSortable/jquery.ui.nestedSortable.js";
-         $add_jsIncPaths[] =  "assets/ckeditor-4.2/ckeditor.js";
+         $add_jsIncPaths[] =  "/assets/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js" ;
+         $add_jsIncPaths[] =  "/assets/nestedSortable/jquery.ui.nestedSortable.js";
+         $add_jsIncPaths[] =  "/assets/ckeditor-4.2/ckeditor.js";
      }
     //var_dump($core->jsIncPaths);
     // deoarecele add.jsIncPaths trebuie sa fie la inceput

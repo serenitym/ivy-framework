@@ -527,11 +527,11 @@ class CsetModule extends CgenTools
     }
 
     #=============================================[ Module initialization]======
+
     public function Build_object($caller,  $objFolder, $objModName, $objName,
-        $adminFolder='', $adminPrefix=''
-    )
+        $adminFolder='', $adminPrefix='')
     {
-#1
+        #1
         if (isset($caller->$objName) && is_object($caller->$objName) ) {
             //echo "Obiectul care exista deja $modName <br>";
             //var_dump($this->$modName);
@@ -586,8 +586,7 @@ class CsetModule extends CgenTools
      */
 
     public function Module_Build($caller, $modName, $modType, $adminFolder='',
-        $adminPrefix='C'
-    )
+        $adminPrefix='C')
     {
         #1
         //$this->$modName = new $className($this);
