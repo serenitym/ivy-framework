@@ -6,4 +6,4 @@
 	url = git@github.com:nightsh/kcfinder.git
 [submodule "public/assets/securimage-git"]
 	path = public/assets/securimage-git
-	url = https://github.com/dapphp/securimage.git
+	url = git@github.com:nightsh/securimage.git
