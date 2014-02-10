@@ -166,7 +166,10 @@ class Ccore extends Cunstable
 
         //echo "Ccore - Handle_postRequest POST: "; var_dump($_POST);
         //error_log("[ivy] Handle_postRequest modName = ".$_POST['modName']." methName = ".$_POST['methName']);
-        if (isset($_POST['modName']) && isset($_POST['methName'])) {
+        if (isset($_POST['modName'])
+            && isset($_POST['methName'])
+            && strlen($_POST['methName']) > 0
+        ) {
 
             $mod = $this->Get_postMod($_POST['modName']);
 
