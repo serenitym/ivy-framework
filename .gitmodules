@@ -4,6 +4,3 @@
 [submodule "public/assets/ivy-kcfinder"]
 	path = public/assets/ivy-kcfinder
 	url = git@github.com:nightsh/kcfinder.git
-[submodule "protected/GENERAL/Tools/PHP-Markdown"]
-	path = protected/GENERAL/Tools/PHP-Markdown
-	url = https://github.com/michelf/php-markdown.git
