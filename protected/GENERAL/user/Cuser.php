@@ -173,7 +173,7 @@ class Cuser extends permissions
     public function addToolbarLogout()
     {
         array_push($this->toolbarBtts,"
-            <a href='index.php?logOUT=1' id='logOUT'>
+            <a href='/?logOUT' id='logOUT'>
                 Log out {$this->uname}
                 [ id: {$this->uid} | class: {$this->uclass} ]
             </a>

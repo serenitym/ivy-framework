@@ -264,6 +264,23 @@ class Toolbox extends LibToolbox
         return $str;
     }
 
+    static function trim_all( $str , $what = NULL , $with = ' ' )
+    {
+        if ( $what === NULL ) {
+            //  Character      Decimal      Use
+            //  "\0"            0           Null Character
+            //  "\t"            9           Tab
+            //  "\n"           10           New line
+            //  "\x0B"         11           Vertical Tab
+            //  "\r"           13           New Line in Mac
+            //  " "            32           Space
+
+            $what   = "\\x00-\\x20";    //all white-spaces and control chars
+        }
+
+        return trim(preg_replace("/[".$what."]+/", $with, $str), $what);
+    }
+
     /* countryTools */
 
     static function codeToCountry ($code, $file='data/countries.json')
@@ -297,6 +314,26 @@ class Toolbox extends LibToolbox
 
         return $http.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
     }
+
+    /* Database tools */
+
+    /* public Db_getMaxID($table, mysqli $dbconn, $id = 'id') {{{ */
+    /**
+     * Db_getMax returns the maximum value of a field in a given table
+     *
+     * @param mixed $table
+     * @param mysqli $dbconn
+     * @param string $field
+     * @static
+     * @access public
+     * @return void
+     */
+    static function Db_getMax($table, mysqli $dbconn, $field = 'id')
+    {
+        $query = "SELECT MAX($field) AS max FROM $table;";
+        return $dbconn->query($query)->fetch_object()->max;
+    }
+    /* }}} */
 
 }
 /* vim: set ft=php: set fdm=marker: */

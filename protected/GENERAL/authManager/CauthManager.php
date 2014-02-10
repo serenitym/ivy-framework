@@ -217,7 +217,7 @@ class CauthManager extends authCommon implements Serializable {
     /*public  function Set_toolbarButtons(&$C)
     {
         array_push($C->TOOLbar->buttons,"
-            <a href='index.php?logOUT=1' id='logOUT'>
+            <a href='/?logOUT=1' id='logOUT'>
                 Log out {$C->user->uname}
                 [ id: {$C->user->uid} | class: {$C->user->uclass} ]
             </a>
