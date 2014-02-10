@@ -312,7 +312,7 @@ class Ccore extends Cunstable
         $this->Handle_postRequest();
 
         // set vectorul de module utilizate
-        $this->Set_Fs_usedModules();
+        //$this->Set_Fs_usedModules();
         //var_dump($_SESSION['userData']);
         //var_dump($_SESSION['user']);
 
