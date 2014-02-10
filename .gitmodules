@@ -4,3 +4,6 @@
 [submodule "public/assets/ivy-kcfinder"]
 	path = public/assets/ivy-kcfinder
 	url = git@github.com:nightsh/kcfinder.git
+[submodule "public/assets/securimage-git"]
+	path = public/assets/securimage-git
+	url = https://github.com/dapphp/securimage.git
