@@ -212,7 +212,7 @@ class Ctree extends Cmodules
           //var_dump($this->tempTree);
           $treeSer = serialize($this->tempTree);
           #umask(0777);
-          $succes  = file_put_contents($pathTree,$treeSer);
+          $succes  = Toolbox::Fs_writeTo($pathTree,$treeSer);
           //$succes  = Toolbox::Fs_writeTo($pathTree, $treeSer);
 
           //if(defined('UMASK')) umask(UMASK);
