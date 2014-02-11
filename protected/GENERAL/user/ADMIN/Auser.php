@@ -371,7 +371,7 @@ class Auser
 
         $mail = ivyMailer::build();
 
-        $mail->setFrom(SMTP_USER, "The Black Sea mailer");
+        $mail->setFrom(SMTP_USER, "The Sponge");
         $mail->AddTo($this->post->email);
         $mail->subject = 'Your invitation on ' . SITE_NAME;
         $mail->defineText(
