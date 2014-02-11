@@ -12,12 +12,12 @@
     -->
 
     <input type='button' name='deactivateAccount' value='deactivate me'
-    onclick = \"ivyMods.user.popup('".FW_PUB_URL."','deactivate', 'Deactivate my account', '".$o->uid."'); return false;\">
+    onclick = \"ivyMods.user.popup('".FW_PUB_URL.$o->modDirPub."','deactivate', 'Deactivate my account', '".$o->uid."'); return false;\">
 
     <input type='button' name='changePassword' value='change password'
-    onclick = \"ivyMods.user.popup('".FW_PUB_URL."','changePass', 'Change Password', '".$o->uid."'); return false;\">
+    onclick = \"ivyMods.user.popup('".FW_PUB_URL.$o->modDirPub."','changePass', 'Change Password', '".$o->uid."'); return false;\">
 
     <input type='button' name='inviteUser' value='invite'
-           onclick = \"ivyMods.user.popup('".FW_PUB_URL."','inviteMember', 'Invite Member'); return false;\" >
+           onclick = \"ivyMods.user.popup('".FW_PUB_URL.$o->modDirPub."','inviteMember', 'Invite Member'); return false;\" >
 
 </form>
