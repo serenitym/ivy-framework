@@ -151,7 +151,6 @@ class Toolbox extends LibToolbox
                 // Recursive mkdir() will try to create the eventually nested
                 // directory structure
                 if (!mkdir($basedir, 0777, true)) {
-                //if (!self::rmkdir($basedir)) {
                     error_log(
                         "Error: mkdir() failed to create directory",
                         E_USER_WARNING
@@ -174,11 +173,11 @@ class Toolbox extends LibToolbox
         switch ($mode) {
         default:
         case 'w':
-                file_put_contents($file, $data);
-                break;
+            file_put_contents($file, $data);
+            break;
         case 'w+':
-                file_put_contents($file, $data, FILE_APPEND);
-                break;
+            file_put_contents($file, $data, FILE_APPEND);
+            break;
         }
     }
 
@@ -336,4 +335,3 @@ class Toolbox extends LibToolbox
     /* }}} */
 
 }
-/* vim: set ft=php: set fdm=marker: */
