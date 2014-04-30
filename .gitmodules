@@ -1,6 +1,6 @@
 [submodule "protected/GENERAL/Tools/Zebra_Session"]
 	path = protected/GENERAL/Tools/Zebra_Session
-	url = git@github.com:nightsh/Zebra_Session.git
+	url = https://github.com/nightsh/Zebra_Session.git
 [submodule "public/assets/ivy-kcfinder"]
 	path = public/assets/ivy-kcfinder
-	url = git@github.com:nightsh/kcfinder.git
+	url = https://github.com/nightsh/kcfinder.git
