@@ -222,7 +222,6 @@ class Ccore extends Cunstable
         }
 
     }
-
     #1.4
     protected function addModuleUser()
     {

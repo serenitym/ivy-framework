@@ -905,9 +905,9 @@ var iEdit = function () {
 				 * @type {*}
 				 */
 				var minLength = jqEDtag.data('ieditMinln');
-				var path = jqEDtag.data('ieditPath');
-				var source = jqEDtag.data('ieditSource');
-				var select = jqEDtag.data('ieditSelect');
+				var path      = jqEDtag.data('ieditPath');
+				var source    = jqEDtag.data('ieditSource');
+				var select    = jqEDtag.data('ieditSelect');
 
 
 				// daca sursa este o cale
